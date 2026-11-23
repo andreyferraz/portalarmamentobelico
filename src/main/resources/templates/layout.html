@@ -106,7 +106,7 @@
       <div class="footer-top-grid">
         <!-- Coluna 1: Marca e Devoção -->
         <div class="footer-col-brand">
-          <img src="assets/images/logo-armamento-belico.png" alt="Armamento Bélico Logo">
+          <img th:src="@{/assets/images/logo-armamento-belico.png}" alt="Armamento Bélico Logo">
           <p>
             Armamento Bélico é um zine físico e independente impresso em sangue e tinta desde 2008. Dedicado à exaltação das forças mais brutais e soturnas do Metal subterrâneo mundial.
           </p>
@@ -170,7 +170,7 @@
   </footer>
 
   <!-- Script Core Único -->
-  <script src="script.js"></script>
+  <script th:src="@{/js/script.js}"></script>
 </body>
 
 </html>
