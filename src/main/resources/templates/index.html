@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+    th:replace="~{layout :: layout('Início | Armamento Bélico Zine', ~{::content})}">
+<header>
+    <title th:text="${title}"></title>
+</header>
+
+<div th:fragment="content">
+
+    <!-- HERO / MANIFESTO UNDERGROUND (LARGURA TOTAL DA PÁGINA) -->
+    <section class="hero-cult-banner">
+        <div class="hero-cult-container">
+            <div class="hero-content">
+                <span class="tape-tag blood">MANIFESTO IMPRESSO • ANO 18</span>
+                <h1 class="gothic-title" data-i18n="hero_title">Armamento Bélico Zine</h1>
+                <p class="hero-manifesto" data-i18n="hero_manifesto">
+                    O fanzine físico e impresso mais ativo do underground brasileiro. Desde 2008 registrando o sangue, o
+                    suor e a podridão do Death Metal, Black Metal e demais gêneros da música extrema.
+                </p>
+                <div class="hero-actions">
+                    <a href="#edicoes-disponiveis" class="btn-brutal btn-blood">
+                        <span class="inverted-cross">✝</span> <span data-i18n="hero_cta_buy">Comprar Edição Atual</span>
+                    </a>
+                    <a href="arquivo.html" class="btn-brutal btn-outline-decay">
+                        <i class="fa-solid fa-book-open" aria-hidden="true"></i> <span
+                            data-i18n="hero_cta_archive">Explorar Coleção Completa</span>
+                    </a>
+                </div>
+                <div class="hero-socials" aria-label="Redes sociais">
+                    <span class="hero-socials-label" data-i18n="hero_follow_us">Siga nas redes:</span>
+                    <div class="hero-socials-links">
+                        <a href="https://www.facebook.com/armamentobelicozine" target="_blank" rel="noopener noreferrer"
+                            class="hero-social-link" aria-label="Facebook do Armamento Bélico Zine" title="Facebook">
+                            <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://www.instagram.com/armamentobelicozine" target="_blank"
+                            rel="noopener noreferrer" class="hero-social-link"
+                            aria-label="Instagram do Armamento Bélico Zine" title="Instagram">
+                            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="https://www.youtube.com/@armamentobelicozine" target="_blank" rel="noopener noreferrer"
+                            class="hero-social-link" aria-label="YouTube do Armamento Bélico Zine" title="YouTube">
+                            <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-wrapper">
+
+        <!-- SEÇÃO CTA: ASSINATURA ANUAL DO FANZINE (COM ARTE OBSCURA DO BAPHOMET) -->
+        <section class="subscription-cta-section" id="cta-assinatura">
+            <div class="cta-tape-decor">
+                <span class="tape-tag blood" data-i18n="cta_tag">PACTO DE APOIO CONTÍNUO</span>
+            </div>
+
+            <div class="cta-container">
+                <!-- Lado do Conteúdo / Informações da Assinatura -->
+                <div class="cta-content">
+                    <span class="cta-mini-tag dark" data-i18n="cta_mini_tag">TIRAGENS FÍSICAS LIMITADAS</span>
+                    <h2 class="pirata-title cta-title" data-i18n="cta_title">Assine o Armamento Bélico Zine</h2>
+                    <p class="cta-desc" data-i18n="cta_desc">
+                        Faça parte do culto físico ao Metal da Morte e receba cada manifestação impressa na sua morada
+                        sem risco de esgotamento.
+                    </p>
+
+                    <!-- Destaque do Preço e Benefícios Chave -->
+                    <div class="cta-plan-highlight">
+                        <div class="cta-price-row">
+                            <span class="cta-price-amount">R$ 20,00</span>
+                            <span class="cta-price-frequency" data-i18n="cta_price_period">/ mês (Assinatura Anual •
+                                Pix)</span>
+                        </div>
+                        <p class="cta-guarantee-text" data-i18n="cta_guarantee">
+                            Plano único de 12 meses (R$ 20/mês no Pix recorrente ou R$ 22/mês no cartão de crédito).
+                            Somente edições em português (Brasil).
+                        </p>
+                    </div>
+
+                    <!-- Lista de Vantagens Brutais -->
+                    <ul class="cta-perks-list">
+                        <li>
+                            <strong data-i18n="cta_feat_1_b">4 Edições no Ano:</strong>
+                            <span data-i18n="cta_feat_1_t">12 meses de assinatura com 4 edições entregues: 1 edição a
+                                cada 3 meses de pagamento.</span>
+                        </li>
+                        <li>
+                            <strong data-i18n="cta_feat_2_b">Pix ou Cartão de Crédito:</strong>
+                            <span data-i18n="cta_feat_2_t">R$ 20,00/mês via Pix recorrente ou R$ 22,00/mês no cartão de
+                                crédito (para cobrir taxas).</span>
+                        </li>
+                        <li>
+                            <strong data-i18n="cta_feat_3_b">Envio pelos Correios:</strong>
+                            <span data-i18n="cta_feat_3_t">Despacho após a conclusão de cada ciclo de 3 meses pagos e o
+                                lançamento da respectiva edição.</span>
+                        </li>
+                        <li>
+                            <strong data-i18n="cta_feat_4_b">Brindes Inclusos:</strong>
+                            <span data-i18n="cta_feat_4_t">A assinatura inclui brindes, que variam conforme a
+                                disponibilidade de cada remessa.</span>
+                        </li>
+                    </ul>
+
+                    <!-- Botões de Ação -->
+                    <div class="cta-actions">
+                        <a href="assinatura.html" class="btn-brutal btn-blood">
+                            <span class="inverted-cross">✝</span> <span data-i18n="cta_btn">Garantir Assinatura • R$
+                                20/mês</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SEÇÃO: EDIÇÕES DISPONÍVEIS PARA COMPRA (FILTRADAS PELO IDIOMA) -->
+        <section class="products-section" id="edicoes-disponiveis">
+            <div class="section-headline">
+                <h2 data-i18n="section_editions_title">Edições Disponíveis para Aquisição</h2>
+                <p class="sub-title" data-i18n="section_editions_sub">
+                    Tiragens físicas limitadas em papel offset pesado • Envio para todo o Brasil
+                </p>
+                <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+            </div>
+
+            <!-- Container dinâmico alimentado pelo script.js com produtos filtrados pelo idioma atual -->
+            <div class="products-grid" id="products-grid-container">
+                <!-- Renderizado dinamicamente via script.js -->
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="arquivo.html" class="btn-brutal btn-outline-decay">
+                    <i class="fa-solid fa-book-open" aria-hidden="true"></i> <span
+                        data-i18n="section_editions_all">Conferir todas as edições</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: DESTAQUE CANAL DO YOUTUBE COM BOTÃO INSCREVA-SE -->
+        <section class="youtube-spotlight">
+            <div class="youtube-content">
+                <span class="tape-tag dark">PRODUÇÃO AUDIOVISUAL MALDITA</span>
+                <h2 class="pirata-title" data-i18n="youtube_title">Canal Oficial do Armamento Bélico no YouTube</h2>
+                <p data-i18n="youtube_desc">
+                    Entrevistas em vídeo, audições comentadas de demos raras, resenhas de materiais obscuros e cobertura
+                    dos porões do metal extremo.
+                </p>
+                <ul class="youtube-features">
+                    <li>Conversas exclusivas com hordas clássicas e novatos sanguinários</li>
+                    <li>Apresentação física dos fanzines, zines antigos e fitas cassete</li>
+                    <li>Resenhas ácidas sem patrocínio corporativo</li>
+                </ul>
+                <a href="https://www.youtube.com/@armamentobelicozine?sub_confirmation=1" target="_blank"
+                    rel="noopener noreferrer" class="btn-brutal btn-blood">
+                    <i class="fa-brands fa-youtube" aria-hidden="true"></i> <span data-i18n="youtube_btn">Inscreva-se no
+                        Canal</span>
+                </a>
+            </div>
+
+            <!-- Vídeo incorporado do canal -->
+            <div class="youtube-visual">
+                <div class="youtube-video-container" data-youtube-id="5J1o1DHkekE"
+                    data-youtube-title="Armamento Bélico Zine #58">
+                    <button type="button" class="youtube-facade-btn"
+                        aria-label="Reproduzir vídeo: Armamento Bélico Zine #58">
+                        <img src="https://i.ytimg.com/vi/5J1o1DHkekE/hqdefault.jpg" alt="Armamento Bélico Zine #58"
+                            class="youtube-facade-thumb" loading="lazy">
+                        <span class="youtube-play-btn" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
+                    </button>
+                </div>
+                <p
+                    style="font-size: 0.75rem; color: var(--color-paper-dim); margin-top: 8px; font-family: var(--font-mono);">
+                    [ARMAMENTO BÉLICO ZINE #58]
+                </p>
+            </div>
+        </section>
+
+        <!-- SEÇÃO: 2 ÚLTIMAS NOTÍCIAS PUBLICADAS -->
+        <section class="home-news-section">
+            <div class="section-headline">
+                <h2 data-i18n="news_section_title">Últimas Manifestações do Underground</h2>
+                <p class="sub-title" data-i18n="news_section_sub">
+                    Resenhas, comunicados de gravadoras e anúncios exclusivos
+                </p>
+                <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+            </div>
+
+            <div class="news-grid-duo">
+                <!-- Notícia 1 -->
+                <article class="news-card-home">
+                    <span class="news-date">24 de Agosto, 2026 • Notícia de Capa</span>
+                    <a href="noticia-interna.html?id=1" class="news-title-link">
+                        <h3 class="pirata-title">Diabolizer: A Fúria do Death Metal Turco Assola as Páginas da Edição
+                            #58</h3>
+                    </a>
+                    <p class="news-excerpt">
+                        Conversamos profundamente com os integrantes da horda turca Diabolizer sobre a concepção de seu
+                        novo manifesto brutal, as raízes do Death Metal dos anos 90 e a cena extrema na Eurásia.
+                    </p>
+                    <a href="noticia-interna.html?id=1" class="news-readmore" data-i18n="news_read_more">
+                        Ler Matéria Completa ☠
+                    </a>
+                </article>
+
+                <!-- Notícia 2 -->
+                <article class="news-card-home">
+                    <span class="news-date">10 de Julho, 2026 • Lançamento em Fita K7</span>
+                    <a href="noticia-interna.html?id=2" class="news-title-link">
+                        <h3 class="pirata-title">Coldwinter: Novo Álbum em Cassete Profissional e Distribuição
+                            Internacional</h3>
+                    </a>
+                    <p class="news-excerpt">
+                        A horda brasileira Coldwinter anuncia seu mais recente trabalho em fita K7 com tiragem
+                        estritamente limitada, capa serigrafada e encarte especial. Detalhes completos da produção
+                        independente.
+                    </p>
+                    <a href="noticia-interna.html?id=2" class="news-readmore" data-i18n="news_read_more">
+                        Ler Matéria Completa ☠
+                    </a>
+                </article>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="noticias.html" class="btn-brutal btn-outline-decay" data-i18n="news_read_all">
+                    ☠ Ver Todas as Notícias do Zine
+                </a>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+</html>

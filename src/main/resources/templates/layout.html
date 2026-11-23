@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+    th:fragment="layout(title, content)">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARMAMENTO BÉLICO ZINE | Fanzine Impresso de Metal Extremo</title>
+  <meta name="description" content="Fanzine impresso e independente de Death Metal, Black Metal, Grindcore e Doom. Desde 2008 registrando o verdadeiro underground mundial.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link rel="icon" th:href="@{/assets/images/logo-armamento-belico.png}" type="image/png">
+</head>
+
+<body class="page-home">
+
+    <!-- Linha superior de sangue -->
+  <div class="top-blood-bar"></div>
+
+  <!-- CABEÇALHO PRINCIPAL -->
+  <header class="site-header">
+    <div class="header-top-banner" data-i18n="site_tagline">
+      Fanzine Impresso de Metal Extremo • Desde 2008
+    </div>
+    <div class="header-container">
+      <!-- Logo do Fanzine -->
+      <div class="logo-container">
+        <a th:href="@{/}" class="logo-link" title="Armamento Bélico Zine - Início">
+          <img th:src="@{/assets/images/logo-armamento-belico.png}" alt="Armamento Bélico Zine Logo" class="header-logo-img">
+          <div class="logo-text-wrap">
+            <span class="logo-title">Armamento Bélico</span>
+            <span class="logo-tagline">Underground Metal Zine</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Menu de Navegação Multi-page -->
+      <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
+        <ul class="nav-list" id="nav-list" popover="auto">
+          <li><a href="index.html" class="nav-link active" aria-current="page" data-i18n="nav_home">Início</a></li>
+          <li><a href="historia.html" class="nav-link" data-i18n="nav_history">História</a></li>
+          <li><a href="arquivo.html" class="nav-link" data-i18n="nav_archive">Edições e loja</a></li>
+          <li><a href="noticias.html" class="nav-link" data-i18n="nav_news">Notícias</a></li>
+          <li><a href="eventos.html" class="nav-link" data-i18n="nav_events">Eventos</a></li>
+          <li><a href="indique.html" class="nav-link" data-i18n="nav_suggest">Indique uma Horda</a></li>
+          <li><a href="aliados.html" class="nav-link" data-i18n="nav_allies">Aliados</a></li>
+          <!-- REGRA: Link de Assinatura visível APENAS no idioma Português -->
+          <li class="nav-assinatura"><a href="assinatura.html" class="nav-link" data-i18n="nav_subscription">Assinatura</a></li>
+        </ul>
+      </nav>
+
+      <!-- Ações do Cabeçalho: Idiomas e Carrinho -->
+      <div class="header-actions">
+        <!-- Alternância de Idiomas (Bandeiras Brasil & EUA/UK) -->
+        <div class="lang-selector">
+          <button class="lang-btn active" data-lang="pt" title="Português do Brasil">
+            <span class="lang-flag">🇧🇷</span> PT
+          </button>
+          <button class="lang-btn" data-lang="en" title="English / International">
+            <span class="lang-flag">🇺🇸</span> EN
+          </button>
+        </div>
+
+        <!-- Botão do Necrocarrinho -->
+        <button class="cart-trigger-btn" id="cart-trigger-btn" title="Abrir Carrinho">
+          <i class="fa-solid fa-cart-shopping" aria-hidden="true"></i>
+          <span class="cart-count-badge" id="cart-count-badge">0</span>
+        </button>
+
+        <!-- Toggle Mobile -->
+        <button type="button" class="mobile-toggle" id="mobile-toggle" popovertarget="nav-list" popovertargetaction="toggle" aria-controls="nav-list" aria-expanded="false" aria-label="Abrir Menu"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+    <main id="main-content" th:replace="${content}">
+        Conteúdo da página
+    </main>
+
+     <!-- MODAL / DRAWER DO CARRINHO (PRESENTE EM TODAS AS PÁGINAS) -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Carrinho de Compras">
+    <div class="cart-drawer-header">
+      <h3 class="pirata-title" data-i18n="cart_title">Necrocarrinho</h3>
+      <button class="cart-close-btn" id="cart-close-btn" title="Fechar"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    </div>
+    <div class="cart-drawer-body" id="cart-items-container">
+      <!-- Preenchido via script.js -->
+    </div>
+    <div class="cart-drawer-footer">
+      <div class="cart-total-line">
+        <span class="cart-total-label" data-i18n="cart_total">Total do Pedido:</span>
+        <span class="cart-total-val" id="cart-total-val">R$ 0,00</span>
+      </div>
+      <!-- Botões de Checkout: WhatsApp (PT) ou PayPal (EN) via script.js -->
+      <div class="cart-checkout-actions" id="cart-checkout-actions"></div>
+    </div>
+  </aside>
+
+  <!-- RODAPÉ INFERNAL (PRESENTE EM TODAS AS PÁGINAS) -->
+  <footer class="site-footer">
+    <div class="footer-infernal-bg"></div>
+    <div class="footer-infernal-silhouette"></div>
+
+    <div class="footer-content-wrap">
+      <div class="footer-top-grid">
+        <!-- Coluna 1: Marca e Devoção -->
+        <div class="footer-col-brand">
+          <img src="assets/images/logo-armamento-belico.png" alt="Armamento Bélico Logo">
+          <p>
+            Armamento Bélico é um zine físico e independente impresso em sangue e tinta desde 2008. Dedicado à exaltação das forças mais brutais e soturnas do Metal subterrâneo mundial.
+          </p>
+        </div>
+
+        <!-- Coluna 2: Navegação -->
+        <div>
+          <h4 class="footer-col-title pirata-title">Navegação</h4>
+          <ul class="footer-links-list">
+            <li><a href="index.html" data-i18n="nav_home">Início</a></li>
+            <li><a href="historia.html" data-i18n="nav_history">História</a></li>
+            <li><a href="arquivo.html" data-i18n="nav_archive">Edições e loja</a></li>
+            <li><a href="noticias.html" data-i18n="nav_news">Notícias</a></li>
+            <li><a href="eventos.html" data-i18n="nav_events">Eventos</a></li>
+            <li><a href="indique.html" data-i18n="nav_suggest">Indique uma Horda</a></li>
+            <li><a href="aliados.html" data-i18n="nav_allies">Aliados</a></li>
+            <li class="nav-assinatura"><a href="assinatura.html" data-i18n="nav_subscription">Assinatura</a></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 3: Documentação -->
+        <div>
+          <h4 class="footer-col-title pirata-title">Legal & Contato</h4>
+          <ul class="footer-links-list">
+            <li><a href="privacidade.html" data-i18n="footer_privacy">Privacidade & Cookies</a></li>
+            <li><a href="https://wa.me/5527981076157" target="_blank" rel="noopener">WhatsApp Oficial</a></li>
+            <li><a href="mailto:armamento.belico.zine@gmail.com">Contato por E-mail</a></li>
+          </ul>
+        </div>
+
+        <!-- Coluna 4: Redes Sociais Brutais -->
+        <div>
+          <h4 class="footer-col-title pirata-title">Redes Subterrâneas</h4>
+          <div class="footer-socials">
+            <a href="https://www.youtube.com/@armamentobelicozine" target="_blank" rel="noopener" class="social-link-btn">
+              <i class="fa-brands fa-youtube" aria-hidden="true"></i> YouTube Oficial
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener" class="social-link-btn">
+              <i class="fa-brands fa-instagram" aria-hidden="true"></i> Instagram Zine
+            </a>
+            <a href="https://bandcamp.com" target="_blank" rel="noopener" class="social-link-btn">
+              <i class="fa-brands fa-bandcamp" aria-hidden="true"></i> Bandcamp Distro
+            </a>
+            <a href="https://wa.me/5527981076157" target="_blank" rel="noopener" class="social-link-btn">
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> WhatsApp Direto
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra Inferior com Anos e Créditos -->
+      <div class="footer-bottom-bar">
+        <span class="footer-cult-year">
+          Desde 2008 - <span id="current-year-span">2026</span> • ARMAMENTO BÉLICO ZINE
+        </span>
+        <span class="footer-dev-credit" data-i18n="footer_dev">
+          Desenvolvido com devoção e ódio por Andrey Ferraz. Sem bibliotecas, puro metal.
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Core Único -->
+  <script src="script.js"></script>
+</body>
+
+</html>
