@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+    th:replace="~{layout :: layout('Início | Armamento Bélico Zine', ~{::content})}">
+<header>
+    <title th:text="${title}"></title>
+</header>
+
+<div th:fragment="content">
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-wrapper">
+        <div class="section-headline">
+            <span class="tape-tag blood" data-i18n="events_tag">AGENDA DO SUBTERRÂNEO</span>
+            <h1 class="gothic-title" data-i18n="events_title">Eventos de Música Extrema</h1>
+            <p class="sub-title" data-i18n="events_subtitle">
+                Shows, festivais e rituais do underground nacional. Eventos futuros aparecem primeiro e passam a "Já
+                aconteceu" automaticamente no dia seguinte.
+            </p>
+            <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+        </div>
+
+        <!-- DIRETRIZES & REGRAS DE PUBLICAÇÃO -->
+        <section class="events-rules-box" aria-labelledby="events-rules-heading">
+            <div class="events-rules-header">
+                <span class="tape-tag blood">MODERAÇÃO &amp; DIRETRIZES</span>
+                <h2 id="events-rules-heading" class="pirata-title" data-i18n="events_rules_title">Regras Obrigatórias
+                    para Cadastro de Eventos</h2>
+            </div>
+            <ul class="events-rules-list">
+                <li>
+                    <strong>Apenas Música Extrema:</strong> Somente serão aceitos eventos ligados à música extrema
+                    (Death Metal, Black Metal, Grindcore, Doom, Thrash/Crossover underground e vertentes afins).
+                </li>
+                <li>
+                    <strong>Sem Bandas Cristãs:</strong> Não serão aceitos eventos de supostas bandas extremas que
+                    possuam letras voltadas para o cristianismo.
+                </li>
+                <li>
+                    <strong>Eventos Beneficentes:</strong> Não serão aceitos eventos beneficentes em prol de caridade
+                    cristã, <em>salvo exceção</em> se for um evento beneficente com cunho de ajudar irmãos da própria
+                    cena underground.
+                </li>
+                <li>
+                    <strong>Aprovação Manual:</strong> Todos os eventos cadastrados passam por análise e só estarão
+                    publicados no site após aprovação do editor.
+                </li>
+            </ul>
+        </section>
+
+        <!-- BARRA DE FILTRO POR ESTADO E BOTÃO DE CADASTRO -->
+        <section class="events-toolbar" aria-label="Filtros de eventos">
+            <search class="events-search-wrap">
+                <form id="events-filter-form" class="events-filter-form" action="eventos.html" method="GET">
+                    <div class="events-filter-group">
+                        <label for="event-state-filter" data-i18n="events_filter_state_label">Filtrar por Estado
+                            (UF):</label>
+                        <select id="event-state-filter" name="estado" class="form-control events-select">
+                            <option value="all" data-i18n="events_filter_all_states">Todos os Estados</option>
+                            <option value="AC">AC - Acre</option>
+                            <option value="AL">AL - Alagoas</option>
+                            <option value="AP">AP - Amapá</option>
+                            <option value="AM">AM - Amazonas</option>
+                            <option value="BA">BA - Bahia</option>
+                            <option value="CE">CE - Ceará</option>
+                            <option value="DF">DF - Distrito Federal</option>
+                            <option value="ES">ES - Espírito Santo</option>
+                            <option value="GO">GO - Goiás</option>
+                            <option value="MA">MA - Maranhão</option>
+                            <option value="MT">MT - Mato Grosso</option>
+                            <option value="MS">MS - Mato Grosso do Sul</option>
+                            <option value="MG">MG - Minas Gerais</option>
+                            <option value="PA">PA - Pará</option>
+                            <option value="PB">PB - Paraíba</option>
+                            <option value="PR">PR - Paraná</option>
+                            <option value="PE">PE - Pernambuco</option>
+                            <option value="PI">PI - Piauí</option>
+                            <option value="RJ">RJ - Rio de Janeiro</option>
+                            <option value="RN">RN - Rio Grande do Norte</option>
+                            <option value="RS">RS - Rio Grande do Sul</option>
+                            <option value="RO">RO - Rondônia</option>
+                            <option value="RR">RR - Roraima</option>
+                            <option value="SC">SC - Santa Catarina</option>
+                            <option value="SP">SP - São Paulo</option>
+                            <option value="SE">SE - Sergipe</option>
+                            <option value="TO">TO - Tocantins</option>
+                        </select>
+                    </div>
+
+                    <div class="events-filter-group">
+                        <label for="event-status-filter" data-i18n="events_filter_status_label">Status:</label>
+                        <select id="event-status-filter" name="status" class="form-control events-select">
+                            <option value="all">Todos (Futuros primeiro)</option>
+                            <option value="upcoming">Vai acontecer</option>
+                            <option value="past">Já aconteceu</option>
+                        </select>
+                    </div>
+                </form>
+            </search>
+
+            <div class="events-toolbar-actions">
+                <span class="events-count-indicator" id="events-count-indicator" aria-live="polite"></span>
+                <a href="#cadastrar-evento" class="btn-brutal btn-blood">
+                    ☠ <span data-i18n="events_cta_submit">Cadastrar Evento</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- LISTAGEM DE EVENTOS (FUTUROS PRIMEIRO, DEPOIS PASSADOS) -->
+        <section class="events-list-section" aria-label="Lista de eventos">
+            <div class="events-grid" id="events-grid">
+                <!-- Preenchido dinamicamente via script.js -->
+            </div>
+        </section>
+
+        <!-- SEÇÃO: FORMULÁRIO DE CADASTRO DE EVENTO -->
+        <section class="event-form-section" id="cadastrar-evento" aria-labelledby="event-form-heading">
+            <div class="section-headline">
+                <span class="tape-tag dark">ENVIO PARA APROVAÇÃO</span>
+                <h2 id="event-form-heading" class="pirata-title" data-i18n="events_form_title">Cadastrar Novo Evento
+                </h2>
+                <p class="sub-title" data-i18n="events_form_subtitle">
+                    Preencha todos os dados abaixo. Após o envio, o evento ficará aguardando aprovação manual antes de
+                    aparecer na agenda.
+                </p>
+            </div>
+
+            <div class="event-form-container">
+                <div id="event-submit-feedback" class="event-submit-feedback" role="status" aria-live="polite" hidden>
+                </div>
+
+                <form id="event-submit-form" action="#cadastrar-evento" method="POST" novalidate
+                    aria-labelledby="event-form-heading">
+                    <!-- Título do Evento -->
+                    <div class="field form-group">
+                        <label for="ev-title">Título do Evento <span class="req-mark"
+                                aria-hidden="true">*</span></label>
+                        <input type="text" id="ev-title" name="title" class="form-control" required minlength="3"
+                            maxlength="120" aria-describedby="ev-title-hint" data-error="ev-title-error"
+                            placeholder="Ex: Necro Ritual Fest VI - São Paulo">
+                        <span id="ev-title-hint" class="hint">Informe o nome oficial do show ou festival (mínimo 3
+                            caracteres).</span>
+                        <div id="ev-title-error" class="error-msg">
+                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o título do evento
+                            (mínimo 3 caracteres).
+                        </div>
+                    </div>
+
+                    <!-- Flyer do Evento -->
+                    <div class="field form-group">
+                        <label for="ev-flyer">Flyer do Evento (Imagem) <span class="req-mark"
+                                aria-hidden="true">*</span></label>
+                        <span id="ev-flyer-hint" class="hint">Envie o flyer oficial em JPG, PNG ou WEBP.</span>
+                        <input type="file" id="ev-flyer" name="flyer" class="form-control form-control-file"
+                            accept="image/*" required aria-describedby="ev-flyer-hint" data-error="ev-flyer-error">
+                        <div id="ev-flyer-error" class="error-msg">
+                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Selecione a imagem do flyer do
+                            evento.
+                        </div>
+                        <div id="ev-flyer-preview-wrap" class="flyer-preview-box" hidden>
+                            <img id="ev-flyer-preview" src="" alt="Pré-visualização do flyer selecionado">
+                            <span class="flyer-preview-caption">Pré-visualização do flyer</span>
+                        </div>
+                    </div>
+
+                    <!-- Cidade e Estado -->
+                    <div class="form-row-2col">
+                        <div class="field form-group">
+                            <label for="ev-city">Cidade <span class="req-mark" aria-hidden="true">*</span></label>
+                            <input type="text" id="ev-city" name="city" class="form-control" required
+                                autocomplete="address-level2" data-error="ev-city-error"
+                                placeholder="Ex: Belo Horizonte">
+                            <div id="ev-city-error" class="error-msg">
+                                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe a cidade onde o
+                                evento ocorrerá.
+                            </div>
+                        </div>
+
+                        <div class="field form-group">
+                            <label for="ev-state">Estado (UF) <span class="req-mark" aria-hidden="true">*</span></label>
+                            <select id="ev-state" name="state" class="form-control" required
+                                autocomplete="address-level1" data-error="ev-state-error">
+                                <option value="">Selecione o estado...</option>
+                                <option value="AC">AC - Acre</option>
+                                <option value="AL">AL - Alagoas</option>
+                                <option value="AP">AP - Amapá</option>
+                                <option value="AM">AM - Amazonas</option>
+                                <option value="BA">BA - Bahia</option>
+                                <option value="CE">CE - Ceará</option>
+                                <option value="DF">DF - Distrito Federal</option>
+                                <option value="ES">ES - Espírito Santo</option>
+                                <option value="GO">GO - Goiás</option>
+                                <option value="MA">MA - Maranhão</option>
+                                <option value="MT">MT - Mato Grosso</option>
+                                <option value="MS">MS - Mato Grosso do Sul</option>
+                                <option value="MG">MG - Minas Gerais</option>
+                                <option value="PA">PA - Pará</option>
+                                <option value="PB">PB - Paraíba</option>
+                                <option value="PR">PR - Paraná</option>
+                                <option value="PE">PE - Pernambuco</option>
+                                <option value="PI">PI - Piauí</option>
+                                <option value="RJ">RJ - Rio de Janeiro</option>
+                                <option value="RN">RN - Rio Grande do Norte</option>
+                                <option value="RS">RS - Rio Grande do Sul</option>
+                                <option value="RO">RO - Rondônia</option>
+                                <option value="RR">RR - Roraima</option>
+                                <option value="SC">SC - Santa Catarina</option>
+                                <option value="SP">SP - São Paulo</option>
+                                <option value="SE">SE - Sergipe</option>
+                                <option value="TO">TO - Tocantins</option>
+                            </select>
+                            <div id="ev-state-error" class="error-msg">
+                                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Selecione o estado (UF) do
+                                evento.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data e Horário -->
+                    <div class="form-row-2col">
+                        <div class="field form-group">
+                            <label for="ev-date">Data do Evento <span class="req-mark"
+                                    aria-hidden="true">*</span></label>
+                            <input type="date" id="ev-date" name="date" class="form-control" required
+                                data-error="ev-date-error">
+                            <div id="ev-date-error" class="error-msg">
+                                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe a data do evento.
+                            </div>
+                        </div>
+
+                        <div class="field form-group">
+                            <label for="ev-time">Horário <span class="req-mark" aria-hidden="true">*</span></label>
+                            <input type="time" id="ev-time" name="time" class="form-control" required
+                                data-error="ev-time-error">
+                            <div id="ev-time-error" class="error-msg">
+                                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o horário de início
+                                do evento.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contato do Organizador e WhatsApp de quem está publicando -->
+                    <div class="form-row-2col">
+                        <div class="field form-group">
+                            <label for="ev-organizer-contact">Contato do Organizador <span class="req-mark"
+                                    aria-hidden="true">*</span></label>
+                            <span id="ev-org-hint" class="hint">WhatsApp, e-mail ou @ do produtor/casa de show.</span>
+                            <input type="text" id="ev-organizer-contact" name="organizer_contact" class="form-control"
+                                required aria-describedby="ev-org-hint" data-error="ev-org-error"
+                                placeholder="Ex: (11) 99999-8888 / @produtora">
+                            <div id="ev-org-error" class="error-msg">
+                                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o contato do
+                                organizador do evento.
+                            </div>
+                        </div>
+
+                        <div class="field form-group">
+                            <label for="ev-publisher-whatsapp">WhatsApp de quem está publicando <span class="req-mark"
+                                    aria-hidden="true">*</span></label>
+                            <span id="ev-pub-hint" class="hint">Número com DDD para validação da publicação.</span>
+                            <input type="tel" id="ev-publisher-whatsapp" name="publisher_whatsapp" class="form-control"
+                                required autocomplete="tel" inputmode="tel" autocorrect="off" spellcheck="false"
+                                pattern="[\d\s\(\)\+\-]{10,20}" aria-describedby="ev-pub-hint" data-error="ev-pub-error"
+                                placeholder="Ex: (11) 98888-7777">
+                            <div id="ev-pub-error" class="error-msg">
+                                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe um número de
+                                WhatsApp válido com DDD (mínimo 10 dígitos).
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Papel de quem está publicando: Organizador ou Apenas ajudando -->
+                    <fieldset class="form-group event-fieldset">
+                        <legend>Você é o organizador ou está apenas ajudando? <span class="req-mark"
+                                aria-hidden="true">*</span></legend>
+                        <div class="radio-group-inline">
+                            <div class="radio-option">
+                                <input type="radio" id="role-organizer" name="publisher_role" value="organizer" required
+                                    data-error="ev-role-error">
+                                <label for="role-organizer">Sou o organizador do evento</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="role-helper" name="publisher_role" value="helper" required
+                                    data-error="ev-role-error">
+                                <label for="role-helper">Estou apenas ajudando na divulgação</label>
+                            </div>
+                        </div>
+                        <div id="ev-role-error" class="error-msg">
+                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Selecione se você é o
+                            organizador ou está apenas ajudando.
+                        </div>
+                    </fieldset>
+
+                    <!-- Confirmação das Regras -->
+                    <div class="field form-group checkbox-field">
+                        <div class="checkbox-inline">
+                            <input type="checkbox" id="ev-rules-agree" name="rules_agree" required
+                                data-error="ev-rules-error">
+                            <label for="ev-rules-agree">
+                                Confirmo que este é um evento exclusivamente de música extrema, não envolve bandas com
+                                letras cristãs nem caridade cristã (exceto apoio a irmãos da cena underground), e estou
+                                ciente de que será publicado somente após aprovação. <span class="req-mark"
+                                    aria-hidden="true">*</span>
+                            </label>
+                        </div>
+                        <div id="ev-rules-error" class="error-msg">
+                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Você precisa confirmar que o
+                            evento atende às diretrizes da cena underground.
+                        </div>
+                    </div>
+
+                    <div class="event-form-actions">
+                        <button type="submit" class="btn-brutal btn-blood" id="ev-submit-btn">
+                            ☠ Enviar Evento para Aprovação
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL / DIALOG PARA AMPLIAR FLYER -->
+    <dialog id="flyer-dialog" class="flyer-dialog" aria-labelledby="flyer-dialog-title">
+        <div class="flyer-dialog-inner">
+            <div class="flyer-dialog-header">
+                <h3 id="flyer-dialog-title" class="pirata-title">Flyer do Evento</h3>
+                <button type="button" class="cart-close-btn" id="flyer-dialog-close" aria-label="Fechar flyer"><i
+                        class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </div>
+            <div class="flyer-dialog-body">
+                <img id="flyer-dialog-img" src="" alt="">
+            </div>
+        </div>
+    </dialog>
+
+
+</div>
+
+</html>

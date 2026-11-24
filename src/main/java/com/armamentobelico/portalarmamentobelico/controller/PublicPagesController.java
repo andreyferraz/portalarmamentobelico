@@ -26,4 +26,14 @@ public class PublicPagesController {
         return "noticias";
     }
 
+    @GetMapping("/eventos")
+    public String eventos() {
+        return "eventos";   
+    }
+
+    @GetMapping("/indique")
+    public String indique() {
+        return "indique";
+    }
+
 }

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+    th:replace="~{layout :: layout('Edição | Armamento Bélico Zine', ~{::content})}">
+<header>
+    <title th:text="${title}"></title>
+</header>
+
+<div th:fragment="content">
+
+
+    <!-- CONTEÚDO PRINCIPAL — TEMPLATE DA PÁGINA DE EDIÇÃO (#58) -->
+    <main class="main-wrapper">
+
+        <!-- NAVEGAÇÃO CONTEXTUAL (BREADCRUMB) -->
+        <nav class="edition-breadcrumb" aria-label="Caminho de navegação">
+            <ol>
+                <li><a href="index.html" data-i18n="nav_home">Início</a></li>
+                <li><a href="arquivo.html" data-i18n="nav_archive">Edições e loja</a></li>
+                <li aria-current="page" id="edition-breadcrumb-current">Armamento Bélico #58</li>
+            </ol>
+        </nav>
+
+        <!-- BLOCO PRINCIPAL: GALERIA + INFORMAÇÕES E COMPRA -->
+        <section class="edition-hero-grid" aria-labelledby="edition-title">
+
+            <!-- COLUNA ESQUERDA: GALERIA DE IMAGENS (CAPA + ATÉ 5 FOTOS EXTRAS) -->
+            <div class="edition-gallery-col">
+                <div class="edition-main-photo-wrap">
+                    <span class="edition-stock-pill is-available" id="edition-stock-pill">
+                        <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                        <span id="edition-stock-pill-text">Disponível</span>
+                    </span>
+
+                    <button type="button" class="edition-main-photo-btn" id="edition-main-photo-btn"
+                        aria-label="Ampliar imagem da edição">
+                        <img src="assets/images/capa-edicao-58.png" alt="Capa da edição Armamento Bélico #58"
+                            id="edition-main-photo" class="edition-main-photo">
+                        <span class="edition-zoom-hint" aria-hidden="true">
+                            <i class="fa-solid fa-magnifying-glass-plus"></i>
+                            <span data-i18n="edition_zoom_hint">Ampliar</span>
+                        </span>
+                    </button>
+
+                    <div class="edition-photo-bar">
+                        <p class="edition-photo-caption" id="edition-photo-caption">
+                            Capa oficial — Armamento Bélico #58
+                        </p>
+                        <span class="edition-photo-counter" id="edition-photo-counter">1 / 6</span>
+                    </div>
+                </div>
+
+                <!-- Miniaturas abaixo da foto principal (Capa + até 5 fotos extras) -->
+                <div class="edition-thumbs-grid" id="edition-thumbs-grid" role="group"
+                    aria-label="Galeria de fotos da edição">
+                    <!-- Renderizado dinamicamente via script.js (template suporta capa + até 5 fotos extras) -->
+                </div>
+            </div>
+
+            <!-- COLUNA DIREITA: TÍTULO, METADADOS, PREÇO, CTAS, FRETE E COMPARTILHAMENTO -->
+            <div class="edition-info-col">
+                <div class="edition-heading-block">
+                    <div class="edition-tags-row">
+                        <span class="tape-tag blood" id="edition-number-tag">EDIÇÃO #58</span>
+                        <span class="tape-tag dark" id="edition-year-tag">ANO 18</span>
+                    </div>
+
+                    <h1 class="pirata-title edition-title" id="edition-title">Armamento Bélico #58</h1>
+                    <p class="edition-subtitle" id="edition-subtitle">
+                        Edição Nacional em Português • Especial Death &amp; Black Metal Subterrâneo
+                    </p>
+                </div>
+
+                <!-- Informações Complementares (Mês, Ano, Ano de Existência e Páginas) -->
+                <dl class="edition-meta-grid" aria-label="Informações complementares da edição">
+                    <div class="edition-meta-item">
+                        <dt data-i18n="edition_meta_month">Mês de Lançamento</dt>
+                        <dd id="edition-meta-month">Agosto</dd>
+                    </div>
+                    <div class="edition-meta-item">
+                        <dt data-i18n="edition_meta_year">Ano de Lançamento</dt>
+                        <dd id="edition-meta-year">2026</dd>
+                    </div>
+                    <div class="edition-meta-item">
+                        <dt data-i18n="edition_meta_existence">Ano da Revista</dt>
+                        <dd id="edition-meta-existence">Ano 18</dd>
+                    </div>
+                    <div class="edition-meta-item">
+                        <dt data-i18n="edition_meta_pages">Páginas</dt>
+                        <dd id="edition-meta-pages">68 páginas</dd>
+                    </div>
+                </dl>
+
+                <!-- Valor em Destaque + CTAs (Comprar e Assinar) + Resumo de Frete -->
+                <div class="edition-purchase-box">
+                    <div class="edition-price-header">
+                        <div>
+                            <span class="edition-price-label" data-i18n="edition_price_label">Valor da Edição
+                                Impressa</span>
+                            <div class="edition-price-value" id="edition-price-value">R$ 30,00</div>
+                        </div>
+                        <span class="edition-stock-inline is-available" id="edition-stock-inline">
+                            Disponível em estoque
+                        </span>
+                    </div>
+
+                    <!-- Aviso exibido automaticamente pelo template quando status === 'soldout' -->
+                    <div class="edition-soldout-alert" id="edition-soldout-alert" hidden role="status">
+                        <i class="fa-solid fa-skull" aria-hidden="true"></i>
+                        <span id="edition-soldout-alert-text">
+                            Esta edição física encontra-se esgotada em nossa tiragem original. O registro permanece no
+                            catálogo histórico do zine.
+                        </span>
+                    </div>
+
+                    <div class="edition-cta-group">
+                        <button type="button" class="btn-brutal btn-blood edition-btn-buy" id="edition-btn-buy">
+                            <span class="inverted-cross">✝</span>
+                            <span id="edition-btn-buy-label">Comprar Edição #58</span>
+                        </button>
+                        <a href="assinatura.html" class="btn-brutal btn-outline-decay edition-btn-subscribe"
+                            id="edition-btn-subscribe">
+                            <i class="fa-solid fa-scroll" aria-hidden="true"></i>
+                            <span data-i18n="edition_cta_subscribe">Assinar o Zine</span>
+                        </a>
+                    </div>
+
+                    <!-- Resumo rápido de envio / frete (regra do item 4) -->
+                    <div class="edition-shipping-box" id="edition-shipping-box">
+                        <div class="edition-shipping-row">
+                            <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
+                            <p id="edition-shipping-fee-text">
+                                <strong>Frete Correios:</strong> R$ 13,00 para 1 edição (+ R$ 2,00 por edição adicional
+                                no mesmo pedido).
+                            </p>
+                        </div>
+                        <div class="edition-shipping-row">
+                            <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
+                            <p id="edition-shipping-deadline-text">
+                                <strong>Postagem:</strong> Envio via Impresso Registrado em até 3 dias úteis após a
+                                confirmação do pagamento.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de Compartilhamento -->
+                <div class="edition-share-bar">
+                    <span class="edition-share-label" data-i18n="edition_share_label">Compartilhar edição:</span>
+                    <div class="edition-share-actions">
+                        <button type="button" class="edition-share-btn" id="edition-copy-link-btn">
+                            <i class="fa-solid fa-link" aria-hidden="true"></i>
+                            <span id="edition-copy-link-label" data-i18n="edition_copy_link">Copiar link</span>
+                        </button>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="edition-share-btn"
+                            id="edition-share-whatsapp" aria-label="Compartilhar no WhatsApp" title="WhatsApp">
+                            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                            <span>WhatsApp</span>
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="edition-share-btn"
+                            id="edition-share-facebook" aria-label="Compartilhar no Facebook" title="Facebook">
+                            <i class="fa-brands fa-facebook-f" aria-hidden="true"></i>
+                            <span>Facebook</span>
+                        </a>
+                        <a href="#" target="_blank" rel="noopener noreferrer" class="edition-share-btn"
+                            id="edition-share-x" aria-label="Compartilhar no X" title="X">
+                            <i class="fa-brands fa-x-twitter" aria-hidden="true"></i>
+                            <span>X</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- DESCRIÇÃO DA EDIÇÃO, LISTA DE ENTREVISTAS E ESPECIFICAÇÕES TÉCNICAS -->
+        <section class="edition-details-grid" aria-label="Conteúdo e especificações da edição">
+
+            <!-- Descrição & Entrevistas -->
+            <article class="edition-description-card zine-box">
+                <span class="tape-tag blood" data-i18n="edition_desc_tag">CONTEÚDO DA EDIÇÃO</span>
+                <h2 class="pirata-title edition-section-title" data-i18n="edition_desc_title">
+                    Descrição &amp; Entrevistas
+                </h2>
+
+                <p class="edition-description-lead" id="edition-description-text">
+                    68 páginas em offset rústico pesado, capa em papel cartão com verniz fosco. Entrevistas profundas
+                    sobre a essência do Death e Black Metal obscuro, dezenas de resenhas de demos, fitas K7, zines e CDs
+                    do underground mundial.
+                </p>
+
+                <div class="edition-interviews-block">
+                    <h3 class="edition-subsection-title">
+                        <i class="fa-solid fa-skull" aria-hidden="true"></i>
+                        <span data-i18n="edition_interviews_title">Hordas &amp; Artistas Entrevistados</span>
+                    </h3>
+                    <ul class="edition-interviews-list" id="edition-interviews-list">
+                        <!-- Renderizado dinamicamente via script.js -->
+                    </ul>
+                </div>
+
+                <div class="edition-extras-block">
+                    <h3 class="edition-subsection-title">
+                        <i class="fa-solid fa-book-skull" aria-hidden="true"></i>
+                        <span data-i18n="edition_extras_title">Demais Conteúdos Presentes</span>
+                    </h3>
+                    <ul class="edition-extras-list" id="edition-extras-list">
+                        <!-- Renderizado dinamicamente via script.js -->
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Especificações Técnicas -->
+            <aside class="edition-specs-card zine-box" aria-labelledby="edition-specs-heading">
+                <span class="tape-tag dark" data-i18n="edition_specs_tag">FICHA TÉCNICA</span>
+                <h2 class="pirata-title edition-section-title" id="edition-specs-heading"
+                    data-i18n="edition_specs_title">
+                    Especificações do Zine
+                </h2>
+
+                <dl class="edition-specs-list" id="edition-specs-list">
+                    <!-- Renderizado dinamicamente via script.js -->
+                </dl>
+
+                <div class="edition-specs-note" id="edition-specs-note">
+                    <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+                    <span data-i18n="edition_specs_note">
+                        Publicação 100% independente, impressa fisicamente em papel, enviada protegida contra dobras e
+                        umidade.
+                    </span>
+                </div>
+            </aside>
+
+        </section>
+
+        <!-- VÍDEO DO YOUTUBE INCORPORADO (RENDERIZADO PELO LINK DA EDIÇÃO) -->
+        <section class="edition-video-section zine-box" id="edition-video-section"
+            aria-labelledby="edition-video-heading">
+            <div class="edition-video-header">
+                <div>
+                    <span class="tape-tag blood" data-i18n="edition_video_tag">FOLHEANDO O ZINE • YOUTUBE</span>
+                    <h2 class="pirata-title edition-section-title" id="edition-video-heading"
+                        data-i18n="edition_video_title">
+                        Apresentação em Vídeo da Edição #58
+                    </h2>
+                    <p class="edition-video-subtitle" id="edition-video-subtitle">
+                        Confira por dentro as páginas impressas, artes, diagramação e detalhes físicos desta edição
+                        diretamente no canal oficial do Armamento Bélico.
+                    </p>
+                </div>
+                <a href="https://www.youtube.com/watch?v=5J1o1DHkekE" target="_blank" rel="noopener noreferrer"
+                    class="btn-brutal btn-outline-decay btn-sm" id="edition-video-external-link">
+                    <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                    <span data-i18n="edition_video_watch_yt">Abrir no YouTube</span>
+                </a>
+            </div>
+
+            <div class="edition-video-frame-wrap" id="edition-video-player-slot">
+                <!-- Renderizado dinamicamente via script.js a partir da URL do YouTube da edição -->
+            </div>
+        </section>
+
+        <!-- NAVEGAÇÃO CONTEXTUAL ENTRE EDIÇÕES (ANTERIOR / COLEÇÃO / PRÓXIMA) -->
+        <nav class="edition-context-nav" aria-label="Navegação entre edições">
+            <a href="arquivo.html" class="edition-nav-card edition-nav-prev" id="edition-nav-prev">
+                <span class="edition-nav-dir"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> <span
+                        data-i18n="edition_nav_prev">Edição Anterior</span></span>
+                <strong class="edition-nav-name" id="edition-nav-prev-title">Armamento Bélico #57</strong>
+                <span class="edition-nav-hint" id="edition-nav-prev-hint">Ver no catálogo geral</span>
+            </a>
+
+            <a href="arquivo.html" class="edition-nav-card edition-nav-all">
+                <span class="edition-nav-dir"><i class="fa-solid fa-book-open" aria-hidden="true"></i> <span
+                        data-i18n="edition_nav_catalog">Coleção Completa</span></span>
+                <strong class="edition-nav-name" data-i18n="nav_archive">Edições e loja</strong>
+            </a>
+
+            <span class="edition-nav-card edition-nav-next is-disabled" id="edition-nav-next" aria-disabled="true">
+                <span class="edition-nav-dir"><span data-i18n="edition_nav_next">Próxima Edição</span> <i
+                        class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                <strong class="edition-nav-name" id="edition-nav-next-title">Edição mais recente</strong>
+                <span class="edition-nav-hint" id="edition-nav-next-hint">Em breve nas prensas</span>
+            </span>
+        </nav>
+
+    </main>
+
+    <!-- LIGHTBOX DE AMPLIAÇÃO DA GALERIA (<dialog> nativo com closedby="any") -->
+    <dialog id="edition-lightbox-dialog" class="edition-lightbox-dialog" closedby="any"
+        aria-labelledby="edition-lightbox-title">
+        <div class="edition-lightbox-header">
+            <div>
+                <h2 class="pirata-title" id="edition-lightbox-title">Armamento Bélico #58</h2>
+                <span class="edition-lightbox-counter" id="edition-lightbox-counter">1 / 6</span>
+            </div>
+            <button type="button" class="cart-close-btn" id="edition-lightbox-close" autofocus
+                aria-label="Fechar ampliação">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="edition-lightbox-body">
+            <button type="button" class="edition-lightbox-arrow edition-lightbox-prev" id="edition-lightbox-prev"
+                aria-label="Foto anterior">
+                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+            </button>
+            <figure class="edition-lightbox-figure">
+                <img src="assets/images/capa-edicao-58.png" alt="Capa da edição Armamento Bélico #58"
+                    id="edition-lightbox-img">
+                <figcaption id="edition-lightbox-caption">Capa oficial — Armamento Bélico #58</figcaption>
+            </figure>
+            <button type="button" class="edition-lightbox-arrow edition-lightbox-next" id="edition-lightbox-next"
+                aria-label="Próxima foto">
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+            </button>
+        </div>
+    </dialog>
+
+</div>
+
+</html>

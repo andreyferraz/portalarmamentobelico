@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+    th:replace="~{layout :: layout('Início | Armamento Bélico Zine', ~{::content})}">
+<header>
+    <title th:text="${title}"></title>
+</header>
+
+<div th:fragment="content">
+
+    <main class="main-wrapper">
+        <div class="section-headline">
+            <span class="tape-tag blood" data-i18n="suggest_tag">CURADORIA SUBTERRÂNEA</span>
+            <h1 class="gothic-title" data-i18n="suggest_title">Indique uma Horda</h1>
+            <p class="sub-title" data-i18n="suggest_subtitle">
+                Conhece alguma banda de Metal Extremo com material físico lançado que merece ser entrevistada no
+                Armamento Bélico Zine? Envie sua indicação abaixo.
+            </p>
+            <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+        </div>
+
+        <!-- CRITÉRIOS PARA INDICAÇÃO -->
+        <section class="events-rules-box" aria-labelledby="suggest-rules-heading">
+            <div class="events-rules-header">
+                <span class="tape-tag blood" data-i18n="suggest_rules_tag">CRITÉRIOS DO ZINE</span>
+                <h2 id="suggest-rules-heading" class="pirata-title" data-i18n="suggest_rules_title">Orientações para
+                    Indicação de Bandas</h2>
+            </div>
+            <ul class="events-rules-list">
+                <li>
+                    <strong>Material Físico Lançado:</strong> Priorizamos hordas que possuam ao menos um registro físico
+                    (CD, K7, Vinil ou Split/Demo em mídia física).
+                </li>
+                <li>
+                    <strong>Sonoridade Extrema:</strong> Death Metal, Black Metal, Grindcore, Doom, Thrash/Crossover e
+                    vertentes underground sem vínculo comercial ou letras cristãs.
+                </li>
+                <li>
+                    <strong>Sem Duplicidade:</strong> O sistema verifica automaticamente se a banda já foi indicada
+                    anteriormente com o mesmo nome e país.
+                </li>
+            </ul>
+        </section>
+
+        <!-- FORMULÁRIO DE INDICAÇÃO -->
+        <section class="event-form-section" id="indicar-banda" aria-labelledby="band-form-heading">
+            <div class="section-headline">
+                <span class="tape-tag dark" data-i18n="suggest_form_tag">SUGESTÃO PARA ENTREVISTA</span>
+                <h2 id="band-form-heading" class="pirata-title" data-i18n="suggest_form_title">Formulário de Indicação
+                </h2>
+                <p class="sub-title" data-i18n="suggest_form_subtitle">
+                    Informe os dados da horda, o título do lançamento físico e um link para audição.
+                </p>
+            </div>
+
+            <div class="event-form-container">
+                <div id="band-submit-feedback" class="event-submit-feedback" role="status" aria-live="polite" hidden>
+                </div>
+
+                <form id="band-suggest-form" action="#indicar-banda" method="POST" novalidate
+                    aria-labelledby="band-form-heading">
+                    <!-- Nome da Banda -->
+                    <div class="field form-group">
+                        <label for="band-name"><span data-i18n="suggest_field_name">Nome da Banda</span> <span
+                                class="req-mark" aria-hidden="true">*</span></label>
+                        <span id="band-name-hint" class="hint">Informe o nome oficial da horda (mínimo 2
+                            caracteres).</span>
+                        <input type="text" id="band-name" name="band_name" class="form-control" required minlength="2"
+                            maxlength="120" autocorrect="off" autocapitalize="none" spellcheck="false"
+                            enterkeyhint="next" aria-describedby="band-name-hint" data-error="band-name-error"
+                            placeholder="Ex: Diabolizer">
+                        <div id="band-name-error" class="error-msg">
+                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o nome da banda (mínimo
+                            2 caracteres).
+                        </div>
+                    </div>
+
+                    <!-- País e Estado/Região (Opcional) -->
+                    <div class="form-row-2col">
+                        <div class="field form-group">
+                            <label for="band-country"><span data-i18n="suggest_field_country">País</span> <span
+                                    class="req-mark" aria-hidden="true">*</span></label>
+                            <span id="band-country-hint" class="hint">País de origem da banda (usado na verificação de
+                                duplicidade).</span>
+                            <input type="text" id="band-country" name="country" list="band-countries-list"
+                                class="form-control" required minlength="2" maxlength="80" autocomplete="country-name"
+                                enterkeyhint="next" aria-describedby="band-country-hint" data-error="band-country-error"
+                                placeholder="Ex: Brasil">
+                            <datalist id="band-countries-list">
+                                <option value="Brasil"></option>
+                                <option value="Alemanha"></option>
+                                <option value="Argentina"></option>
+                                <option value="Austrália"></option>
+                                <option value="Canadá"></option>
+                                <option value="Chile"></option>
+                                <option value="Colômbia"></option>
+                                <option value="Estados Unidos"></option>
+                                <option value="Finlândia"></option>
+                                <option value="França"></option>
+                                <option value="Grécia"></option>
+                                <option value="Itália"></option>
+                                <option value="Japão"></option>
+                                <option value="México"></option>
+                                <option value="Noruega"></option>
+                                <option value="Polônia"></option>
+                                <option value="Portugal"></option>
+                                <option value="Reino Unido"></option>
+                                <option value="Suécia"></option>
+                                <option value="Turquia"></option>
+                            </datalist>
+                            <div id="band-country-error" class="error-msg">
+                                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o país de origem da
+                                banda.
+                            </div>
+                        </div>
+
+                        <div class="field form-group">
+                            <label for="band-region"><span data-i18n="suggest_field_region">Estado / Região
+                                    (opcional)</span></label>
+                            <span id="band-region-hint" class="hint">UF, estado ou província, se aplicável.</span>
+                            <input type="text" id="band-region" name="region" class="form-control" maxlength="80"
+                                autocomplete="address-level1" enterkeyhint="next" aria-describedby="band-region-hint"
+                                placeholder="Ex: SP, Minas Gerais, Baviera">
+                        </div>
+                    </div>
+
+                    <!-- Título do Material Físico Lançado -->
+                    <div class="field form-group">
+                        <label for="band-release"><span data-i18n="suggest_field_release">Título do Material Físico
+                                Lançado</span> <span class="req-mark" aria-hidden="true">*</span></label>
+                        <span id="band-release-hint" class="hint">Nome do álbum, EP, demo ou split lançado em formato
+                            físico (CD, K7, Vinil).</span>
+                        <input type="text" id="band-release" name="release_title" class="form-control" required
+                            minlength="2" maxlength="140" enterkeyhint="next" aria-describedby="band-release-hint"
+                            data-error="band-release-error" placeholder="Ex: Khalkedonian Death (CD / K7)">
+                        <div id="band-release-error" class="error-msg">
+                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o título do material
+                            físico lançado pela banda.
+                        </div>
+                    </div>
+
+                    <!-- Link para Ouvir a Banda na Internet -->
+                    <div class="field form-group">
+                        <label for="band-url"><span data-i18n="suggest_field_url">Link para Ouvir a Banda na
+                                Internet</span> <span class="req-mark" aria-hidden="true">*</span></label>
+                        <span id="band-url-hint" class="hint">Informe a URL completa (iniciando com https:// ou http://)
+                            — Bandcamp, YouTube, Spotify, etc.</span>
+                        <input type="url" id="band-url" name="listen_url" class="form-control" required inputmode="url"
+                            autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="done"
+                            aria-describedby="band-url-hint" data-error="band-url-error"
+                            placeholder="https://banda.bandcamp.com">
+                        <div id="band-url-error" class="error-msg">
+                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe uma URL válida iniciando
+                            com https:// ou http://.
+                        </div>
+                    </div>
+
+                    <div class="event-form-actions">
+                        <button type="submit" class="btn-brutal btn-blood" id="band-submit-btn">
+                            <span class="inverted-cross" aria-hidden="true">✝</span> <span
+                                data-i18n="suggest_submit_btn">Enviar Indicação</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- HORDAS JÁ INDICADAS / NO RADAR -->
+        <section class="indicated-bands-section" aria-labelledby="indicated-bands-heading">
+            <div class="section-headline">
+                <span class="tape-tag dark" data-i18n="suggest_list_tag">REGISTRO DE INDICAÇÕES</span>
+                <h2 id="indicated-bands-heading" class="pirata-title" data-i18n="suggest_list_title">Hordas Já Indicadas
+                </h2>
+                <p class="sub-title" id="indicated-bands-count" aria-live="polite"></p>
+            </div>
+            <div class="indicated-bands-grid" id="indicated-bands-grid">
+                <!-- Preenchido dinamicamente via script.js -->
+            </div>
+        </section>
+    </main>
+
+</div>
+
+</html>
