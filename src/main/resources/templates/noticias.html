@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+    th:replace="~{layout :: layout('Notícias | Armamento Bélico Zine', ~{::content})}">
+<header>
+    <title th:text="${title}"></title>
+</header>
+
+<div th:fragment="content">
+
+     <main class="main-wrapper">
+    <div class="section-headline">
+      <span class="tape-tag blood">DESPACHOS DAS TREVAS</span>
+      <h1 class="gothic-title" data-i18n="news_section_title">Últimas Manifestações do Underground</h1>
+      <p class="sub-title" data-i18n="news_section_sub">
+        Resenhas, comunicados de gravadoras e anúncios exclusivos
+      </p>
+      <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+    </div>
+
+    <!-- LISTA DE NOTÍCIAS / FEED -->
+    <div class="news-feed-list">
+
+      <!-- Notícia 1: Diabolizer -->
+      <article class="news-feed-item">
+        <div class="news-feed-thumb">
+          <img src="assets/images/capa-edicao-58.png" alt="Diabolizer Entrevista" class="xerox-img">
+        </div>
+        <div class="news-feed-content">
+          <span class="news-date">24 de Agosto, 2026 • Entrevista de Capa</span>
+          <a href="noticia-interna.html?id=1">
+            <h2 class="pirata-title">Diabolizer: A Fúria do Death Metal Turco Assola as Páginas da Edição #58</h2>
+          </a>
+          <p class="news-excerpt">
+            Conversamos profundamente com os integrantes da horda turca Diabolizer sobre a concepção de seu novo manifesto brutal, as raízes do Death Metal dos anos 90 e a cena extrema na Eurásia.
+          </p>
+          <div class="news-tags">
+            <span class="tape-tag dark">Death Metal</span>
+            <span class="tape-tag blood">Edição #58</span>
+            <span class="tape-tag dark">Turquia</span>
+          </div>
+          <div style="margin-top: 15px;">
+            <a href="noticia-interna.html?id=1" class="news-readmore" data-i18n="news_read_more">Ler Matéria Completa ☠</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Notícia 2: Coldwinter -->
+      <article class="news-feed-item">
+        <div class="news-feed-thumb">
+          <img src="assets/images/capa-edicao-57.jpg" alt="Coldwinter Tape" class="xerox-img">
+        </div>
+        <div class="news-feed-content">
+          <span class="news-date">10 de Julho, 2026 • Lançamento em Fita K7</span>
+          <a href="noticia-interna.html?id=2">
+            <h2 class="pirata-title">Coldwinter: Novo Álbum em Cassete Profissional e Distribuição Internacional</h2>
+          </a>
+          <p class="news-excerpt">
+            A horda brasileira Coldwinter anuncia seu mais recente trabalho em fita K7 com tiragem estritamente limitada, capa serigrafada e encarte especial. Detalhes completos da produção independente.
+          </p>
+          <div class="news-tags">
+            <span class="tape-tag dark">Black Metal</span>
+            <span class="tape-tag dark">Fita K7</span>
+            <span class="tape-tag blood">Brasil</span>
+          </div>
+          <div style="margin-top: 15px;">
+            <a href="noticia-interna.html?id=2" class="news-readmore" data-i18n="news_read_more">Ler Matéria Completa ☠</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Notícia 3: Patriarkh -->
+      <article class="news-feed-item">
+        <div class="news-feed-thumb">
+          <img src="assets/images/capa-edicao-55.jpg" alt="Patriarkh Entrevista" class="xerox-img">
+        </div>
+        <div class="news-feed-content">
+          <span class="news-date">18 de Maio, 2026 • Documento Histórico</span>
+          <a href="noticia-interna.html?id=3">
+            <h2 class="pirata-title">Patriarkh (ex-Batushka): Rituais Litúrgicos e a Ruptura Ortodoxa na Polônia</h2>
+          </a>
+          <p class="news-excerpt">
+            O compositor Bartłomiej Krysiuk abre o jogo sobre o renascimento da entidade litúrgica sob a alcunha Patriarkh, turnês na América do Sul e a sonoridade opressiva de seus novos cânticos sacrílegos.
+          </p>
+          <div class="news-tags">
+            <span class="tape-tag dark">Black Metal</span>
+            <span class="tape-tag dark">Polônia</span>
+            <span class="tape-tag dark">Edição #55</span>
+          </div>
+          <div style="margin-top: 15px;">
+            <a href="noticia-interna.html?id=3" class="news-readmore" data-i18n="news_read_more">Ler Matéria Completa ☠</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Notícia 4: Lord Belial -->
+      <article class="news-feed-item">
+        <div class="news-feed-thumb">
+          <img src="assets/images/capa-edicao-56.jpg" alt="Lord Belial Zine" class="xerox-img">
+        </div>
+        <div class="news-feed-content">
+          <span class="news-date">02 de Março, 2026 • Resenha Exclusiva</span>
+          <a href="noticia-interna.html?id=4">
+            <h2 class="pirata-title">Lord Belial: A Eternidade do Black Metal Sueco em Entrevista Devastadora</h2>
+          </a>
+          <p class="news-excerpt">
+            Micke Backelin rememora os dias de glória do som de Gotemburgo nos anos 90, os segredos de 'Enter the Moonlight Gate' e a determinação implacável de continuar devastando palcos pelo planeta.
+          </p>
+          <div class="news-tags">
+            <span class="tape-tag dark">Black/Death</span>
+            <span class="tape-tag dark">Suécia</span>
+            <span class="tape-tag blood">Edição #56</span>
+          </div>
+          <div style="margin-top: 15px;">
+            <a href="noticia-interna.html?id=4" class="news-readmore" data-i18n="news_read_more">Ler Matéria Completa ☠</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+</div>
+</html>

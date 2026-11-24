@@ -16,4 +16,9 @@ public class PublicPagesController {
         return "historia";
     }
 
+    @GetMapping("/arquivo")
+    public String arquivo() {
+        return "arquivo";
+    }
+
 }

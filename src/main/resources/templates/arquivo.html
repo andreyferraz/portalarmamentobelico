@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+    th:replace="~{layout :: layout('Edições e Loja | Armamento Bélico Zine', ~{::content})}">
+<header>
+    <title th:text="${title}"></title>
+</header>
+
+<div th:fragment="content">
+
+    <main class="main-wrapper">
+        <div class="section-headline">
+            <span class="tape-tag dark">CATÁLOGO HISTÓRICO GERAL</span>
+            <h1 class="gothic-title" data-i18n="archive_title">Arquivo do Necrotério - Todas as Edições</h1>
+            <p class="sub-title" data-i18n="archive_sub">
+                O registro histórico de 18 anos de publicações impressas
+            </p>
+            <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+        </div>
+
+        <!-- FILTROS DE ESTOQUE -->
+        <div class="archive-filters">
+            <button class="filter-btn active" data-filter="all" data-i18n="archive_filter_all">Todas as Edições</button>
+            <button class="filter-btn" data-filter="instock" data-i18n="archive_filter_stock">Apenas em Estoque</button>
+            <button class="filter-btn" data-filter="soldout" data-i18n="archive_filter_sold">Esgotados</button>
+        </div>
+
+        <!-- GRID GERAL DE TODAS AS EDIÇÕES -->
+        <div class="products-grid" id="products-grid-container">
+            <!-- Preenchido pelo script.js com todas as edições no idioma ativo -->
+        </div>
+
+        <!-- NOTA HISTÓRICA SOBRE EDIÇÕES ESGOTADAS -->
+        <div class="zine-box" style="margin-top: 50px; text-align: center;">
+            <h3 class="pirata-title" style="font-size: 1.6rem; color: #fff; margin-bottom: 8px;">
+                Procurando edições clássicas (#01 a #53)?
+            </h3>
+            <p style="font-size: 0.9rem; color: var(--color-paper-dim); max-width: 700px; margin: 0 auto 15px;">
+                Toda a primeira fase xerocada do Armamento Bélico encontra-se atualmente esgotada em suas tiragens
+                originais. Estamos preparando um tomo comemorativo impresso compilando os anos pioneiros (2008 - 2015).
+                Acompanhe nossos informativos para reservas.
+            </p>
+            <a href="https://wa.me/5527981076157?text=Ola!%20Tenho%20interesse%20nas%20edicoes%20raras%20do%20Arquivo%20do%20Armamento%20Belico."
+                target="_blank" rel="noopener" class="btn-brutal btn-outline-decay btn-sm">
+                Consultar Acervo Raro via WhatsApp
+            </a>
+        </div>
+
+    </main>
+
+</div>
+
+</html>
