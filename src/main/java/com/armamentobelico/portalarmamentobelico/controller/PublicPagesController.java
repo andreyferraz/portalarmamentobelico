@@ -11,4 +11,9 @@ public class PublicPagesController {
         return "index";
     }
 
+    @GetMapping("/historia")
+    public String historia() {
+        return "historia";
+    }
+
 }

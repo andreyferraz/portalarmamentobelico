@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+    th:replace="~{layout :: layout('História | Armamento Bélico Zine', ~{::content})}">
+<header>
+    <title th:text="${title}"></title>
+</header>
+
+<div th:fragment="content">
+
+      <main class="main-wrapper">
+    <div class="section-headline">
+      <span class="tape-tag blood">CRÔNICA DE SANGUE E TINTA</span>
+      <h1 class="gothic-title" data-i18n="history_title">A Trajetória do Armamento Bélico</h1>
+      <p class="sub-title" data-i18n="history_sub">
+        18 Anos de Resistência, Tinta e Morte no Underground
+      </p>
+      <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+    </div>
+
+    <div class="history-layout">
+      <!-- Coluna Principal com a Narrativa Histórica -->
+      <article class="history-text zine-box">
+        
+        <!-- Conteúdo em Português -->
+        <div class="lang-content-pt">
+          <h2 class="pirata-title" style="font-size: 2.2rem; margin-bottom: 15px; color: #fff;">
+            O Nascimento nas Catacumbas de 2008
+          </h2>
+          <p>
+            No crepúsculo de 2008, enquanto a internet começava a pasteurizar a imprensa musical e transformar a paixão pelo metal em cliques efêmeros e descartáveis, o <strong>Armamento Bélico</strong> ergueu-se nas sombras como uma trincheira de resistência física. Movido pela ferocidade do Death Metal mais sujo, do Black Metal ríspido e do Grindcore sem filtros, o zine nasceu na mais pura tradição <em>cut and paste</em> (corta e cola com tesoura e cola bastão), sob a luz de lâmpadas fracas e o zumbido de fotocopiadoras clandestinas.
+          </p>
+
+          <blockquote>
+            "O verdadeiro underground não sobrevive em feeds algorítmicos. Ele precisa do cheiro de toner quente, da textura do papel encardido nas mãos e da dedicação fanática daqueles que preferem sangrar a se vender ao mercado corporativo."
+          </blockquote>
+
+          <h3 class="pirata-title" style="font-size: 1.8rem; margin: 25px 0 10px; color: #fff;">
+            A Filosofia da Fotocópia e a Conexão Postal
+          </h3>
+          <p>
+            As primeiras edições tinham tiragens de apenas 100 cópias xerocadas, grampeadas manualmente uma a uma e enviadas pelo correio em envelopes pardos com selos carimbados para todas as regiões do Brasil e para redutos ocultos na América do Sul, Europa e Japão. A regra sempre foi clara: entrevistar apenas quem tem algo brutal e verdadeiro a declarar, ignorando tendências passageiras, bandas 'plastic-metal' e jabás de grandes conglomerados.
+          </p>
+          <p>
+            Ao longo de quase duas décadas e mais de 58 edições ininterruptas, o Armamento Bélico documentou desde o ressurgimento de lendas como Lord Belial, Pentagram Chile, Vulcano e Sarcófago, até as manifestações mais pestilentas de novos cultos da Turquia, Noruega, Polônia, Chile e dos confins do Brasil profundo.
+          </p>
+
+          <h3 class="pirata-title" style="font-size: 1.8rem; margin: 25px 0 10px; color: #fff;">
+            A Transição para o Offset sem Perder a Ferocidade
+          </h3>
+          <p>
+            Com o passar dos anos e o esgotamento constante de todas as tiragens, o fanzine evoluiu seu processo para a impressão gráfica em papel offset de alta densidade e capas resistentes, mas mantendo rigorosamente a diagramação clássica: texto denso e datilografado, colagens macabras, gravuras medievais de Albrecht Dürer e Gustave Doré, e a ausência absoluta de anúncios comerciais desnecessários.
+          </p>
+          <p>
+            Hoje, em 2026, com 18 anos de existência ininterrupta, o Armamento Bélico reafirma seu compromisso sagrado: continuar sendo o fanzine impresso mais implacável do underground, apoiando o formato físico (Fitas K7, Vinis, CDs e Zines) até o fim dos tempos.
+          </p>
+        </div>
+
+        <!-- Conteúdo em Inglês (Alternado com i18n) -->
+        <div class="lang-content-en" style="display: none;">
+          <h2 class="pirata-title" style="font-size: 2.2rem; margin-bottom: 15px; color: #fff;">
+            Born in the Catacombs of 2008
+          </h2>
+          <p>
+            In the dusk of 2008, while the digital internet began pasteurizing music journalism into disposable algorithmic clicks, <strong>Armamento Bélico</strong> rose from the shadows as a trench of physical resistance. Driven by the raw ferocity of filthy Death Metal, relentless Black Metal and unhinged Grindcore, the zine was born in the sacred tradition of <em>cut & paste</em>, under flickering dim lights and the hum of underground photocopy machines.
+          </p>
+
+          <blockquote>
+            "True underground does not dwell on corporate feeds. It demands the stench of hot toner, the heavy feel of rough paper in headbangers' hands, and the fanatical devotion of those who would rather bleed than compromise."
+          </blockquote>
+
+          <h3 class="pirata-title" style="font-size: 1.8rem; margin: 25px 0 10px; color: #fff;">
+            Xerox Ethics and Postal Network
+          </h3>
+          <p>
+            Early print runs consisted of just 100 xeroxed copies, manually stapled one by one and mailed in brown paper envelopes with real stamps to maniacs across South America, Europe, North America and Japan. The ethos has never changed: feature only the most uncompromising and devoted acts, rejecting commercial trends, plastic modern metal and corporate bribery.
+          </p>
+          <p>
+            Through nearly two decades and more than 58 uninterrupted issues, Armamento Bélico has chronicled both classic pioneers (such as Lord Belial, Pentagram Chile, Sarcófago, Vulcano) and the most pestilent new hordes emerging worldwide.
+          </p>
+
+          <h3 class="pirata-title" style="font-size: 1.8rem; margin: 25px 0 10px; color: #fff;">
+            Offset Evolution, Unaltered Brutality
+          </h3>
+          <p>
+            While expanding its printing capabilities into heavyweight offset paper and matte covers, the zine strictly preserves its timeless aesthetic: dense typewriter typography, grim dark medieval engravings, photocopied band photos, and zero corporate advertising.
+          </p>
+          <p>
+            Today, celebrating 18 relentless years, Armamento Bélico stands firm in its eternal oath: keeping the physical flame of extreme metal alive until the bitter end.
+          </p>
+        </div>
+
+      </article>
+
+      <!-- Coluna Lateral de Artefatos / Relíquias do Zine -->
+      <aside class="history-side-artifacts">
+        <div class="artifact-box">
+          <img src="assets/images/capa-edicao-58.png" alt="Armamento Bélico #58" class="xerox-img">
+          <figcaption>Edição #58 (2026) • A fúria do Metal da Morte turco e norueguês</figcaption>
+        </div>
+
+        <div class="artifact-box">
+          <img src="assets/images/capa-edicao-56.jpg" alt="Armamento Bélico #56" class="xerox-img">
+          <figcaption>Edição #56 (2026) • Lord Belial e Pentagram Chile na capa</figcaption>
+        </div>
+
+        <div class="artifact-box" style="background: #180505; border: 1px dashed var(--color-blood);">
+          <span style="font-size: 2.2rem; display:block; margin-bottom: 5px;">📜</span>
+          <h4 class="pirata-title" style="color: #fff; font-size: 1.3rem;">Manifesto Físico</h4>
+          <p style="font-size: 0.8rem; color: var(--color-paper-dim); margin-top: 5px;">
+            "Somente o papel resiste à fragilidade digital. Colecione zines, apoie fitas K7, mantenha o underground impenetrável."
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- CRONOLOGIA DAS LOGOS DO ZINE -->
+    <section class="history-logos-section" aria-labelledby="history-logos-heading">
+      <div class="section-headline">
+        <span class="tape-tag blood" data-i18n="history_logos_tag">IDENTIDADE PROFANA</span>
+        <h2 id="history-logos-heading" class="pirata-title" data-i18n="history_logos_title">
+          Evolução das Logos do Armamento Bélico
+        </h2>
+        <p class="sub-title" data-i18n="history_logos_sub">
+          Todas as insígnias utilizadas pelo fanzine, suas respectivas edições lançadas e o período de uso de cada fase
+        </p>
+        <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+      </div>
+
+      <div class="logos-timeline-grid">
+        <!-- Fase 1: 2008 - 2012 -->
+        <article class="logo-era-card">
+          <div class="logo-era-header">
+            <span class="tape-tag dark">2008 – 2012</span>
+            <span class="logo-era-editions-badge">Edições #01 a #15</span>
+          </div>
+          <div class="logo-era-media">
+            <img src="assets/images/logo-armamento-belico.png" alt="Logo Armamento Bélico Fase 1 (2008-2012)" class="xerox-img logo-era-img-v1" loading="lazy">
+          </div>
+          <div class="logo-era-body">
+            <div class="lang-content-pt">
+              <h3 class="pirata-title">1ª Logo • Era Xerox &amp; Cut-and-Paste</h3>
+              <p class="logo-era-meta"><strong>Período de uso:</strong> 2008 a 2012</p>
+              <p class="logo-era-meta"><strong>Edições lançadas:</strong> #01, #02, #03, #04, #05, #06, #07, #08, #09, #10, #11, #12, #13, #14 e #15</p>
+              <p class="logo-era-desc">
+                Inaugurada nos primeiros exemplares xerocados e grampeados à mão. Traço bruto, irregular e diretamente inspirado nos zines sul-americanos do final dos anos 80 e 90.
+              </p>
+            </div>
+            <div class="lang-content-en" style="display: none;">
+              <h3 class="pirata-title">1st Logo • Xerox &amp; Cut-and-Paste Era</h3>
+              <p class="logo-era-meta"><strong>Active period:</strong> 2008 to 2012</p>
+              <p class="logo-era-meta"><strong>Issues released:</strong> #01 through #15</p>
+              <p class="logo-era-desc">
+                Introduced in the very first hand-stapled xeroxed print runs. Raw, jagged lettering directly rooted in late 80s and 90s South American underground zines.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Fase 2: 2013 - 2017 -->
+        <article class="logo-era-card">
+          <div class="logo-era-header">
+            <span class="tape-tag dark">2013 – 2017</span>
+            <span class="logo-era-editions-badge">Edições #16 a #32</span>
+          </div>
+          <div class="logo-era-media">
+            <img src="assets/images/logo-armamento-belico.png" alt="Logo Armamento Bélico Fase 2 (2013-2017)" class="xerox-img logo-era-img-v2" loading="lazy">
+          </div>
+          <div class="logo-era-body">
+            <div class="lang-content-pt">
+              <h3 class="pirata-title">2ª Logo • Era da Expansão Postal</h3>
+              <p class="logo-era-meta"><strong>Período de uso:</strong> 2013 a 2017</p>
+              <p class="logo-era-meta"><strong>Edições lançadas:</strong> #16 a #32</p>
+              <p class="logo-era-desc">
+                Marcou a consolidação do zine com distribuição regular para Europa e América Latina, trazendo linhas mais afiadas e simetria gótica nas capas.
+              </p>
+            </div>
+            <div class="lang-content-en" style="display: none;">
+              <h3 class="pirata-title">2nd Logo • Postal Expansion Era</h3>
+              <p class="logo-era-meta"><strong>Active period:</strong> 2013 to 2017</p>
+              <p class="logo-era-meta"><strong>Issues released:</strong> #16 through #32</p>
+              <p class="logo-era-desc">
+                Marked the zine's consolidation with regular mailorder reach across Europe and Latin America, featuring sharper gothic symmetry on the covers.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Fase 3: 2018 - 2023 -->
+        <article class="logo-era-card">
+          <div class="logo-era-header">
+            <span class="tape-tag dark">2018 – 2023</span>
+            <span class="logo-era-editions-badge">Edições #33 a #49</span>
+          </div>
+          <div class="logo-era-media">
+            <img src="assets/images/logo-armamento-belico.png" alt="Logo Armamento Bélico Fase 3 (2018-2023)" class="xerox-img logo-era-img-v3" loading="lazy">
+          </div>
+          <div class="logo-era-body">
+            <div class="lang-content-pt">
+              <h3 class="pirata-title">3ª Logo • Transição Offset Profana</h3>
+              <p class="logo-era-meta"><strong>Período de uso:</strong> 2018 a 2023</p>
+              <p class="logo-era-meta"><strong>Edições lançadas:</strong> #33 a #49</p>
+              <p class="logo-era-desc">
+                Acompanhando a transição definitiva para impressão offset profissional em papel encorpado, mantendo a agressividade visual e o contraste extremo.
+              </p>
+            </div>
+            <div class="lang-content-en" style="display: none;">
+              <h3 class="pirata-title">3rd Logo • Profane Offset Transition</h3>
+              <p class="logo-era-meta"><strong>Active period:</strong> 2018 to 2023</p>
+              <p class="logo-era-meta"><strong>Issues released:</strong> #33 through #49</p>
+              <p class="logo-era-desc">
+                Accompanied the definitive shift to professional heavyweight offset printing while preserving extreme contrast and visual aggression.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Fase 4: 2024 - Presente -->
+        <article class="logo-era-card is-current">
+          <div class="logo-era-header">
+            <span class="tape-tag blood">2024 – Presente</span>
+            <span class="logo-era-editions-badge">Edições #50 a #58+</span>
+          </div>
+          <div class="logo-era-media">
+            <img src="assets/images/logo-armamento-belico.png" alt="Logo Armamento Bélico Atual (2024-Presente)" loading="lazy">
+          </div>
+          <div class="logo-era-body">
+            <div class="lang-content-pt">
+              <h3 class="pirata-title">4ª Logo (Atual) • Culto Definitivo</h3>
+              <p class="logo-era-meta"><strong>Período de uso:</strong> 2024 até o presente</p>
+              <p class="logo-era-meta"><strong>Edições lançadas:</strong> #50 (Especial Jubileu), #51, #52, #53, #54, #55, #56, #57 e #58</p>
+              <p class="logo-era-desc">
+                Estreada na edição comemorativa #50 e utilizada nas tiragens atuais em português e inglês. Representa a maturidade implacável do Armamento Bélico.
+              </p>
+            </div>
+            <div class="lang-content-en" style="display: none;">
+              <h3 class="pirata-title">4th Logo (Current) • Definitive Cult</h3>
+              <p class="logo-era-meta"><strong>Active period:</strong> 2024 to present</p>
+              <p class="logo-era-meta"><strong>Issues released:</strong> #50 (Jubilee Special) through #58+</p>
+              <p class="logo-era-desc">
+                Debuted on the commemorative issue #50 and featured on all current Portuguese and English print editions.
+              </p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+</div>
+
+</html>

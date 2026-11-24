@@ -38,7 +38,7 @@
       <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
         <ul class="nav-list" id="nav-list" popover="auto">
           <li><a th:href="@{/}" class="nav-link active" aria-current="page" data-i18n="nav_home">Início</a></li>
-          <li><a href="historia.html" class="nav-link" data-i18n="nav_history">História</a></li>
+          <li><a th:href="@{/historia}" class="nav-link" data-i18n="nav_history">História</a></li>
           <li><a href="arquivo.html" class="nav-link" data-i18n="nav_archive">Edições e loja</a></li>
           <li><a href="noticias.html" class="nav-link" data-i18n="nav_news">Notícias</a></li>
           <li><a href="eventos.html" class="nav-link" data-i18n="nav_events">Eventos</a></li>
@@ -116,8 +116,8 @@
         <div>
           <h4 class="footer-col-title pirata-title">Navegação</h4>
           <ul class="footer-links-list">
-            <li><a href="index.html" data-i18n="nav_home">Início</a></li>
-            <li><a href="historia.html" data-i18n="nav_history">História</a></li>
+            <li><a th:href="@{/}" data-i18n="nav_home">Início</a></li>
+            <li><a th:href="@{/historia}" data-i18n="nav_history">História</a></li>
             <li><a href="arquivo.html" data-i18n="nav_archive">Edições e loja</a></li>
             <li><a href="noticias.html" data-i18n="nav_news">Notícias</a></li>
             <li><a href="eventos.html" data-i18n="nav_events">Eventos</a></li>
