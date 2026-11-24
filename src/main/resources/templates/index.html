@@ -11,7 +11,7 @@
     <section class="hero-cult-banner">
         <div class="hero-cult-container">
             <div class="hero-content">
-                <span class="tape-tag blood">MANIFESTO IMPRESSO • ANO 18</span>
+                <span class="tape-tag blood">MANIFESTO IMPRESSO • <span id="anos-de-atividade"></span></span>
                 <h1 class="gothic-title" data-i18n="hero_title">Armamento Bélico Zine</h1>
                 <p class="hero-manifesto" data-i18n="hero_manifesto">
                     O fanzine físico e impresso mais ativo do underground brasileiro. Desde 2008 registrando o sangue, o
@@ -232,6 +232,23 @@
         </section>
 
     </main>
-</div>
 
+    <script>
+        function updateYearsOfActivity() {
+            const foundingYear = 2008;
+            const foundingMonth = 5; // Junho (meses em JS são indexados a partir de 0: 0 = Jan, 5 = Jun)
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth();
+
+            // Contabiliza anos completos desde junho de 2008 (muda apenas ao chegar em junho)
+            const yearsOfActivity = currentYear - foundingYear - (currentMonth < foundingMonth ? 1 : 0);
+            const target = document.getElementById('anos-de-atividade');
+            if (target) {
+                target.textContent = `ANO ${yearsOfActivity}`;
+            }
+        }
+        updateYearsOfActivity();
+    </script>
+</div>
 </html>
