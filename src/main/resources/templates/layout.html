@@ -42,10 +42,10 @@
           <li><a th:href="@{/arquivo}" class="nav-link" data-i18n="nav_archive">Edições e loja</a></li>
           <li><a th:href="@{/noticias}" class="nav-link" data-i18n="nav_news">Notícias</a></li>
           <li><a th:href="@{/eventos}" class="nav-link" data-i18n="nav_events">Eventos</a></li>
-          <li><a href="indique.html" class="nav-link" data-i18n="nav_suggest">Indique uma Horda</a></li>
-          <li><a href="aliados.html" class="nav-link" data-i18n="nav_allies">Aliados</a></li>
+          <li><a th:href="@{/indique}" class="nav-link" data-i18n="nav_suggest">Indique uma Horda</a></li>
+          <li><a th:href="@{/aliados}" class="nav-link" data-i18n="nav_allies">Aliados</a></li>
           <!-- REGRA: Link de Assinatura visível APENAS no idioma Português -->
-          <li class="nav-assinatura"><a href="assinatura.html" class="nav-link" data-i18n="nav_subscription">Assinatura</a></li>
+          <li class="nav-assinatura"><a th:href="@{/assinatura}" class="nav-link" data-i18n="nav_subscription">Assinatura</a></li>
         </ul>
       </nav>
 
@@ -121,9 +121,9 @@
             <li><a th:href="@{/arquivo}" data-i18n="nav_archive">Edições e loja</a></li>
             <li><a th:href="@{/noticias}" data-i18n="nav_news">Notícias</a></li>
             <li><a th:href="@{/eventos}" data-i18n="nav_events">Eventos</a></li>
-            <li><a href="indique.html" data-i18n="nav_suggest">Indique uma Horda</a></li>
-            <li><a href="aliados.html" data-i18n="nav_allies">Aliados</a></li>
-            <li class="nav-assinatura"><a href="assinatura.html" data-i18n="nav_subscription">Assinatura</a></li>
+            <li><a th:href="@{/indique}" data-i18n="nav_suggest">Indique uma Horda</a></li>
+            <li><a th:href="@{/aliados}" data-i18n="nav_allies">Aliados</a></li>
+            <li class="nav-assinatura"><a th:href="@{/assinatura}" data-i18n="nav_subscription">Assinatura</a></li>
           </ul>
         </div>
 
@@ -131,7 +131,7 @@
         <div>
           <h4 class="footer-col-title pirata-title">Legal & Contato</h4>
           <ul class="footer-links-list">
-            <li><a href="privacidade.html" data-i18n="footer_privacy">Privacidade & Cookies</a></li>
+            <li><a th:href="@{/privacidade}" data-i18n="footer_privacy">Privacidade & Cookies</a></li>
             <li><a href="https://wa.me/5527981076157" target="_blank" rel="noopener">WhatsApp Oficial</a></li>
             <li><a href="mailto:armamento.belico.zine@gmail.com">Contato por E-mail</a></li>
           </ul>
