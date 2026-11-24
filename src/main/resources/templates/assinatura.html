@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+    th:replace="~{layout :: layout('Assinatura | Armamento Bélico Zine', ~{::content})}">
+<header>
+    <title th:text="${title}"></title>
+</header>
+
+<div th:fragment="content">
+
+    <main class="main-wrapper">
+        <div class="section-headline">
+            <span class="tape-tag blood">APOIO CONTÍNUO</span>
+            <h1 class="gothic-title" data-i18n="subscription_title">Assine o Armamento Bélico</h1>
+            <p class="sub-title" data-i18n="subscription_sub">
+                Receba 4 edições impressas em 12 meses, com brindes inclusos
+            </p>
+            <div class="divider">☠ <span class="inverted-cross">✝</span> ☠</div>
+        </div>
+
+        <!-- AVISO NA VERSÃO EM INGLÊS (ASSINATURA EXCLUSIVA PARA EDIÇÕES EM PORTUGUÊS) -->
+        <div id="sub-intl-notice" class="sub-warning-intl" style="display: none;" role="alert">
+            <h3 class="pirata-title">NOT YET AVAILABLE FOR THIS LANGUAGE</h3>
+            <p data-i18n="subscription_warning">
+                Not yet available for this language. Subscriptions are currently only available for editions in
+                Brazilian Portuguese.
+            </p>
+        </div>
+
+        <div id="subscription-content">
+            <!-- PLANO ÚNICO -->
+            <div class="subscription-grid single-plan" id="subscription-plans-grid">
+                <div class="plan-card featured">
+                    <div class="plan-header">
+                        <span class="tape-tag blood">PLANO ÚNICO</span>
+                        <h2 class="pirata-title" style="margin-top: 10px;">Assinatura Anual</h2>
+                        <div class="plan-price text-blood">R$ 20,00 <span>/ mês</span></div>
+                        <p class="plan-card-note">Edições em português (Brasil)</p>
+                    </div>
+                    <ul class="plan-perks">
+                        <li><strong>12 meses</strong> de assinatura</li>
+                        <li><strong>4 edições</strong> entregues no período: 1 edição a cada 3 meses de pagamento</li>
+                        <li>Brindes inclusos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ETAPAS -->
+            <div class="sub-form-wrap" id="subscription-form-area">
+                <ol class="sub-steps-indicator" id="sub-steps-indicator" aria-label="Etapas da assinatura">
+                    <li data-step-ind="1" class="active">1. Termos</li>
+                    <li data-step-ind="2">2. Pagamento</li>
+                    <li data-step-ind="3">3. Endereço</li>
+                </ol>
+
+                <form id="subscription-form" novalidate>
+                    <!-- ETAPA 1 -->
+                    <fieldset class="sub-step" id="sub-step-1">
+                        <legend>Etapa 1 — Termos da Assinatura</legend>
+                        <div class="sub-terms-box" tabindex="0" aria-label="Termos da assinatura">
+                            <ul>
+                                <li><strong>Plano:</strong> assinatura de <strong>12 meses</strong>, com a entrega de
+                                    <strong>4 edições</strong> no período, sendo <strong>1 edição a cada 3
+                                        meses</strong> de pagamento. Somente edições em português (Brasil).</li>
+                                <li><strong>Valor:</strong> <strong>R$ 20,00</strong> por mês via <strong>Pix
+                                        recorrente</strong>. Caso a assinatura seja feita por <strong>cartão de
+                                        crédito</strong>, o valor é de <strong>R$ 22,00</strong> por mês, para cobrir as
+                                    taxas.</li>
+                                <li><strong>Sem estorno:</strong> se o assinante desistir da assinatura após ter
+                                    realizado qualquer pagamento, <strong>o dinheiro não será estornado</strong>.</li>
+                                <li><strong>Primeira edição:</strong> a primeira edição recebida será a lançada no
+                                    período em que o assinante completar o <strong>primeiro ciclo de pagamentos de 3
+                                        meses</strong>.</li>
+                                <li><strong>Pagamentos:</strong> o compromisso é de 12 pagamentos mensais, totalizando 4
+                                    entregas trimestrais ao longo do ano.</li>
+                                <li><strong>Envio:</strong> as edições são enviadas pelos Correios após a conclusão de
+                                    cada ciclo de 3 meses pagos e o lançamento da respectiva edição.</li>
+                                <li><strong>Endereço:</strong> é responsabilidade do assinante informar o endereço
+                                    correto e avisar o editor em caso de mudança.</li>
+                                <li><strong>Brindes:</strong> a assinatura inclui brindes, que variam conforme a
+                                    disponibilidade de cada remessa.</li>
+                                <li><strong>Cancelamento:</strong> o cancelamento interrompe apenas as cobranças futuras
+                                    e não gera devolução de valores já pagos.</li>
+                            </ul>
+                        </div>
+                        <div class="checkbox-inline sub-terms-accept">
+                            <input type="checkbox" id="sub-terms-check">
+                            <label for="sub-terms-check">Li e estou de acordo com os termos da assinatura.</label>
+                        </div>
+                    </fieldset>
+
+                    <!-- ETAPA 2 -->
+                    <fieldset class="sub-step is-locked" id="sub-step-2" disabled>
+                        <legend>Etapa 2 — Forma de Pagamento</legend>
+                        <p class="sub-step-locked-msg">Aceite os termos para liberar esta etapa.</p>
+                        <div class="cart-payment-options">
+                            <label class="cart-payment-option">
+                                <input type="radio" name="sub_payment" value="Cartão de Crédito (R$ 22,00/mês)">
+                                <span class="cart-payment-card">
+                                    <i class="fa-solid fa-credit-card cart-payment-icon" aria-hidden="true"></i>
+                                    <span class="cart-payment-label">Cartão de Crédito</span>
+                                    <span class="sub-payment-price">R$ 22,00 / mês</span>
+                                </span>
+                            </label>
+                            <label class="cart-payment-option">
+                                <input type="radio" name="sub_payment" value="Pix Recorrente (R$ 20,00/mês)">
+                                <span class="cart-payment-card">
+                                    <i class="fa-brands fa-pix cart-payment-icon" aria-hidden="true"></i>
+                                    <span class="cart-payment-label">Pix Recorrente</span>
+                                    <span class="sub-payment-price">R$ 20,00 / mês</span>
+                                </span>
+                            </label>
+                        </div>
+                    </fieldset>
+
+                    <!-- ETAPA 3 -->
+                    <fieldset class="sub-step is-locked" id="sub-step-3" disabled>
+                        <legend>Etapa 3 — Endereço Completo</legend>
+                        <p class="sub-step-locked-msg">Escolha a forma de pagamento para liberar esta etapa.</p>
+
+                        <div class="form-group">
+                            <label for="sub-name">Nome Completo *</label>
+                            <input type="text" id="sub-name" class="form-control sub-addr" autocomplete="name"
+                                maxlength="120" required>
+                        </div>
+                        <div class="form-group sub-grid-2">
+                            <div>
+                                <label for="sub-cep">CEP *</label>
+                                <input type="text" id="sub-cep" class="form-control sub-addr" inputmode="numeric"
+                                    autocomplete="postal-code" maxlength="20" required>
+                            </div>
+                            <div>
+                                <label for="sub-number">Número *</label>
+                                <input type="text" id="sub-number" class="form-control sub-addr" maxlength="20"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sub-street">Rua / Logradouro *</label>
+                            <input type="text" id="sub-street" class="form-control sub-addr"
+                                autocomplete="address-line1" maxlength="140" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sub-complement">Complemento (opcional)</label>
+                            <input type="text" id="sub-complement" class="form-control" autocomplete="address-line2"
+                                maxlength="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="sub-neighborhood">Bairro *</label>
+                            <input type="text" id="sub-neighborhood" class="form-control sub-addr" maxlength="80"
+                                required>
+                        </div>
+                        <div class="form-group sub-grid-2">
+                            <div>
+                                <label for="sub-city">Cidade *</label>
+                                <input type="text" id="sub-city" class="form-control sub-addr"
+                                    autocomplete="address-level2" maxlength="80" required>
+                            </div>
+                            <div>
+                                <label for="sub-state">Estado (UF) *</label>
+                                <input type="text" id="sub-state" class="form-control sub-addr"
+                                    autocomplete="address-level1" maxlength="40" required>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 25px;">
+                            <button type="submit" id="sub-submit-btn" class="btn-whatsapp-checkout"
+                                style="width: 100%; font-size: 1.1rem; padding: 15px;" disabled>
+                                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Solicitar Assinatura
+                            </button>
+                            <p class="cart-checkout-note" style="margin-top: 8px;">Seus dados serão enviados ao editor
+                                via WhatsApp.</p>
+                        </div>
+                    </fieldset>
+                </form>
+
+                <!-- CONFIRMAÇÃO PÓS-ENVIO -->
+                <div id="sub-confirm-area" hidden></div>
+            </div>
+        </div>
+
+    </main>
+
+</div>
+
+</html>

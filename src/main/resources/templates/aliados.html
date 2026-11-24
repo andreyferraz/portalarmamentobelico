@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+    th:replace="~{layout :: layout('Aliados | Armamento Bélico Zine', ~{::content})}">
+<header>
+    <title th:text="${title}"></title>
+</header>
+
+<div th:fragment="content">
+
+    <main class="main-wrapper">
+        <div class="section-headline">
+            <span class="tape-tag dark">CONFRARIA SUBTERRÂNEA</span>
+            <h1 class="gothic-title" data-i18n="allies_title">Pactos & Aliados do Cenário</h1>
+            <p class="sub-title" data-i18n="allies_sub">
+                Selos, gravadoras e fanzines irmãos que mantêm a chama profana acesa
+            </p>
+            <div class="divider">☠ <span class="inverted-cross">✝</span> ☠</div>
+        </div>
+
+        <!-- INTRODUÇÃO DA PÁGINA -->
+        <div class="zine-box" style="margin-bottom: 35px; text-align: center;">
+            <p style="font-size: 0.95rem; max-width: 800px; margin: 0 auto; color: var(--color-paper);">
+                O <strong>Armamento Bélico</strong> não mantém parcerias comerciais espúrias com corporações da grande
+                mídia. Todos os aliados listados abaixo compartilham do mesmo juramento: devoção ao formato físico,
+                apoio leal às bandas sem concessões e repúdio total à esterilização do underground.
+            </p>
+        </div>
+
+        <!-- GRID DE PARCEIROS E SELOS -->
+        <div class="allies-grid">
+
+            <!-- Aliado 1: Extremely Rotten Productions -->
+            <article class="ally-card">
+                <div class="ally-logo-frame">
+                    <span
+                        style="font-family: var(--font-gothic); font-size: 1.5rem; color: #fff; text-align: center; line-height: 1;">EXTREMELY
+                        ROTTEN</span>
+                </div>
+                <h3 class="pirata-title ally-name">Extremely Rotten Productions</h3>
+                <span class="ally-type">Selo / Distro • Dinamarca</span>
+                <p class="ally-desc">
+                    O santuário do Rotten Death Metal mundial operado por David Torturdød (Undergang). Lançamentos
+                    purulentos em vinil e cassete.
+                </p>
+                <a href="https://extremelyrottenprod.com/" target="_blank" rel="noopener noreferrer"
+                    class="btn-brutal btn-outline-decay btn-sm">
+                    Visitar Cripta ↗
+                </a>
+            </article>
+
+            <!-- Aliado 2: Black Hole Productions -->
+            <article class="ally-card">
+                <div class="ally-logo-frame">
+                    <span
+                        style="font-family: var(--font-typewriter); font-size: 1.4rem; font-weight: bold; color: #ff3333;">BLACK
+                        HOLE</span>
+                </div>
+                <h3 class="pirata-title ally-name">Black Hole Productions</h3>
+                <span class="ally-type">Selo Independente • Brasil</span>
+                <p class="ally-desc">
+                    Um dos selos mais ativos do underground brasileiro, lançando relíquias em CD, slipcase e edições de
+                    luxo para maníacos da morte.
+                </p>
+                <a href="https://blackholeproductions.com.br" target="_blank" rel="noopener noreferrer"
+                    class="btn-brutal btn-outline-decay btn-sm">
+                    Visitar Cripta ↗
+                </a>
+            </article>
+
+            <!-- Aliado 3: Mutilation Records -->
+            <article class="ally-card">
+                <div class="ally-logo-frame">
+                    <span style="font-family: var(--font-pirata); font-size: 1.7rem; color: #fff;">MUTILATION</span>
+                </div>
+                <h3 class="pirata-title ally-name">Mutilation Productions</h3>
+                <span class="ally-type">Gravadora & Distribuidora • Brasil</span>
+                <p class="ally-desc">
+                    Pioneirismo em prensagens oficiais em vinil e CDs das maiores aberrações do Death Metal, Thrash e
+                    Grindcore sul-americano e mundial.
+                </p>
+                <a href="https://www.mutilationrec.com/" target="_blank" rel="noopener noreferrer"
+                    class="btn-brutal btn-outline-decay btn-sm">
+                    Visitar Cripta ↗
+                </a>
+            </article>
+
+            <!-- Aliado 4: Cogumelo Records -->
+            <article class="ally-card">
+                <div class="ally-logo-frame">
+                    <span
+                        style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: bold; color: #fff;">COGUMELO
+                        REC</span>
+                </div>
+                <h3 class="pirata-title ally-name">Cogumelo Records</h3>
+                <span class="ally-type">Lenda Histórica • Belo Horizonte</span>
+                <p class="ally-desc">
+                    O berço de ouro do Metal extremo brasileiro: Sarcófago, Sepultura clássico, Holocausto, Chakal,
+                    Vulcano e Mutilator.
+                </p>
+                <a href="https://cogumelorecords.loja2.com.br/" target="_blank" rel="noopener noreferrer"
+                    class="btn-brutal btn-outline-decay btn-sm">
+                    Visitar Cripta ↗
+                </a>
+            </article>
+
+            <!-- Aliado 5: Nuclear War Now! Productions -->
+            <article class="ally-card">
+                <div class="ally-logo-frame">
+                    <span style="font-family: var(--font-gothic); font-size: 1.8rem; color: #ff0000;">NWN!</span>
+                </div>
+                <h3 class="pirata-title ally-name">Nuclear War Now!</h3>
+                <span class="ally-type">Selo Cult • EUA</span>
+                <p class="ally-desc">
+                    A vanguarda do Bestial Black Metal, War Metal e resgates arqueológicos de demos arcanas em fita
+                    analógica e ceras pesadas.
+                </p>
+                <a href="https://www.nwnprod.com/" target="_blank" rel="noopener noreferrer"
+                    class="btn-brutal btn-outline-decay btn-sm">
+                    Visitar Cripta ↗
+                </a>
+            </article>
+
+            <!-- Aliado 6: Sister Zines Alliance -->
+            <article class="ally-card">
+                <div class="ally-logo-frame">
+                    <span style="font-family: var(--font-mono); font-size: 1.1rem; color: #ddd;">ZINES UNIDOS</span>
+                </div>
+                <h3 class="pirata-title ally-name">Irmandade dos Fanzines</h3>
+                <span class="ally-type">Publicações Físicas Irmãs</span>
+                <p class="ally-desc">
+                    Aliança de fanzines impressos ao redor do globo: Slayer Mag (arquivos), Voices from the Darkside,
+                    Snakepit e Necromaniac.
+                </p>
+                <a href="https://voicesfromthedarkside.de" target="_blank" rel="noopener noreferrer"
+                    class="btn-brutal btn-outline-decay btn-sm">
+                    Visitar Cripta ↗
+                </a>
+            </article>
+
+        </div>
+    </main>
+
+</div>
+
+</html>

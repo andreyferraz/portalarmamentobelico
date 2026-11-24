@@ -36,4 +36,14 @@ public class PublicPagesController {
         return "indique";
     }
 
+    @GetMapping("/aliados")
+    public String aliados() {
+        return "aliados";
+    }
+
+    @GetMapping("/assinatura")
+    public String assinatura() {
+        return "assinatura";
+    }
+
 }
