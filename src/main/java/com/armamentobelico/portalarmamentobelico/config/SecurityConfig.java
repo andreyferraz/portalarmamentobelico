@@ -1,6 +1,12 @@
 package com.armamentobelico.portalarmamentobelico.config;
 
+import java.io.IOException;
 import java.util.UUID;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -13,6 +19,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfToken;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.armamentobelico.portalarmamentobelico.model.Admin;
 import com.armamentobelico.portalarmamentobelico.repository.AdminRepository;
@@ -42,9 +51,39 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/admin", true)
                         .failureUrl("/?loginError=true")
                         .permitAll())
-                .logout(logout -> logout.logoutSuccessUrl("/"));
+                .logout(logout -> logout.logoutSuccessUrl("/"))
+                .addFilterAfter(new CsrfTokenInitializationFilter(), CsrfFilter.class);
 
         return http.build();
+    }
+
+    private static final class CsrfTokenInitializationFilter extends OncePerRequestFilter {
+        @Override
+        protected boolean shouldNotFilter(HttpServletRequest request) {
+            String contextPath = request.getContextPath();
+            String path = request.getRequestURI();
+            if (contextPath != null && !contextPath.isEmpty() && path.startsWith(contextPath)) {
+                path = path.substring(contextPath.length());
+            }
+            return path.startsWith("/css/")
+                    || path.startsWith("/js/")
+                    || path.startsWith("/assets/")
+                    || path.startsWith("/img/")
+                    || path.startsWith("/static/")
+                    || path.startsWith("/webjars/")
+                    || "/favicon.ico".equals(path);
+        }
+
+        @Override
+        protected void doFilterInternal(HttpServletRequest request,
+                HttpServletResponse response,
+                FilterChain filterChain) throws ServletException, IOException {
+            CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+            if (csrfToken != null) {
+                csrfToken.getToken();
+            }
+            filterChain.doFilter(request, response);
+        }
     }
 
     @Bean
