@@ -2725,10 +2725,69 @@
     });
   }
 
+  // --- MODAL DE LOGIN ADMINISTRATIVO ---
+  function initAdminLoginModal() {
+    const dialog = document.getElementById('admin-login-dialog');
+    if (!dialog) return;
+
+    // Fallback de light-dismiss para navegadores sem suporte a closedby="any"
+    if (!('closedBy' in HTMLDialogElement.prototype)) {
+      const isOutside = (event) => {
+        const rect = dialog.getBoundingClientRect();
+        return (
+          event.clientX < rect.left ||
+          event.clientX > rect.right ||
+          event.clientY < rect.top ||
+          event.clientY > rect.bottom
+        );
+      };
+      let pressedOutside = false;
+      dialog.addEventListener('pointerdown', (event) => {
+        pressedOutside = isOutside(event);
+      });
+      dialog.addEventListener('pointerup', (event) => {
+        if (pressedOutside && isOutside(event)) {
+          dialog.close();
+        }
+      });
+    }
+
+    // Toggle de visualização de senha
+    const passwordInput = document.getElementById('admin-password');
+    const passwordToggle = document.getElementById('admin-password-toggle');
+    if (passwordInput && passwordToggle) {
+      passwordToggle.addEventListener('click', () => {
+        const showing = passwordInput.type === 'text';
+        passwordInput.type = showing ? 'password' : 'text';
+        passwordToggle.setAttribute('aria-pressed', String(!showing));
+        passwordToggle.setAttribute('aria-label', showing ? 'Mostrar senha' : 'Ocultar senha');
+        const icon = passwordToggle.querySelector('i');
+        if (icon) {
+          icon.classList.toggle('fa-eye', showing);
+          icon.classList.toggle('fa-eye-slash', !showing);
+        }
+      });
+    }
+
+    // Abre automaticamente o modal ao ser redirecionado de /admin ou após erro de login
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('login') || params.has('loginError')) {
+      if (!dialog.open && typeof dialog.showModal === 'function') {
+        dialog.showModal();
+      }
+      params.delete('login');
+      params.delete('loginError');
+      const nextSearch = params.toString();
+      const nextUrl = window.location.pathname + (nextSearch ? `?${nextSearch}` : '') + window.location.hash;
+      window.history.replaceState({}, '', nextUrl);
+    }
+  }
+
   // --- INICIALIZAÇÃO GERAL ---
   function init() {
     // 0. Marcar aba ativa no menu com base na rota atual
     updateActiveNavLink();
+    initAdminLoginModal();
 
     // 1. Configurar listeners de idioma
     document.querySelectorAll('.lang-btn').forEach(btn => {

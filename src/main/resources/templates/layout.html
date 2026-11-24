@@ -167,9 +167,73 @@
           <a href="https://andreyferraz.com.br" target="_blank" rel="noopener">Andrêy Ferraz</a>.
           <span data-i18n="footer_dev_suffix">Puro metal infernal.</span>
         </span>
+        <button sec:authorize="!isAuthenticated()" type="button" class="footer-admin-btn" id="admin-login-trigger" commandfor="admin-login-dialog" command="show-modal">
+          <i class="fa-solid fa-lock" aria-hidden="true"></i>
+          <span>Acesso Restrito</span>
+        </button>
+        <a sec:authorize="isAuthenticated()" th:href="@{/admin}" class="footer-admin-btn footer-admin-btn--authenticated" id="admin-panel-link">
+          <i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i>
+          <span>Inferno Aberto</span>
+        </a>
       </div>
     </div>
   </footer>
+
+  <!-- MODAL DE LOGIN ADMINISTRATIVO (SEM PÁGINA DE LOGIN DEDICADA) -->
+  <dialog sec:authorize="!isAuthenticated()" id="admin-login-dialog" class="admin-login-dialog" closedby="any" aria-labelledby="admin-login-title">
+    <div class="admin-login-header">
+      <div class="admin-login-title-wrap">
+        <i class="fa-solid fa-skull-crossbones" aria-hidden="true"></i>
+        <h1 id="admin-login-title" class="pirata-title">Acesso Restrito</h1>
+      </div>
+      <button type="button" class="admin-login-close" commandfor="admin-login-dialog" command="close" aria-label="Fechar modal de login">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <form method="post" th:action="@{/login}" class="admin-login-form">
+      <p th:if="${param.loginError != null}" class="admin-login-feedback admin-login-feedback--error" role="alert">
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        Usuário ou senha inválidos. Tente novamente.
+      </p>
+      <p th:if="${param.login != null and param.loginError == null}" class="admin-login-feedback admin-login-feedback--info" role="status">
+        <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+        Faça login para acessar o painel administrativo.
+      </p>
+
+      <div class="admin-login-field">
+        <label for="admin-username">Usuário</label>
+        <input type="text" id="admin-username" name="username" autocomplete="username" spellcheck="false" autocapitalize="none" autocorrect="off" enterkeyhint="next" required autofocus>
+      </div>
+
+      <div class="admin-login-field">
+        <label for="admin-password">Senha</label>
+        <div class="admin-password-wrap">
+          <input type="password" id="admin-password" name="password" autocomplete="current-password" enterkeyhint="done" required>
+          <button type="button" class="admin-password-toggle" id="admin-password-toggle" aria-label="Mostrar senha" aria-pressed="false">
+            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-login-actions">
+        <button type="button" class="admin-login-cancel" commandfor="admin-login-dialog" command="close">
+          Cancelar
+        </button>
+        <button type="submit" class="admin-login-submit">
+          <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+          <span>Entrar no Painel</span>
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Polyfill condicional para Invoker Commands (command/commandfor) -->
+  <script type="module">
+    if (!('commandForElement' in HTMLButtonElement.prototype)) {
+      import('https://esm.run/invokers-polyfill');
+    }
+  </script>
 
   <!-- Script Core Único -->
   <script th:src="@{/js/script.js}"></script>

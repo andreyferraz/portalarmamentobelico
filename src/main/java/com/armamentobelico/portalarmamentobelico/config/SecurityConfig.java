@@ -34,11 +34,13 @@ public class SecurityConfig {
                                 "/favicon.ico",
                                 "/webjars/**")
                         .permitAll()
-                        .requestMatchers("/admin/**").authenticated()
+                        .requestMatchers("/admin", "/admin/**").authenticated()
                         .anyRequest().permitAll())
                 .formLogin(form -> form
-                        .loginPage("/login")
+                        .loginPage("/?login=required")
+                        .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/admin", true)
+                        .failureUrl("/?loginError=true")
                         .permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/"));
 
