@@ -2581,6 +2581,7 @@ h1, h2, h3, h4, .gothic-title {
 .footer-socials {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 10px;
 }
 
