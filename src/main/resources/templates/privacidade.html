@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
+    th:replace="~{layout :: layout('Assinatura | Armamento Bélico Zine', ~{::content})}">
+<header>
+    <title th:text="${title}"></title>
+</header>
+
+<div th:fragment="content">
+
+    <main class="main-wrapper">
+        <div class="section-headline">
+            <span class="tape-tag blood">MANIFESTO DE INTEGRIDADE</span>
+            <h1 class="gothic-title" data-i18n="privacy_title">Manifesto de Privacidade & Cookies</h1>
+            <p class="sub-title" data-i18n="privacy_sub">
+                Respeito irrestrito ao submundo e à privacidade do headbanger
+            </p>
+            <div class="divider">☠ <span class="inverted-cross">✝</span> ☠</div>
+        </div>
+
+        <div class="privacy-container zine-box">
+
+            <!-- Conteúdo PT -->
+            <div class="lang-content-pt">
+                <h2 class="pirata-title">1. Nosso Juramento Ético Anticomercial</h2>
+                <p>
+                    O <strong>Armamento Bélico Fanzine</strong> existe desde 2008 para disseminar a música extrema e a
+                    cultura independente. Repudiamos veementemente a exploração de dados, a vigilância de perfis
+                    comportamentais e os esquemas publicitários invasivos que dominam a internet corporativa atual.
+                </p>
+
+                <h2 class="pirata-title">2. Quais Dados Armazenamos Localmente?</h2>
+                <p>
+                    Este site foi programado em <strong>HTML5, CSS3 e JavaScript puro</strong>, sem bibliotecas externas
+                    pesadas ou rastreadores de terceiros. Utilizamos exclusivamente o recurso nativo de
+                    <code>localStorage</code> do seu navegador com duas únicas finalidades técnicas essenciais:
+                </p>
+                <ul style="margin-left: 25px; margin-bottom: 20px; line-height: 1.8;">
+                    <li><strong>Preferência de Idioma (<code>ab_lang</code>):</strong> Para memorizar se você navega em
+                        Português ou Inglês entre uma página e outra.</li>
+                    <li><strong>Necrocarrinho de Compras (<code>ab_cart</code>):</strong> Para permitir que os fanzines
+                        adicionados permaneçam salvos enquanto você navega pelas diferentes seções do site.</li>
+                </ul>
+                <p>
+                    Nenhum desses dados é transmitido para servidores de telemetria ou vendido para anunciantes. Eles
+                    residem unicamente no seu dispositivo e podem ser apagados por você a qualquer momento limpando os
+                    dados do navegador.
+                </p>
+
+                <h2 class="pirata-title">3. Finalização de Pedidos via WhatsApp e PayPal</h2>
+                <p>
+                    Ao clicar no botão de finalizar pedido:
+                </p>
+                <p>
+                    <strong>Na versão em Português:</strong> O site gera um resumo textual com os itens do seu pedido e
+                    abre o aplicativo oficial do WhatsApp para comunicação direta com o editor. Seu número de telefone,
+                    endereço e comprovante PIX são utilizados com o único propósito de postagem física da sua encomenda
+                    através dos Correios.
+                </p>
+                <p>
+                    <strong>Na versão Internacional (Inglês):</strong> Os pagamentos são intermediados com total
+                    segurança através do gateway do PayPal. O Armamento Bélico nunca tem acesso aos dados sensíveis do
+                    seu cartão de crédito ou conta bancária.
+                </p>
+
+                <h2 class="pirata-title">4. Ausência de Cookies Invasivos</h2>
+                <p>
+                    Não injetamos pixels do Facebook/Meta, trackers do Google Ads, scripts de 'fingerprinting' ou
+                    anúncios pop-up. Nossa dedicação é 100% voltada à música extrema e aos leitores leais do fanzine.
+                </p>
+
+                <h2 class="pirata-title">5. Contato e Retificação</h2>
+                <p>
+                    Para qualquer dúvida, alteração de endereço cadastral para assinaturas ativas ou cancelamento de
+                    dados de envio, faça contato diretamente via <a href="mailto:armamento.belico.zine@gmail.com"
+                        class="text-blood">armamento.belico.zine@gmail.com</a> ou pelo WhatsApp do fanzine.
+                </p>
+            </div>
+
+            <!-- Conteúdo EN -->
+            <div class="lang-content-en" style="display: none;">
+                <h2 class="pirata-title">1. Our Non-Commercial Ethical Oath</h2>
+                <p>
+                    <strong>Armamento Bélico Fanzine</strong> has stood firm since 2008 promoting true extreme metal and
+                    underground culture. We despise user profiling, corporate tracking scripts, and surveillance
+                    capitalism.
+                </p>
+
+                <h2 class="pirata-title">2. What Data Is Stored Locally?</h2>
+                <p>
+                    This website is built with <strong>pure HTML5, CSS3, and Vanilla JavaScript</strong> with zero
+                    external tracking libraries. We strictly utilize your browser's native <code>localStorage</code> for
+                    two operational tasks:
+                </p>
+                <ul style="margin-left: 25px; margin-bottom: 20px; line-height: 1.8;">
+                    <li><strong>Language Preference (<code>ab_lang</code>):</strong> Remembers whether you are viewing
+                        the site in Portuguese or English.</li>
+                    <li><strong>Death Cart (<code>ab_cart</code>):</strong> Preserves the zines you selected while
+                        navigating across separate pages.</li>
+                </ul>
+                <p>
+                    Zero tracking cookies. Zero third-party data selling. You can wipe this data at any second by
+                    clearing your browser cache.
+                </p>
+
+                <h2 class="pirata-title">3. Order Fulfillment (WhatsApp & PayPal)</h2>
+                <p>
+                    Upon checkout:
+                </p>
+                <p>
+                    <strong>Portuguese Edition:</strong> Generates an encrypted order summary sent directly to the
+                    editor via WhatsApp for domestic shipping and PIX payment.
+                </p>
+                <p>
+                    <strong>International English Edition:</strong> Handled securely through PayPal. We never handle or
+                    store your financial or credit card credentials.
+                </p>
+
+                <h2 class="pirata-title">4. Contact & Inquiries</h2>
+                <p>
+                    For postal updates, inquiries or distro cooperation, contact us anytime at <a
+                        href="mailto:armamento.belico.zine@gmail.com"
+                        class="text-blood">armamento.belico.zine@gmail.com</a>.
+                </p>
+            </div>
+
+        </div>
+    </main>
+
+</div>
+
+</html>

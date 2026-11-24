@@ -46,4 +46,9 @@ public class PublicPagesController {
         return "assinatura";
     }
 
+    @GetMapping("/privacidade")
+    public String privacidade() {
+        return "privacidade";
+    }
+
 }
