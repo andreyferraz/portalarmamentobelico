@@ -2674,8 +2674,62 @@
     syncResponsiveNavLayout(true);
   }
 
+  // --- DESTAQUE DINÂMICO DO ITEM ATIVO NO MENU DE NAVEGAÇÃO ---
+  function normalizeNavPath(pathname) {
+    let normalized = (pathname || '/').trim().toLowerCase();
+    normalized = normalized.replace(/\/+$/, '') || '/';
+    if (normalized === '/index.html') return '/';
+    if (normalized.endsWith('.html')) {
+      normalized = normalized.slice(0, -5) || '/';
+    }
+    return normalized;
+  }
+
+  function updateActiveNavLink() {
+    const navLinks = document.querySelectorAll('#main-nav .nav-link');
+    if (!navLinks.length) return;
+
+    const currentPath = normalizeNavPath(window.location.pathname);
+
+    let bestMatch = null;
+    let bestMatchLength = -1;
+
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+
+      let linkPath;
+      try {
+        linkPath = normalizeNavPath(new URL(link.href, window.location.origin).pathname);
+      } catch (_) {
+        return;
+      }
+
+      const isExactMatch = currentPath === linkPath;
+      const isNestedMatch = linkPath !== '/' && currentPath.startsWith(`${linkPath}/`);
+
+      if ((isExactMatch || isNestedMatch) && linkPath.length > bestMatchLength) {
+        bestMatch = link;
+        bestMatchLength = linkPath.length;
+      }
+    });
+
+    navLinks.forEach(link => {
+      const isActive = link === bestMatch;
+      link.classList.toggle('active', isActive);
+      if (isActive) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+  }
+
   // --- INICIALIZAÇÃO GERAL ---
   function init() {
+    // 0. Marcar aba ativa no menu com base na rota atual
+    updateActiveNavLink();
+
     // 1. Configurar listeners de idioma
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.addEventListener('click', () => {
