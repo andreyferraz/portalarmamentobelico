@@ -21,4 +21,9 @@ public class PublicPagesController {
         return "arquivo";
     }
 
+    @GetMapping("/noticias")
+    public String noticias() {
+        return "noticias";
+    }
+
 }
