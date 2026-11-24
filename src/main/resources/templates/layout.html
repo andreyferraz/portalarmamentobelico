@@ -37,7 +37,7 @@
       <!-- Menu de Navegação Multi-page -->
       <nav class="main-nav" id="main-nav" aria-label="Navegação principal">
         <ul class="nav-list" id="nav-list" popover="auto">
-          <li><a href="index.html" class="nav-link active" aria-current="page" data-i18n="nav_home">Início</a></li>
+          <li><a th:href="@{/}" class="nav-link active" aria-current="page" data-i18n="nav_home">Início</a></li>
           <li><a href="historia.html" class="nav-link" data-i18n="nav_history">História</a></li>
           <li><a href="arquivo.html" class="nav-link" data-i18n="nav_archive">Edições e loja</a></li>
           <li><a href="noticias.html" class="nav-link" data-i18n="nav_news">Notícias</a></li>
@@ -162,8 +162,10 @@
         <span class="footer-cult-year">
           Desde 2008 - <span id="current-year-span">2026</span> • ARMAMENTO BÉLICO ZINE
         </span>
-        <span class="footer-dev-credit" data-i18n="footer_dev">
-          Desenvolvido com devoção e ódio por Andrey Ferraz. Sem bibliotecas, puro metal.
+        <span class="footer-dev-credit">
+          <span data-i18n="footer_dev_prefix">Desenvolvido com devoção e ódio por</span>
+          <a href="https://andreyferraz.com.br" target="_blank" rel="noopener">Andrêy Ferraz</a>.
+          <span data-i18n="footer_dev_suffix">Puro metal infernal.</span>
         </span>
       </div>
     </div>
