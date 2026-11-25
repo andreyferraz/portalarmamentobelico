@@ -1,1 +1,478 @@
-<h1>Deu certo</h1>
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    try {
+      var savedScheme = localStorage.getItem("abz-admin-color-scheme");
+      if (savedScheme === "light" || savedScheme === "dark") {
+        document.querySelector('meta[name="color-scheme"]').content = savedScheme;
+      }
+    } catch (e) {}
+  </script>
+  <title>Visão Geral | Painel Admin — Armamento Bélico Zine</title>
+  <link rel="icon" th:href="@{/assets/logo-armamento-belico.png}" type="image/png">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+
+<body class="admin-body">
+  <a href="#admin-main-title" class="skip-link visually-hidden">Pular para o conteúdo principal</a>
+
+  <div class="admin-shell" id="admin-shell">
+    <!-- Backdrop para menu mobile -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+
+    <!-- Barra lateral -->
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Menu lateral">
+      <a th:href="@{/admin}" class="sidebar-brand">
+        <img th:src="@{/assets/logo-armamento-belico.png}" alt="" class="sidebar-brand-logo">
+        <span class="sidebar-brand-text">
+          <span class="sidebar-brand-title">Armamento Bélico</span>
+          <span class="sidebar-brand-sub">Painel Administrativo</span>
+        </span>
+      </a>
+
+      <nav class="sidebar-nav" aria-label="Módulos do painel">
+        <div class="nav-group">
+          <p class="nav-group-label">Geral</p>
+          <ul class="nav-list">
+            <li>
+              <a th:href="@{/admin}" class="nav-link" aria-current="page">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+                  <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+                  <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+                  <rect x="3" y="16" width="7" height="5" rx="1"></rect>
+                </svg>
+                <span class="nav-label">Visão Geral</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-label">Conteúdo</p>
+          <ul class="nav-list">
+            <li>
+              <a th:href="@{/admin/edicoes}" class="nav-link" data-module-pending="true" data-module-name="Edições do Fanzine">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                </svg>
+                <span class="nav-label">Edições</span>
+                <span class="nav-badge" th:text="${totalEdicoes ?: 0}">0</span>
+              </a>
+            </li>
+            <li>
+              <a th:href="@{/admin/noticias}" class="nav-link" data-module-pending="true" data-module-name="Notícias">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                  <path d="M18 14h-8"></path>
+                  <path d="M15 18h-5"></path>
+                  <path d="M10 6h8v4h-8V6Z"></path>
+                </svg>
+                <span class="nav-label">Notícias</span>
+                <span class="nav-badge" th:text="${totalNoticias ?: 0}">0</span>
+              </a>
+            </li>
+            <li>
+              <a th:href="@{/admin/aliados}" class="nav-link" data-module-pending="true" data-module-name="Aliados">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span class="nav-label">Aliados</span>
+                <span class="nav-badge" th:text="${totalAliados ?: 0}">0</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-label">Curadoria</p>
+          <ul class="nav-list">
+            <li>
+              <a th:href="@{/admin/eventos}" class="nav-link" data-module-pending="true" data-module-name="Eventos">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span class="nav-label">Eventos</span>
+                <span class="nav-badge" th:classappend="${(eventosPendentes ?: 0) > 0} ? ' is-alert' : ''" th:text="${eventosPendentes ?: 0}">0</span>
+              </a>
+            </li>
+            <li>
+              <a th:href="@{/admin/indicacoes}" class="nav-link" data-module-pending="true" data-module-name="Indicações de Bandas">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M9 18V5l12-2v13"></path>
+                  <circle cx="6" cy="18" r="3"></circle>
+                  <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <span class="nav-label">Indicações</span>
+                <span class="nav-badge" th:classappend="${(indicacoesPendentes ?: 0) > 0} ? ' is-alert' : ''" th:text="${indicacoesPendentes ?: 0}">0</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a th:href="@{/}" class="sidebar-action" target="_blank" rel="noopener noreferrer">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          <span class="sidebar-action-label">Ver site público</span>
+        </a>
+
+        <button type="button" class="sidebar-action" id="theme-toggle-btn">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <span class="sidebar-action-label" id="theme-toggle-label">Alternar tema</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Barra superior -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <button type="button" class="icon-btn mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="admin-sidebar" aria-label="Abrir menu lateral">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <button type="button" class="icon-btn desktop-collapse-btn" id="sidebar-collapse-btn" aria-expanded="true" aria-controls="admin-sidebar" aria-label="Recolher menu lateral">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+          </svg>
+        </button>
+
+        <div class="topbar-breadcrumb">
+          <span>Painel</span>
+          <span aria-hidden="true">/</span>
+          <strong>Visão Geral</strong>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <span class="topbar-user" title="Usuário autenticado">
+          <span class="topbar-user-dot" aria-hidden="true"></span>
+          <span class="topbar-user-name" sec:authentication="name">admin</span>
+        </span>
+
+        <form th:action="@{/logout}" method="post" class="logout-form">
+          <button type="submit" class="btn btn-sm">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Sair</span>
+          </button>
+        </form>
+      </div>
+    </header>
+
+    <!-- Área principal -->
+    <main class="admin-main">
+      <div class="admin-container">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="admin-main-title" tabindex="-1">Visão Geral</h1>
+            <p class="page-subtitle">
+              Central de gestão do Armamento Bélico Zine: publique edições e notícias, gerencie aliados e modere eventos e indicações de bandas.
+            </p>
+          </div>
+          <div class="page-actions">
+            <a th:href="@{/admin/edicoes/novo}" class="btn btn-primary" data-module-pending="true" data-module-name="Edições do Fanzine">
+              Nova Edição
+            </a>
+            <a th:href="@{/admin/noticias/novo}" class="btn" data-module-pending="true" data-module-name="Notícias">
+              Nova Notícia
+            </a>
+          </div>
+        </div>
+
+        <!-- Alertas de feedback (Flash Attributes) -->
+        <div class="admin-alert is-success" role="status" th:if="${mensagemSucesso}">
+          <span th:text="${mensagemSucesso}">Operação concluída com sucesso.</span>
+          <button type="button" class="btn btn-ghost btn-sm" data-dismiss-alert>Fechar</button>
+        </div>
+
+        <div class="admin-alert is-error" role="alert" th:if="${mensagemErro}">
+          <span th:text="${mensagemErro}">Ocorreu um erro ao processar a solicitação.</span>
+          <button type="button" class="btn btn-ghost btn-sm" data-dismiss-alert>Fechar</button>
+        </div>
+
+        <!-- Indicadores rápidos -->
+        <section aria-labelledby="kpi-heading">
+          <h2 id="kpi-heading" class="visually-hidden">Resumo operacional</h2>
+          <div class="kpi-grid">
+            <article class="kpi-card">
+              <span class="kpi-label">Edições publicadas</span>
+              <span class="kpi-value" th:text="${totalEdicoes ?: 0}">0</span>
+              <span class="kpi-meta">Catálogo do zine e arquivo</span>
+            </article>
+
+            <article class="kpi-card">
+              <span class="kpi-label">Notícias ativas</span>
+              <span class="kpi-value" th:text="${totalNoticias ?: 0}">0</span>
+              <span class="kpi-meta">Conteúdo bilíngue PT / EN</span>
+            </article>
+
+            <article class="kpi-card" th:classappend="${(eventosPendentes ?: 0) > 0} ? ' is-attention' : ''">
+              <span class="kpi-label">Eventos pendentes</span>
+              <span class="kpi-value" th:text="${eventosPendentes ?: 0}">0</span>
+              <span class="kpi-meta">Aguardando aprovação na fila</span>
+            </article>
+
+            <article class="kpi-card" th:classappend="${(indicacoesPendentes ?: 0) > 0} ? ' is-attention' : ''">
+              <span class="kpi-label">Indicações pendentes</span>
+              <span class="kpi-value" th:text="${indicacoesPendentes ?: 0}">0</span>
+              <span class="kpi-meta">Bandas enviadas pelo formulário</span>
+            </article>
+          </div>
+        </section>
+
+        <!-- Acesso rápido aos módulos -->
+        <section aria-labelledby="modules-heading">
+          <div class="section-header">
+            <h2 class="section-title" id="modules-heading">Módulos do Painel</h2>
+          </div>
+
+          <div class="modules-grid">
+            <article class="module-card">
+              <div class="module-card-head">
+                <div class="module-card-title-wrap">
+                  <span class="module-icon-box" aria-hidden="true">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                    </svg>
+                  </span>
+                  <h3 class="module-card-title">Edições do Fanzine</h3>
+                </div>
+                <span class="status-badge is-neutral">CRUD</span>
+              </div>
+              <p class="module-card-desc">
+                Cadastre edições impressas, capas, galeria, faixas/entrevistas vinculadas e controle de disponibilidade.
+              </p>
+              <div class="module-card-footer">
+                <span class="module-route">/admin/edicoes</span>
+                <a th:href="@{/admin/edicoes}" class="btn btn-sm" data-module-pending="true" data-module-name="Edições do Fanzine">Gerenciar <span class="visually-hidden">Edições do Fanzine</span></a>
+              </div>
+            </article>
+
+            <article class="module-card">
+              <div class="module-card-head">
+                <div class="module-card-title-wrap">
+                  <span class="module-icon-box" aria-hidden="true">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                      <path d="M18 14h-8"></path>
+                      <path d="M15 18h-5"></path>
+                      <path d="M10 6h8v4h-8V6Z"></path>
+                    </svg>
+                  </span>
+                  <h3 class="module-card-title">Notícias</h3>
+                </div>
+                <span class="status-badge is-neutral">CRUD</span>
+              </div>
+              <p class="module-card-desc">
+                Publique comunicados e novidades em português e inglês, com imagem otimizada e vínculo opcional com edições.
+              </p>
+              <div class="module-card-footer">
+                <span class="module-route">/admin/noticias</span>
+                <a th:href="@{/admin/noticias}" class="btn btn-sm" data-module-pending="true" data-module-name="Notícias">Gerenciar <span class="visually-hidden">Notícias</span></a>
+              </div>
+            </article>
+
+            <article class="module-card">
+              <div class="module-card-head">
+                <div class="module-card-title-wrap">
+                  <span class="module-icon-box" aria-hidden="true">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </span>
+                  <h3 class="module-card-title">Eventos</h3>
+                </div>
+                <span class="status-badge is-warning">Curadoria</span>
+              </div>
+              <p class="module-card-desc">
+                Aprove ou recuse eventos enviados pelo formulário público, além de editar datas, cartazes e excluir registros.
+              </p>
+              <div class="module-card-footer">
+                <span class="module-route">/admin/eventos</span>
+                <a th:href="@{/admin/eventos}" class="btn btn-sm" data-module-pending="true" data-module-name="Eventos">Moderar <span class="visually-hidden">Eventos</span></a>
+              </div>
+            </article>
+
+            <article class="module-card">
+              <div class="module-card-head">
+                <div class="module-card-title-wrap">
+                  <span class="module-icon-box" aria-hidden="true">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 18V5l12-2v13"></path>
+                      <circle cx="6" cy="18" r="3"></circle>
+                      <circle cx="18" cy="16" r="3"></circle>
+                    </svg>
+                  </span>
+                  <h3 class="module-card-title">Indicações de Bandas</h3>
+                </div>
+                <span class="status-badge is-warning">Curadoria</span>
+              </div>
+              <p class="module-card-desc">
+                Gerencie o ciclo editorial das bandas indicadas: pendente, aceita, em entrevista, concluída e publicada na edição.
+              </p>
+              <div class="module-card-footer">
+                <span class="module-route">/admin/indicacoes</span>
+                <a th:href="@{/admin/indicacoes}" class="btn btn-sm" data-module-pending="true" data-module-name="Indicações de Bandas">Moderar <span class="visually-hidden">Indicações de Bandas</span></a>
+              </div>
+            </article>
+
+            <article class="module-card">
+              <div class="module-card-head">
+                <div class="module-card-title-wrap">
+                  <span class="module-icon-box" aria-hidden="true">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="9" cy="7" r="4"></circle>
+                      <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                  </span>
+                  <h3 class="module-card-title">Aliados</h3>
+                </div>
+                <span class="status-badge is-neutral">CRUD</span>
+              </div>
+              <p class="module-card-desc">
+                Cadastre selos, distros e parceiros com logo opcional, descrição bilíngue, ordem de exibição e visibilidade.
+              </p>
+              <div class="module-card-footer">
+                <span class="module-route">/admin/aliados</span>
+                <a th:href="@{/admin/aliados}" class="btn btn-sm" data-module-pending="true" data-module-name="Aliados">Gerenciar <span class="visually-hidden">Aliados</span></a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Tabela resumo dos módulos (padrão responsivo pronto para listagens CRUD) -->
+        <section class="panel-card" aria-labelledby="table-section-heading">
+          <div class="panel-toolbar">
+            <div>
+              <h2 class="section-title" id="table-section-heading">Mapa de Módulos</h2>
+              <span class="kpi-meta" id="modules-visible-count">5 de 5 módulos</span>
+            </div>
+
+            <div class="search-field">
+              <label for="module-filter-input" class="visually-hidden">Filtrar módulos</label>
+              <svg class="search-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input id="module-filter-input" type="search" class="search-input" placeholder="Filtrar módulos..." autocomplete="off">
+              <kbd class="search-shortcut" aria-hidden="true">/</kbd>
+            </div>
+          </div>
+
+          <div tabindex="0" role="region" aria-labelledby="modules-table-caption" class="table-wrapper">
+            <table class="admin-table">
+              <caption id="modules-table-caption">Módulos administrativos planejados e suas rotas de acesso</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Módulo</th>
+                  <th scope="col">Rota</th>
+                  <th scope="col">Fluxo</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Ação</th>
+                </tr>
+              </thead>
+              <tbody id="modules-table-body">
+                <tr data-module-row>
+                  <th scope="row">Edições do Fanzine</th>
+                  <td><code>/admin/edicoes</code></td>
+                  <td>Cadastro direto + entrevistas</td>
+                  <td><span class="status-badge is-neutral">Aguardando módulo</span></td>
+                  <td><a th:href="@{/admin/edicoes}" class="btn btn-sm" data-module-pending="true" data-module-name="Edições do Fanzine">Abrir <span class="visually-hidden">Edições do Fanzine</span></a></td>
+                </tr>
+                <tr data-module-row>
+                  <th scope="row">Notícias</th>
+                  <td><code>/admin/noticias</code></td>
+                  <td>Cadastro direto (PT / EN)</td>
+                  <td><span class="status-badge is-neutral">Aguardando módulo</span></td>
+                  <td><a th:href="@{/admin/noticias}" class="btn btn-sm" data-module-pending="true" data-module-name="Notícias">Abrir <span class="visually-hidden">Notícias</span></a></td>
+                </tr>
+                <tr data-module-row>
+                  <th scope="row">Eventos</th>
+                  <td><code>/admin/eventos</code></td>
+                  <td>Submissão pública + moderação</td>
+                  <td><span class="status-badge is-warning">Fila de aprovação</span></td>
+                  <td><a th:href="@{/admin/eventos}" class="btn btn-sm" data-module-pending="true" data-module-name="Eventos">Abrir <span class="visually-hidden">Eventos</span></a></td>
+                </tr>
+                <tr data-module-row>
+                  <th scope="row">Indicações de Bandas</th>
+                  <td><code>/admin/indicacoes</code></td>
+                  <td>Submissão pública + ciclo editorial</td>
+                  <td><span class="status-badge is-warning">Fila de curadoria</span></td>
+                  <td><a th:href="@{/admin/indicacoes}" class="btn btn-sm" data-module-pending="true" data-module-name="Indicações de Bandas">Abrir <span class="visually-hidden">Indicações de Bandas</span></a></td>
+                </tr>
+                <tr data-module-row>
+                  <th scope="row">Aliados</th>
+                  <td><code>/admin/aliados</code></td>
+                  <td>Cadastro direto (PT / EN)</td>
+                  <td><span class="status-badge is-neutral">Aguardando módulo</span></td>
+                  <td><a th:href="@{/admin/aliados}" class="btn btn-sm" data-module-pending="true" data-module-name="Aliados">Abrir <span class="visually-hidden">Aliados</span></a></td>
+                </tr>
+                <tr id="modules-empty-row" class="table-empty-row" hidden>
+                  <td colspan="5">Nenhum módulo encontrado para o filtro informado.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Dialog nativo reutilizável para confirmações -->
+  <dialog id="admin-confirm-dialog" class="admin-dialog" aria-labelledby="admin-confirm-title">
+    <div class="admin-dialog-body">
+      <h2 id="admin-confirm-title" class="admin-dialog-title">Confirmar ação</h2>
+      <p id="admin-confirm-message" class="admin-dialog-message">Tem certeza que deseja continuar?</p>
+    </div>
+    <div class="admin-dialog-actions">
+      <button type="button" class="btn" id="admin-confirm-cancel">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="admin-confirm-accept">Confirmar</button>
+    </div>
+  </dialog>
+
+  <!-- Região de avisos dinâmicos -->
+  <div id="admin-toast-region" class="admin-toast-region" aria-live="polite" aria-atomic="true"></div>
+
+  <script th:src="@{/js/admin.js}" defer></script>
+</body>
+
+</html>

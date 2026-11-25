@@ -83,12 +83,37 @@ class AdminLoginSecurityTests {
     void authenticatedUserAccessesAdminAndSeesInfernoAbertoInFooter() throws Exception {
         mockMvc.perform(get("/admin").with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Deu certo")));
+                .andExpect(content().string(containsString("Painel Administrativo")))
+                .andExpect(content().string(containsString("Visão Geral")))
+                .andExpect(content().string(containsString("/css/admin.css")))
+                .andExpect(content().string(containsString("/js/admin.js")))
+                .andExpect(content().string(containsString("action=\"/logout\"")))
+                .andExpect(content().string(containsString("name=\"_csrf\"")))
+                .andExpect(content().string(containsString("/admin/edicoes")))
+                .andExpect(content().string(containsString("/admin/noticias")))
+                .andExpect(content().string(containsString("/admin/eventos")))
+                .andExpect(content().string(containsString("/admin/indicacoes")))
+                .andExpect(content().string(containsString("/admin/aliados")));
 
         mockMvc.perform(get("/").with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Inferno Aberto")))
                 .andExpect(content().string(containsString("href=\"/admin\"")))
                 .andExpect(content().string(not(containsString("id=\"admin-login-dialog\""))));
+    }
+
+    @Test
+    void adminStaticAssetsAreAccessibleWithoutCreatingSession() throws Exception {
+        MvcResult cssResult = mockMvc.perform(get("/css/admin.css"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(".admin-shell")))
+                .andReturn();
+        assertThat(cssResult.getRequest().getSession(false)).isNull();
+
+        MvcResult jsResult = mockMvc.perform(get("/js/admin.js"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("abz-admin-sidebar-collapsed")))
+                .andReturn();
+        assertThat(jsResult.getRequest().getSession(false)).isNull();
     }
 }
