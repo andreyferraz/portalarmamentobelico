@@ -96,7 +96,7 @@ Armazenada na própria tabela `edicao` (relação 1:1):
    - O template suporta **capa + até 5 fotos extras** (máximo de 6 imagens no total).
    - Campos: `id`, `edicao_id`, `arquivo_path`, `legenda`, `ordem` (`1` a `5`).
 2. **Hordas & Artistas Entrevistados (`edicao_entrevista`)** — `#edition-interviews-list`
-   - Campos: `id`, `edicao_id`, `banda`, `pais`, `estilo`, `ordem`.
+   - Campos: `id`, `edicao_id`, `banda`, `pais`, `estilo`, `ordem`, `indicacao_banda_id` *(opcional — FK para `indicacao_banda(id) ON DELETE SET NULL`, permitindo vincular entrevistas oriundas de `/indique`; ver [`docs/crud-indicacao-banda.md`](./crud-indicacao-banda.md))*.
 3. **Demais Conteúdos Presentes (`edicao_conteudo_extra`)** — `#edition-extras-list`
    - Campos: `id`, `edicao_id`, `descricao`, `ordem`.
 
@@ -162,7 +162,9 @@ CREATE TABLE IF NOT EXISTS edicao_entrevista (
     pais TEXT NOT NULL,
     estilo TEXT NOT NULL,
     ordem INTEGER NOT NULL,
-    FOREIGN KEY (edicao_id) REFERENCES edicao(id) ON DELETE CASCADE
+    indicacao_banda_id TEXT,
+    FOREIGN KEY (edicao_id) REFERENCES edicao(id) ON DELETE CASCADE,
+    FOREIGN KEY (indicacao_banda_id) REFERENCES indicacao_banda(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS edicao_conteudo_extra (
@@ -242,6 +244,8 @@ ds.setUrl(datasourceUrl);
     - Cadastro via `origemId` com `copiarImagensOrigem = true` e sem novo upload de capa: duplica fisicamente os arquivos `.webp` com `FileUploadService.duplicarImagem`.
     - Edição: se nova capa for enviada, salva a nova e remove a antiga após commit/atualização; remove do disco apenas fotos extras desmarcadas/excluídas.
     - Exclusão: remove `capaPath` e todos os `arquivoPath` de `edicao_foto` do disco ao excluir a edição.
+  - **Sincronização com Indicações de Bandas (`IndicacaoBandaService`)**:
+    - Ao salvar/atualizar uma edição com `publicado = true`, aciona `IndicacaoBandaService.marcarComoPublicadasPorEdicao(edicao, entrevistas)` para promover automaticamente as indicações correspondentes (por `indicacao_banda_id` explícito ou por correspondência inequívoca de `(banda, pais)` normalizados) para `PUBLICADA`, removendo-as da vitrine pública de `/indique` (detalhes em [`docs/crud-indicacao-banda.md`](./crud-indicacao-banda.md)). Se a edição for despublicada ou excluída (sem versão irmã publicada), aciona `reverterPublicadasDaEdicao`.
 
 ### 5.4. Exposição Pública de Imagens (`config/WebMvcConfig.java`)
 - Configurar `WebMvcConfigurer.addResourceHandlers` mapeando `/uploads/**` para `Paths.get(uploadDir).toUri().toString()` (garantindo barra final e cache HTTP adequado).
