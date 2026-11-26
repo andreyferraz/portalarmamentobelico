@@ -74,4 +74,15 @@ class HtmlSanitizerServiceTests {
         assertFalse(sanitizer.temTextoVisivel("<script>alert(1)</script>"));
         assertTrue(sanitizer.temTextoVisivel("<p>Manifesto underground</p>"));
     }
+
+    @Test
+    void deveNormalizarEspacosNaoQuebraveisParaEvitarOverflow() {
+        String comNbsp = "<p>Texto&nbsp;com&nbsp;espacos&nbsp;colados</p>";
+
+        String limpo = sanitizer.sanitizar(comNbsp);
+
+        assertFalse(limpo.contains("\u00A0"));
+        assertFalse(limpo.contains("&nbsp;"));
+        assertTrue(limpo.contains("<p>Texto com espacos colados</p>"));
+    }
 }

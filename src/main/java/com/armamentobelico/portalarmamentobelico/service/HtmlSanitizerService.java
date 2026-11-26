@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +59,16 @@ public class HtmlSanitizerService {
                 link.attr("target", "_blank");
             }
         }
+
+        // Normaliza espaços não-quebráveis (&nbsp;) emitidos pelo editor rich-text para evitar overflow horizontal
+        doc.traverse((node, depth) -> {
+            if (node instanceof TextNode textNode) {
+                String whole = textNode.getWholeText();
+                if (whole.indexOf('\u00A0') >= 0) {
+                    textNode.text(whole.replace('\u00A0', ' '));
+                }
+            }
+        });
 
         return doc.body().html().trim();
     }
