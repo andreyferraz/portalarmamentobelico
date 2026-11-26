@@ -181,4 +181,43 @@ class NoticiaPublicControllerTests {
                 .andExpect(content().string(containsString("news-grid-duo--single")))
                 .andExpect(content().string(containsString("/noticias/" + salva.getSlug())));
     }
+
+    @Test
+    void deveRenderizarCtaDeEdicaoVinculadaMesmoQuandoEdicaoEstiverEsgotada() throws Exception {
+        EdicaoFormDTO edForm = new EdicaoFormDTO();
+        edForm.setNumeroEdicao(5);
+        edForm.setIdioma(IdiomaEdicao.PT);
+        edForm.setTitulo("Armamento Bélico Zine #05");
+        edForm.setSubtitulo("Edição lançada com o antigo nome Zine Death Metal");
+        edForm.setMesLancamento("Agosto");
+        edForm.setAnoLancamento(2009);
+        edForm.setAnoRevista("Ano 1");
+        edForm.setPaginas(32);
+        edForm.setPreco(new BigDecimal("4.00"));
+        edForm.setStatusEstoque(StatusEstoque.SOLDOUT);
+        edForm.setDescricao("32 páginas em xerox.");
+        edForm.setPublicado(true);
+        edForm.setCapa(criarPng("capa", "capa-5-pt.png"));
+        Edicao edicaoEsgotada = edicaoService.criar(edForm);
+
+        NoticiaFormDTO noticiaForm = new NoticiaFormDTO();
+        noticiaForm.setTituloPt("Resgate Histórico: Edição #05");
+        noticiaForm.setCategoriaPt("Zine");
+        noticiaForm.setAutor("Editoria Armamento Bélico");
+        noticiaForm.setDataPublicacao(LocalDate.of(2026, 8, 24));
+        noticiaForm.setResumoPt("Resumo histórico.");
+        noticiaForm.setConteudoHtmlPt("<p>Texto da matéria histórica.</p>");
+        noticiaForm.setEdicaoId(edicaoEsgotada.getId());
+        noticiaForm.setPublicado(true);
+        var salva = noticiaService.criar(noticiaForm);
+
+        mockMvc.perform(get("/noticias/" + salva.getSlug()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("class=\"news-cta-card\"")))
+                .andExpect(content().string(containsString("Edição #5 — Tiragem Esgotada")))
+                .andExpect(content().string(containsString("Edição lançada com o antigo nome Zine Death Metal")))
+                .andExpect(content().string(containsString("/edicoes/pt/5")))
+                .andExpect(content().string(containsString("Ver detalhes da Edição #5")))
+                .andExpect(content().string(not(containsString("data-add-to-cart-id"))));
+    }
 }

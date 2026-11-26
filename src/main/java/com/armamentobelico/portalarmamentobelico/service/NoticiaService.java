@@ -477,7 +477,7 @@ public class NoticiaService {
         if (edicaoPt != null) {
             ptList.add(toCatalogoItem(edicaoPt));
         }
-        if (edicaoEn != null && (edicaoPt == null || !edicaoEn.getId().equals(edicaoPt.getId()))) {
+        if (edicaoEn != null) {
             enList.add(toCatalogoItem(edicaoEn));
         }
 

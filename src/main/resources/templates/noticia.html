@@ -83,7 +83,7 @@
                 <!-- Variante PT -->
                 <div class="news-cta-lang-pt" th:if="${edicaoVinculadaPt != null}">
                     <h4 class="pirata-title news-cta-title"
-                        th:text="${'Adquira a Edição #' + edicaoVinculadaPt.numeroEdicao + ' Impressa'}">
+                        th:text="${edicaoVinculadaPt.statusEstoque.inStock ? 'Adquira a Edição #' + edicaoVinculadaPt.numeroEdicao + ' Impressa' : 'Edição #' + edicaoVinculadaPt.numeroEdicao + ' — Tiragem Esgotada'}">
                         Adquira a Edição Impressa
                     </h4>
                     <p class="news-cta-desc"
@@ -111,7 +111,7 @@
                 <!-- Variante EN -->
                 <div class="news-cta-lang-en" th:if="${edicaoVinculadaEn != null}" style="display: none;">
                     <h4 class="pirata-title news-cta-title"
-                        th:text="${'Get Physical Print Issue #' + edicaoVinculadaEn.numeroEdicao}">
+                        th:text="${edicaoVinculadaEn.statusEstoque.inStock ? 'Get Physical Print Issue #' + edicaoVinculadaEn.numeroEdicao : 'Issue #' + edicaoVinculadaEn.numeroEdicao + ' — Sold Out'}">
                         Get Physical Print Issue
                     </h4>
                     <p class="news-cta-desc"
