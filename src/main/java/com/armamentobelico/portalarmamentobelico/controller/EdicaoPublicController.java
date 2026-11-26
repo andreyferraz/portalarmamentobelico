@@ -15,6 +15,7 @@ import com.armamentobelico.portalarmamentobelico.model.Edicao;
 import com.armamentobelico.portalarmamentobelico.model.EdicaoFoto;
 import com.armamentobelico.portalarmamentobelico.model.IdiomaEdicao;
 import com.armamentobelico.portalarmamentobelico.service.EdicaoService;
+import com.armamentobelico.portalarmamentobelico.utils.PublicJsonUtils;
 
 @Controller
 @RequestMapping("/edicoes")
@@ -96,38 +97,10 @@ public class EdicaoPublicController {
     }
 
     private String jsonStringOrNull(String value) {
-        return value == null ? "null" : jsonString(value);
+        return PublicJsonUtils.jsonStringOrNull(value);
     }
 
     private String jsonString(String value) {
-        if (value == null) {
-            return "\"\"";
-        }
-        StringBuilder sb = new StringBuilder(value.length() + 2);
-        sb.append('"');
-        for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
-            switch (c) {
-                case '"' -> sb.append("\\\"");
-                case '\\' -> sb.append("\\\\");
-                case '\b' -> sb.append("\\b");
-                case '\f' -> sb.append("\\f");
-                case '\n' -> sb.append("\\n");
-                case '\r' -> sb.append("\\r");
-                case '\t' -> sb.append("\\t");
-                case '<' -> sb.append("\\u003c");
-                case '>' -> sb.append("\\u003e");
-                case '&' -> sb.append("\\u0026");
-                default -> {
-                    if (c < 0x20) {
-                        sb.append(String.format("\\u%04x", (int) c));
-                    } else {
-                        sb.append(c);
-                    }
-                }
-            }
-        }
-        sb.append('"');
-        return sb.toString();
+        return PublicJsonUtils.jsonString(value);
     }
 }

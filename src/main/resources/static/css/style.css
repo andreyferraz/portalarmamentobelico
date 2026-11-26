@@ -4741,3 +4741,215 @@ dialog::backdrop {
   color: #ef4444;
   flex-shrink: 0;
 }
+
+/* Etapa 2: Estado vazio de catálogo, badge LOW, linha PayPal Fee e modais da loja */
+.catalog-empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  border: 1px dashed var(--border-rough);
+  background: rgba(12, 12, 12, 0.85);
+  color: var(--color-paper-dim);
+}
+
+.catalog-empty-state-icon {
+  font-size: 2.25rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-blood-glow);
+}
+
+.catalog-empty-state h3 {
+  color: #ffffff;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.catalog-empty-state p {
+  max-width: 560px;
+  margin: 0 auto 1.25rem;
+  line-height: 1.55;
+}
+
+.tape-tag.warning {
+  background: #7c2d12;
+  color: #ffedd5;
+  border-color: #ea580c;
+}
+
+.cart-summary-line--fee {
+  color: #fca5a5;
+  font-size: 0.86rem;
+}
+
+.store-modal-dialog {
+  width: min(92vw, 480px);
+  padding: 0;
+  margin: auto;
+  border: 1px solid var(--color-blood);
+  background: #0d0d0d;
+  color: var(--color-bone);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.9), 0 0 24px rgba(139, 0, 0, 0.35);
+}
+
+.store-modal-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(3px);
+}
+
+.store-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #140808;
+  border-bottom: 1px solid var(--border-rough);
+}
+
+.store-modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.store-modal-title-wrap i {
+  color: var(--color-blood-glow);
+  font-size: 1.2rem;
+}
+
+.store-modal-title-wrap h2 {
+  margin: 0;
+  font-size: 1.45rem;
+  color: #ffffff;
+}
+
+.store-modal-close {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-paper-dim);
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.store-modal-close:hover,
+.store-modal-close:focus-visible {
+  color: #ffffff;
+  border-color: var(--border-rough);
+}
+
+.store-modal-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.store-modal-text {
+  margin: 0;
+  line-height: 1.55;
+  font-size: 0.94rem;
+  color: var(--color-bone);
+}
+
+.paypal-confirm-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  background: #070707;
+  border: 1px solid var(--border-rough);
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+.paypal-confirm-summary .paypal-summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.paypal-confirm-summary .paypal-summary-row--total {
+  padding-top: 8px;
+  margin-top: 4px;
+  border-top: 1px dashed var(--border-rough);
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.paypal-confirm-summary .paypal-summary-address {
+  padding-top: 8px;
+  margin-top: 4px;
+  border-top: 1px dashed var(--border-rough);
+  color: var(--color-paper-dim);
+  word-break: break-word;
+}
+
+.paypal-confirm-recipient {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--color-paper-dim);
+  font-family: var(--font-mono);
+}
+
+.store-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.store-modal-btn-secondary,
+.store-modal-btn-primary,
+.store-modal-btn-paypal {
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.store-modal-btn-secondary {
+  background: #141414;
+  color: var(--color-paper-dim);
+  border: 1px solid var(--border-rough);
+}
+
+.store-modal-btn-secondary:hover,
+.store-modal-btn-secondary:focus-visible {
+  background: #1f1f1f;
+  color: #ffffff;
+}
+
+.store-modal-btn-primary {
+  background: var(--color-blood);
+  color: #ffffff;
+  border: 1px solid var(--color-blood-glow);
+  font-weight: bold;
+}
+
+.store-modal-btn-primary:hover,
+.store-modal-btn-primary:focus-visible {
+  background: var(--color-blood-glow);
+}
+
+.store-modal-btn-paypal {
+  background: #003087;
+  color: #ffffff;
+  border: 1px solid #0070ba;
+  font-weight: bold;
+}
+
+.store-modal-btn-paypal:hover,
+.store-modal-btn-paypal:focus-visible {
+  background: #0070ba;
+}

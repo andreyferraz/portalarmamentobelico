@@ -1,13 +1,29 @@
 package com.armamentobelico.portalarmamentobelico.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.armamentobelico.portalarmamentobelico.service.EdicaoService;
+import com.armamentobelico.portalarmamentobelico.utils.PublicJsonUtils;
 
 @Controller
 public class PublicPagesController {
 
+    private static final int LIMITE_DESTAQUES_HOME = 4;
+
+    private final EdicaoService edicaoService;
+
+    public PublicPagesController(EdicaoService edicaoService) {
+        this.edicaoService = edicaoService;
+    }
+
     @GetMapping("/")
-    public String index() {
+    public String index(Model model) {
+        model.addAttribute("bodyClass", "page-home");
+        model.addAttribute("catalogPageDataJson",
+                PublicJsonUtils.serializarCatalogoPorIdioma(
+                        edicaoService.listarDestaquesHomePorIdioma(LIMITE_DESTAQUES_HOME)));
         return "index";
     }
 
@@ -17,7 +33,10 @@ public class PublicPagesController {
     }
 
     @GetMapping("/arquivo")
-    public String arquivo() {
+    public String arquivo(Model model) {
+        model.addAttribute("bodyClass", "page-arquivo");
+        model.addAttribute("catalogPageDataJson",
+                PublicJsonUtils.serializarCatalogoPorIdioma(edicaoService.listarCatalogoPublicoPorIdioma()));
         return "arquivo";
     }
 

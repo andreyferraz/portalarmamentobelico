@@ -14,7 +14,7 @@
             <p class="sub-title" data-i18n="archive_sub">
                 O registro histórico de 18 anos de publicações impressas
             </p>
-            <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+            <img th:src="@{/assets/divisor-edicoes.png}" alt="" class="editions-divider" aria-hidden="true">
         </div>
 
         <!-- FILTROS DE ESTOQUE -->
@@ -26,8 +26,9 @@
 
         <!-- GRID GERAL DE TODAS AS EDIÇÕES -->
         <div class="products-grid" id="products-grid-container">
-            <!-- Preenchido pelo script.js com todas as edições no idioma ativo -->
+            <!-- Preenchido pelo script.js com todas as edições publicadas no idioma ativo -->
         </div>
+        <script type="application/json" id="catalog-page-data" th:if="${catalogPageDataJson != null}" th:utext="${catalogPageDataJson}"></script>
 
         <!-- NOTA HISTÓRICA SOBRE EDIÇÕES ESGOTADAS -->
         <div class="zine-box" style="margin-top: 50px; text-align: center;">

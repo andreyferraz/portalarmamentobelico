@@ -21,7 +21,7 @@
                     <a href="#edicoes-disponiveis" class="btn-brutal btn-blood">
                         <span class="inverted-cross">✝</span> <span data-i18n="hero_cta_buy">Comprar Edição Atual</span>
                     </a>
-                    <a href="arquivo.html" class="btn-brutal btn-outline-decay">
+                    <a th:href="@{/arquivo}" class="btn-brutal btn-outline-decay">
                         <i class="fa-solid fa-book-open" aria-hidden="true"></i> <span
                             data-i18n="hero_cta_archive">Explorar Coleção Completa</span>
                     </a>
@@ -107,7 +107,7 @@
 
                     <!-- Botões de Ação -->
                     <div class="cta-actions">
-                        <a href="assinatura.html" class="btn-brutal btn-blood">
+                        <a th:href="@{/assinatura}" class="btn-brutal btn-blood">
                             <span class="inverted-cross">✝</span> <span data-i18n="cta_btn">Garantir Assinatura • R$
                                 20/mês</span>
                         </a>
@@ -133,11 +133,12 @@
             </div>
 
             <div style="text-align: center; margin-top: 30px;">
-                <a href="arquivo.html" class="btn-brutal btn-outline-decay">
+                <a th:href="@{/arquivo}" class="btn-brutal btn-outline-decay">
                     <i class="fa-solid fa-book-open" aria-hidden="true"></i> <span
                         data-i18n="section_editions_all">Conferir todas as edições</span>
                 </a>
             </div>
+            <script type="application/json" id="catalog-page-data" th:if="${catalogPageDataJson != null}" th:utext="${catalogPageDataJson}"></script>
         </section>
 
         <!-- SEÇÃO: DESTAQUE CANAL DO YOUTUBE COM BOTÃO INSCREVA-SE -->
@@ -225,7 +226,7 @@
             </div>
 
             <div style="text-align: center; margin-top: 30px;">
-                <a href="noticias.html" class="btn-brutal btn-outline-decay" data-i18n="news_read_all">
+                <a th:href="@{/noticias}" class="btn-brutal btn-outline-decay" data-i18n="news_read_all">
                     ☠ Ver Todas as Notícias do Zine
                 </a>
             </div>

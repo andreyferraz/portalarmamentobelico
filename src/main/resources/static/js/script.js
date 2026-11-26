@@ -7,283 +7,8 @@
 (function () {
   'use strict';
 
-  // --- BASE DE DADOS DO FANZINE (PRODUTOS / EDIÇÕES) ---
-  // REGRA: Edições em PT (R$) vs Edições em EN (US$)
-  const ZINE_CATALOG = {
-    pt: [
-      {
-        id: 'zine-58-pt',
-        editionNumber: 58,
-        detailUrl: 'edicao.html',
-        title: 'Armamento Bélico #58',
-        subtitle: 'Edição Nacional em Português • Especial Death & Black Metal Subterrâneo',
-        price: 30.00,
-        currency: 'R$',
-        priceFormatted: 'R$ 30,00',
-        cover: 'assets/images/capa-edicao-58.png',
-        releaseMonth: 'Agosto',
-        releaseYear: 2026,
-        zineYear: 'Ano 18',
-        date: 'Agosto / 2026 - Ano 18',
-        bands: 'Diabolizer (Turquia), Mare (Noruega), Coldwinter (Brasil), Mortem Solis (Brasil), Venereal Baptism (EUA), Xiitium of Nemesis (Japão), Executor (Chile), Shaytan (Brasil), Sanctuire (Canadá), The Monolith Deathcult (Holanda)...',
-        inStock: true,
-        stockStatus: 'available', // Valores aceitos pelo template: 'available' | 'low' | 'soldout'
-        pages: 68,
-        description: '68 páginas em offset rústico pesado, capa em papel cartão com verniz fosco. Entrevistas profundas sobre a essência do Death e Black Metal obscuro, dezenas de resenhas de demos, fitas K7, zines e CDs do underground mundial.',
-        // Capa + até 5 fotos extras (template suporta até 5 fotos adicionais vindas do backend)
-        extraPhotos: [
-          {
-            src: 'assets/images/capa-edicao-57.jpg',
-            caption: 'Foto extra 1/5 — Entrevista de capa: Diabolizer (ilustrativa do template)'
-          },
-          {
-            src: 'assets/images/capa-edicao-56.jpg',
-            caption: 'Foto extra 2/5 — Páginas internas e diagramação xerox (ilustrativa do template)'
-          },
-          {
-            src: 'assets/images/capa-edicao-55.jpg',
-            caption: 'Foto extra 3/5 — Seção de resenhas de demos, K7s e vinis (ilustrativa do template)'
-          },
-          {
-            src: 'assets/images/cta-baphomet-assinatura.png',
-            caption: 'Foto extra 4/5 — Arte e encarte exclusivo da edição (ilustrativa do template)'
-          },
-          {
-            src: 'assets/images/youtube-spotlight-bg.png',
-            caption: 'Foto extra 5/5 — Contracapa e detalhes de acabamento (ilustrativa do template)'
-          }
-        ],
-        interviews: [
-          { band: 'Diabolizer', country: 'Turquia', style: 'Death Metal' },
-          { band: 'Mare', country: 'Noruega', style: 'Black Metal' },
-          { band: 'Coldwinter', country: 'Brasil', style: 'Black Metal' },
-          { band: 'Mortem Solis', country: 'Brasil', style: 'Death / Black Metal' },
-          { band: 'Venereal Baptism', country: 'EUA', style: 'Black Metal' },
-          { band: 'Xiitium of Nemesis', country: 'Japão', style: 'Death Metal' },
-          { band: 'Executor', country: 'Chile', style: 'Thrash / Death Metal' },
-          { band: 'Shaytan', country: 'Brasil', style: 'Black Metal' },
-          { band: 'Sanctuire', country: 'Canadá', style: 'Black Metal' },
-          { band: 'The Monolith Deathcult', country: 'Holanda', style: 'Brutal Death Metal' }
-        ],
-        extraContents: [
-          'Mais de 70 resenhas sem filtros de demos, fitas K7, CDs, vinis e zines impressos',
-          'Editorial especial celebrando 18 anos de existência ininterrupta no papel',
-          'Dossiê sobre a cena Death Metal sul-americana e selos independentes',
-          'Diagramação artesanal em alto contraste xerox com artes exclusivas'
-        ],
-        specs: {
-          format: 'A5 (14,8 × 21 cm)',
-          paper: 'Miolo offset rústico 90g • Capa papel cartão 250g com verniz fosco',
-          language: 'Português (Brasil)',
-          printRun: '300 cópias físicas numeradas'
-        },
-        shippingDeadline: 'Envio via Impresso Registrado em até 3 dias úteis após a confirmação do pagamento.',
-        youtubeUrl: 'https://www.youtube.com/watch?v=5J1o1DHkekE',
-        prevEdition: { number: 57, title: 'Armamento Bélico #57', url: 'arquivo.html' },
-        nextEdition: null
-      },
-      {
-        id: 'zine-57-pt',
-        title: 'Armamento Bélico #57',
-        subtitle: 'Edição Nacional em Português',
-        price: 30.00,
-        currency: 'R$',
-        priceFormatted: 'R$ 30,00',
-        cover: 'assets/images/capa-edicao-57.jpg',
-        date: 'Junho / 2026 - Ano 17',
-        bands: 'Litosth (Brasil), Impugner (Noruega), Zdrada Iskariota (Polônia), Ende (França), Tongues That Tell Secrets (EUA), Nihilo (Suíça), Metaphobic (EUA), Unholy Lust (EUA), Teufelnacht (Alemanha)...',
-        inStock: true,
-        pages: 64,
-        description: 'Edição sangrenta cobrindo a ascensão do black metal sinfônico e visceral, doom e necro death metal. Acompanha encarte especial e resenhas exclusivas do underground sul-americano.'
-      },
-      {
-        id: 'zine-56-pt',
-        title: 'Armamento Bélico #56',
-        subtitle: 'Edição Nacional em Português',
-        price: 25.00,
-        currency: 'R$',
-        priceFormatted: 'R$ 25,00',
-        cover: 'assets/images/capa-edicao-56.jpg',
-        date: 'Janeiro / 2026 - Ano 17',
-        bands: 'Lord Belial (Suécia), Pentagram Chile (Chile), Morbosidad (EUA), Incidere (México), Malefactor (Brasil), Vae Victis (Alemanha), Minenfeld (Alemanha), Disma (EUA), Clandestine Blaze (Finlândia)...',
-        inStock: true,
-        pages: 60,
-        description: 'Conversa devastadora com os mestres suecos do Lord Belial, a história brutal do Pentagram Chile e o bestial black metal do Morbosidad. Últimos exemplares em estoque.'
-      },
-      {
-        id: 'zine-55-pt',
-        title: 'Armamento Bélico #55',
-        subtitle: 'Edição Nacional em Português',
-        price: 25.00,
-        currency: 'R$',
-        priceFormatted: 'R$ 25,00',
-        cover: 'assets/images/capa-edicao-55.jpg',
-        date: 'Novembro / 2025 - Ano 17',
-        bands: 'Patriarkh (Polônia), Mental Horror (Brasil), Wolfslust (Brasil), Burial (Itália), Mortal Profecia (Brasil), Eisige Venen (EUA), Loits (Estônia), Shrouded in Darkness (Suécia)...',
-        inStock: false, // ESGOTADO para demonstrar badge e estado
-        pages: 60,
-        description: 'A transição histórica do Batushka para Patriarkh com entrevista exclusiva de 6 páginas, mais o retorno furioso do Mental Horror e a necromancia sonora da Estônia e Polônia. Tiragem esgotada.'
-      },
-      // Edições Históricas do Arquivo
-      {
-        id: 'zine-54-pt',
-        title: 'Armamento Bélico #54',
-        subtitle: 'Edição de Colecionador',
-        price: 25.00,
-        currency: 'R$',
-        priceFormatted: 'R$ 25,00',
-        cover: 'assets/images/capa-edicao-56.jpg',
-        date: 'Julho / 2025 - Ano 16',
-        bands: 'Sarcófago Tribute, Gorgoroth, Mystifier, Krisiun, Incantation, Goatlord...',
-        inStock: false,
-        pages: 56,
-        description: 'Tributo ao metal da morte sul-americano, histórias de fita cassete nos anos 80 e 90.'
-      },
-      {
-        id: 'zine-50-pt',
-        title: 'Armamento Bélico #50 - Especial Jubileu Maldito',
-        subtitle: 'Edição Comemorativa 50 Lançamentos',
-        price: 35.00,
-        currency: 'R$',
-        priceFormatted: 'R$ 35,00',
-        cover: 'assets/images/capa-edicao-57.jpg',
-        date: 'Dezembro / 2024 - Ano 16',
-        bands: 'Mayhem, Darkthrone, Vulcano, Holocausto, Sextrash, Rotting Christ...',
-        inStock: false,
-        pages: 84,
-        description: 'Edição gigante de 84 páginas comemorando o marco de cinquenta fanzines físicos ininterruptos.'
-      }
-    ],
-
-    en: [
-      {
-        id: 'zine-58-en',
-        editionNumber: 58,
-        detailUrl: 'edicao.html',
-        title: 'Armamento Bélico #58 [ENG]',
-        subtitle: 'International English Print Edition • Underground Death & Black Metal Special',
-        price: 12.00,
-        currency: 'US$',
-        priceFormatted: 'US$ 12.00',
-        cover: 'assets/images/capa-edicao-58.png',
-        releaseMonth: 'August',
-        releaseYear: 2026,
-        zineYear: 'Year 18',
-        date: 'August / 2026 - Vol. 18',
-        bands: 'Diabolizer (Turkey), Mare (Norway), Coldwinter (Brazil), Mortem Solis (Brazil), Venereal Baptism (USA), Xiitium of Nemesis (Japan), Executor (Chile), Sanctuire (Canada)...',
-        inStock: true,
-        stockStatus: 'available',
-        pages: 68,
-        description: 'Full English translation. 68 heavyweight printed pages of ruthless underground death/black metal madness, interviews, cult underground demos and underground release reviews.',
-        extraPhotos: [
-          {
-            src: 'assets/images/capa-edicao-57.jpg',
-            caption: 'Extra photo 1/5 — Cover interview: Diabolizer (template preview)'
-          },
-          {
-            src: 'assets/images/capa-edicao-56.jpg',
-            caption: 'Extra photo 2/5 — Inside pages & xerox layout (template preview)'
-          },
-          {
-            src: 'assets/images/capa-edicao-55.jpg',
-            caption: 'Extra photo 3/5 — Reviews section: demos, tapes & vinyl (template preview)'
-          },
-          {
-            src: 'assets/images/cta-baphomet-assinatura.png',
-            caption: 'Extra photo 4/5 — Exclusive insert & artwork (template preview)'
-          },
-          {
-            src: 'assets/images/youtube-spotlight-bg.png',
-            caption: 'Extra photo 5/5 — Back cover & print finish details (template preview)'
-          }
-        ],
-        interviews: [
-          { band: 'Diabolizer', country: 'Turkey', style: 'Death Metal' },
-          { band: 'Mare', country: 'Norway', style: 'Black Metal' },
-          { band: 'Coldwinter', country: 'Brazil', style: 'Black Metal' },
-          { band: 'Mortem Solis', country: 'Brazil', style: 'Death / Black Metal' },
-          { band: 'Venereal Baptism', country: 'USA', style: 'Black Metal' },
-          { band: 'Xiitium of Nemesis', country: 'Japan', style: 'Death Metal' },
-          { band: 'Executor', country: 'Chile', style: 'Thrash / Death Metal' },
-          { band: 'Shaytan', country: 'Brazil', style: 'Black Metal' },
-          { band: 'Sanctuire', country: 'Canada', style: 'Black Metal' },
-          { band: 'The Monolith Deathcult', country: 'Netherlands', style: 'Brutal Death Metal' }
-        ],
-        extraContents: [
-          'Over 70 unfiltered reviews of demos, cassette tapes, CDs, vinyl and printed zines',
-          'Special editorial celebrating 18 years of uninterrupted physical print resistance',
-          'South American underground Death Metal dossier & independent labels spotlight',
-          'Old-school high-contrast xerox layout with exclusive underground artwork'
-        ],
-        specs: {
-          format: 'A5 (14.8 × 21 cm)',
-          paper: '90gsm heavy offset interior • 250gsm matte card cover',
-          language: 'English (International)',
-          printRun: '300 numbered physical copies'
-        },
-        shippingDeadline: 'Dispatched via Registered Worldwide Airmail within 3 business days after payment confirmation.',
-        youtubeUrl: 'https://www.youtube.com/watch?v=5J1o1DHkekE',
-        prevEdition: { number: 57, title: 'Armamento Bélico #57 [ENG]', url: 'arquivo.html' },
-        nextEdition: null
-      },
-      {
-        id: 'zine-57-en',
-        title: 'Armamento Bélico #57 [ENG]',
-        subtitle: 'International English Print Edition',
-        price: 12.00,
-        currency: 'US$',
-        priceFormatted: 'US$ 12.00',
-        cover: 'assets/images/capa-edicao-57.jpg',
-        date: 'June / 2026 - Vol. 17',
-        bands: 'Litosth (Brazil), Impugner (Norway), Zdrada Iskariota (Poland), Ende (France), Tongues That Tell Secrets (USA), Nihilo (Switzerland), Metaphobic (USA)...',
-        inStock: true,
-        pages: 64,
-        description: 'International issue featuring deep discussions with emerging European and American extreme acts, obscure tape archives, and South American necromancy.'
-      },
-      {
-        id: 'zine-56-en',
-        title: 'Armamento Bélico #56 [ENG]',
-        subtitle: 'International English Print Edition',
-        price: 10.00,
-        currency: 'US$',
-        priceFormatted: 'US$ 10.00',
-        cover: 'assets/images/capa-edicao-56.jpg',
-        date: 'January / 2026 - Vol. 17',
-        bands: 'Lord Belial (Sweden), Pentagram Chile (Chile), Morbosidad (USA), Incidere (Mexico), Malefactor (Brazil), Vae Victis (Germany), Disma (USA)...',
-        inStock: true,
-        pages: 60,
-        description: 'Swedish black/death masters Lord Belial, South American pioneers Pentagram Chile, and crushing underground demo reviews. Few copies remaining.'
-      },
-      {
-        id: 'zine-55-en',
-        title: 'Armamento Bélico #55 [ENG]',
-        subtitle: 'International English Print Edition',
-        price: 10.00,
-        currency: 'US$',
-        priceFormatted: 'US$ 10.00',
-        cover: 'assets/images/capa-edicao-55.jpg',
-        date: 'November / 2025 - Vol. 17',
-        bands: 'Patriarkh (Poland), Mental Horror (Brazil), Wolfslust (Brazil), Burial (Italy), Mortal Profecia (Brazil), Eisige Venen (USA)...',
-        inStock: false,
-        pages: 60,
-        description: 'Crucial historical interview with Patriarkh (ex-Batushka), relentless Brazilian death metal assault and Eastern European black metal. Sold out.'
-      },
-      {
-        id: 'zine-50-en',
-        title: 'Armamento Bélico #50 [ENG] - Special Jubilee',
-        subtitle: '50th Issue Commemorative Edition',
-        price: 15.00,
-        currency: 'US$',
-        priceFormatted: 'US$ 15.00',
-        cover: 'assets/images/capa-edicao-57.jpg',
-        date: 'December / 2024 - Vol. 16',
-        bands: 'Mayhem, Darkthrone, Vulcano, Holocausto, Sextrash, Rotting Christ...',
-        inStock: false,
-        pages: 84,
-        description: 'Colossal 84-page anniversary issue honoring 50 consecutive printed fanzines in full English text. Archival collectors edition.'
-      }
-    ]
-  };
+  // --- CATÁLOGO DINÂMICO INJETADO PELO BACKEND (#catalog-page-data e #store-config-data) ---
+  // REGRA OFICIAL: Edições em PT (R$ / BRL) vs Edições em EN (€ / EUR)
 
   // --- DICIONÁRIO DE TRADUÇÃO I18N ---
   const TRANSLATIONS = {
@@ -531,6 +256,7 @@
   // --- GERENCIAMENTO DE ESTADO (LOCALSTORAGE) ---
   const defaultAddress = {
     fullName: '',
+    country: '',
     zip: '',
     street: '',
     number: '',
@@ -547,29 +273,110 @@
     }
   } catch (_) {}
 
-  // Configuração fixa de frete (pronta para ser sobrescrita futuramente pelo backend)
-  const SHIPPING_CONFIG = {
-    'R$': {
-      baseFee: 13.00,      // 1 edição: R$ 13,00
-      additionalFee: 2.00  // Cada edição adicional: + R$ 2,00
+  // Configurações padrão da loja (sobrescritas por #store-config-data injetado pelo backend)
+  const DEFAULT_STORE_CONFIG = {
+    shipping: {
+      'R$': { baseFee: 13.00, additionalFee: 2.00 },
+      '€': { baseFee: 10.00, additionalFee: 3.00 }
     },
-    'US$': {
-      baseFee: 13.00,
-      additionalFee: 2.00
+    whatsappNumber: '5527981076157',
+    paypal: {
+      email: 'revistadeathmetal@hotmail.com',
+      feePercent: 0.064,
+      fixedFeeEur: 0.35
     }
   };
 
+  function loadStoreConfig() {
+    const scriptEl = document.getElementById('store-config-data');
+    if (!scriptEl) return DEFAULT_STORE_CONFIG;
+    try {
+      const parsed = JSON.parse(scriptEl.textContent || 'null');
+      if (!parsed || typeof parsed !== 'object') return DEFAULT_STORE_CONFIG;
+      return {
+        shipping: {
+          'R$': {
+            baseFee: Number(parsed.shipping?.['R$']?.baseFee ?? DEFAULT_STORE_CONFIG.shipping['R$'].baseFee),
+            additionalFee: Number(parsed.shipping?.['R$']?.additionalFee ?? DEFAULT_STORE_CONFIG.shipping['R$'].additionalFee)
+          },
+          '€': {
+            baseFee: Number(parsed.shipping?.['€']?.baseFee ?? DEFAULT_STORE_CONFIG.shipping['€'].baseFee),
+            additionalFee: Number(parsed.shipping?.['€']?.additionalFee ?? DEFAULT_STORE_CONFIG.shipping['€'].additionalFee)
+          }
+        },
+        whatsappNumber: String(parsed.whatsappNumber || DEFAULT_STORE_CONFIG.whatsappNumber),
+        paypal: {
+          email: String(parsed.paypal?.email || DEFAULT_STORE_CONFIG.paypal.email),
+          feePercent: Number(parsed.paypal?.feePercent ?? DEFAULT_STORE_CONFIG.paypal.feePercent),
+          fixedFeeEur: Number(parsed.paypal?.fixedFeeEur ?? DEFAULT_STORE_CONFIG.paypal.fixedFeeEur)
+        }
+      };
+    } catch (_) {
+      return DEFAULT_STORE_CONFIG;
+    }
+  }
+
+  let STORE_CONFIG = DEFAULT_STORE_CONFIG;
+  let cachedCatalogData = undefined;
+
+  function getCatalogData() {
+    if (cachedCatalogData !== undefined) return cachedCatalogData;
+    const scriptEl = document.getElementById('catalog-page-data');
+    if (!scriptEl) {
+      cachedCatalogData = { pt: [], en: [] };
+      return cachedCatalogData;
+    }
+    try {
+      const parsed = JSON.parse(scriptEl.textContent || 'null');
+      cachedCatalogData = {
+        pt: Array.isArray(parsed?.pt) ? parsed.pt : [],
+        en: Array.isArray(parsed?.en) ? parsed.en : []
+      };
+    } catch (_) {
+      cachedCatalogData = { pt: [], en: [] };
+    }
+    return cachedCatalogData;
+  }
+
+  function sanitizeSavedCart(rawCart) {
+    if (!Array.isArray(rawCart)) return [];
+    const validItems = rawCart.filter(
+      item =>
+        item &&
+        typeof item === 'object' &&
+        (item.currency === 'R$' || item.currency === '€') &&
+        Number(item.quantity) > 0
+    );
+    if (validItems.length === 0) return [];
+    const firstCurrency = validItems[0].currency;
+    return validItems.filter(item => item.currency === firstCurrency);
+  }
+
+  let initialCart = [];
+  try {
+    const parsedCart = JSON.parse(localStorage.getItem('ab_cart') || '[]');
+    initialCart = sanitizeSavedCart(parsedCart);
+    if (Array.isArray(parsedCart) && parsedCart.length !== initialCart.length) {
+      localStorage.setItem('ab_cart', JSON.stringify(initialCart));
+    }
+  } catch (_) {
+    initialCart = [];
+  }
+
   const STATE = {
     lang: localStorage.getItem('ab_lang') || 'pt',
-    cart: JSON.parse(localStorage.getItem('ab_cart') || '[]'),
+    cart: initialCart,
     checkoutAddress: savedAddress,
     isReturningCustomer: localStorage.getItem('ab_returning_customer') === 'true',
     paymentMethod: localStorage.getItem('ab_payment_method') === 'card' ? 'card' : 'pix',
     pendingOrderConfirmation: localStorage.getItem('ab_pending_order_confirmation') === 'true',
     showOrderThankYou: false,
-    whatsappNumber: '5527981076157', // Número oficial para pedidos via WhatsApp
-    paypalBusinessEmail: 'armamento.belico.zine@gmail.com'
+    whatsappNumber: DEFAULT_STORE_CONFIG.whatsappNumber,
+    paypalBusinessEmail: DEFAULT_STORE_CONFIG.paypal.email
   };
+
+  let pendingCartReplacementProduct = null;
+  let pendingPayPalCheckoutUrl = null;
 
   let cachedServerEditionData = undefined;
   function getServerEditionData() {
@@ -679,31 +486,29 @@
     renderCart();
   }
 
-  function addToCart(productId) {
-    const currentLang = STATE.lang;
-    const catalog = ZINE_CATALOG[currentLang] || [];
-    let product = catalog.find(p => p.id === productId);
+  function findProductById(productId) {
+    const catalogData = getCatalogData();
+    const allProducts = [...(catalogData.pt || []), ...(catalogData.en || [])];
+    let product = allProducts.find(p => p.id === productId);
     if (!product && editionPageState.edition && editionPageState.edition.id === productId) {
       product = editionPageState.edition;
     }
+    return product || null;
+  }
 
-    if (!product || !product.inStock) {
-      showToast(currentLang === 'pt' ? 'Item esgotado ou indisponível!' : 'Item is sold out!');
-      return;
-    }
-
-    const existingIndex = STATE.cart.findIndex(item => item.id === productId);
+  function pushProductToCart(product) {
+    const existingIndex = STATE.cart.findIndex(item => item.id === product.id);
     if (existingIndex > -1) {
       STATE.cart[existingIndex].quantity += 1;
     } else {
       STATE.cart.push({
         id: product.id,
         title: product.title,
-        price: product.price,
+        price: Number(product.price || 0),
         currency: product.currency,
         cover: product.cover,
         quantity: 1,
-        lang: currentLang
+        lang: product.editionLang || (product.currency === '€' ? 'en' : 'pt')
       });
     }
 
@@ -714,7 +519,68 @@
 
     saveCart();
     openCartDrawer();
-    showToast(currentLang === 'pt' ? `"${product.title}" adicionado ao caixão!` : `"${product.title}" added to cart!`);
+    showToast(STATE.lang === 'pt' ? `"${product.title}" adicionado ao caixão!` : `"${product.title}" added to cart!`);
+  }
+
+  function openCurrencyConflictDialog(product) {
+    const dialog = document.getElementById('cart-currency-conflict-dialog');
+    const titleEl = document.getElementById('cart-conflict-title');
+    const msgEl = document.getElementById('cart-conflict-message');
+    const cancelBtn = document.getElementById('cart-conflict-cancel-btn');
+    const replaceBtn = document.getElementById('cart-conflict-replace-btn');
+
+    const currentCurrency = STATE.cart[0]?.currency || 'R$';
+    const isPtUi = STATE.lang === 'pt';
+
+    if (!dialog || typeof dialog.showModal !== 'function') {
+      showToast(
+        isPtUi
+          ? `Finalize ou limpe seu carrinho em ${currentCurrency} antes de adicionar edições em ${product.currency}.`
+          : `Finish or clear your ${currentCurrency} cart before adding ${product.currency} issues.`
+      );
+      return;
+    }
+
+    pendingCartReplacementProduct = product;
+
+    if (titleEl) {
+      titleEl.textContent = isPtUi ? 'Moedas Diferentes no Carrinho' : 'Different Currencies in Cart';
+    }
+    if (msgEl) {
+      msgEl.textContent = isPtUi
+        ? `Seu Necrocarrinho atual possui itens em ${currentCurrency}. Pedidos em R$ (Brasil • Correios/WhatsApp) e pedidos em € (Internacional • Airmail/PayPal) são fechados separadamente. Deseja substituir o carrinho atual por "${product.title}" (${product.currency})?`
+        : `Your Death Cart currently holds ${currentCurrency} items. Orders in R$ (Brazil • Correios/WhatsApp) and € (International • Airmail/PayPal) must be checked out separately. Replace your current cart with "${product.title}" (${product.currency})?`;
+    }
+    if (cancelBtn) {
+      cancelBtn.textContent = isPtUi ? 'Manter carrinho atual' : 'Keep current cart';
+    }
+    if (replaceBtn) {
+      replaceBtn.textContent = isPtUi ? 'Substituir carrinho' : 'Replace cart';
+    }
+
+    dialog.showModal();
+  }
+
+  function addToCart(productId) {
+    const currentLang = STATE.lang;
+    const product = findProductById(productId);
+
+    if (!product || !product.inStock) {
+      showToast(currentLang === 'pt' ? 'Item esgotado ou indisponível!' : 'Item is sold out!');
+      return;
+    }
+
+    if (product.currency !== 'R$' && product.currency !== '€') {
+      showToast(currentLang === 'pt' ? 'Moeda inválida para esta edição.' : 'Invalid currency for this issue.');
+      return;
+    }
+
+    if (STATE.cart.length > 0 && STATE.cart[0].currency !== product.currency) {
+      openCurrencyConflictDialog(product);
+      return;
+    }
+
+    pushProductToCart(product);
   }
 
   function removeFromCart(productId) {
@@ -735,11 +601,11 @@
         removeFromCart(productId);
       } else {
         STATE.showOrderThankYou = false;
-    if (STATE.pendingOrderConfirmation) {
-      setPendingOrderConfirmation(false);
-    }
+        if (STATE.pendingOrderConfirmation) {
+          setPendingOrderConfirmation(false);
+        }
 
-    saveCart();
+        saveCart();
       }
     }
   }
@@ -754,14 +620,35 @@
 
   function calculateShipping(itemCount, currency) {
     if (!itemCount || itemCount <= 0) return 0;
-    const rule = SHIPPING_CONFIG[currency] || SHIPPING_CONFIG['R$'];
-    return rule.baseFee + ((itemCount - 1) * rule.additionalFee);
+    const rule = STORE_CONFIG.shipping[currency] || STORE_CONFIG.shipping['R$'];
+    return Number((rule.baseFee + ((itemCount - 1) * rule.additionalFee)).toFixed(2));
+  }
+
+  function roundHalfUp2(value) {
+    return Math.round((Number(value || 0) + Number.EPSILON) * 100) / 100;
+  }
+
+  function calculatePayPalEurSummary(baseAmountEur) {
+    const base = roundHalfUp2(baseAmountEur);
+    if (base <= 0) {
+      return { base: 0, fee: 0, total: 0 };
+    }
+    const pct = Number(STORE_CONFIG.paypal?.feePercent ?? 0.064);
+    const fixed = Number(STORE_CONFIG.paypal?.fixedFeeEur ?? 0.35);
+    const divisor = 1 - pct;
+    const total = divisor > 0 ? roundHalfUp2((base + fixed) / divisor) : base;
+    const fee = roundHalfUp2(total - base);
+    return { base, fee, total };
   }
 
   function getCartTotal() {
     if (STATE.cart.length === 0) return 0;
     const currency = STATE.cart[0].currency;
-    return getCartSubtotal() + calculateShipping(getCartItemCount(), currency);
+    const base = getCartSubtotal() + calculateShipping(getCartItemCount(), currency);
+    if (currency === '€') {
+      return calculatePayPalEurSummary(base).total;
+    }
+    return roundHalfUp2(base);
   }
 
   function formatCurrency(value, currency) {
@@ -774,7 +661,7 @@
         ? `€ ${num.toFixed(2).replace('.', ',')}`
         : `€ ${num.toFixed(2)}`;
     }
-    return `${currency || 'US$'} ${num.toFixed(2)}`;
+    return `${currency || '€'} ${num.toFixed(2)}`;
   }
 
   function updateCartCountBadge() {
@@ -823,7 +710,7 @@
     }
   }
 
-  // REGRA DO MENU: O link para a página "Assinatura" só deve estar visível no menu quando o idioma ativo for Português
+  // REGRA DO MENU E HOME: Assinatura só deve estar visível quando o idioma ativo for Português
   function updateSubscriptionNavVisibility() {
     const subNavItems = document.querySelectorAll('.nav-assinatura');
     subNavItems.forEach(item => {
@@ -836,6 +723,12 @@
       }
     });
 
+    const homeSubCta = document.getElementById('cta-assinatura');
+    if (homeSubCta) {
+      homeSubCta.hidden = STATE.lang !== 'pt';
+      homeSubCta.style.display = STATE.lang === 'pt' ? '' : 'none';
+    }
+
     // Se estiver na página de assinatura e mudar para EN, exibe container de aviso
     const subNotice = document.getElementById('sub-intl-notice');
     const subContent = document.getElementById('subscription-content');
@@ -846,48 +739,104 @@
     }
   }
 
-  // --- RENDERIZAÇÃO DOS PRODUTOS / EDIÇÕES ---
+  function applyActiveArchiveFilter() {
+    const activeBtn = document.querySelector('.archive-filters .filter-btn.active');
+    if (!activeBtn) return;
+    const filter = activeBtn.getAttribute('data-filter') || 'all';
+    document.querySelectorAll('.product-card').forEach(card => {
+      const stock = card.getAttribute('data-stock');
+      if (filter === 'all') {
+        card.style.display = '';
+      } else if (filter === 'instock' && stock === 'instock') {
+        card.style.display = '';
+      } else if (filter === 'soldout' && stock === 'soldout') {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // --- RENDERIZAÇÃO DOS PRODUTOS / EDIÇÕES (DADOS REAIS DO BACKEND) ---
   function renderProducts() {
     const productsContainer = document.getElementById('products-grid-container');
     if (!productsContainer) return;
 
     const currentLang = STATE.lang;
-    const catalog = ZINE_CATALOG[currentLang];
+    const catalogData = getCatalogData();
+    const listToRender = catalogData[currentLang] || [];
     const isArchivePage = document.body.classList.contains('page-arquivo');
 
-    // Se for na Home, exibe apenas os 4 mais recentes em estoque
-    const listToRender = isArchivePage ? catalog : catalog.slice(0, 4);
+    if (listToRender.length === 0) {
+      const emptyTitle = currentLang === 'pt'
+        ? (isArchivePage ? 'Nenhuma edição publicada em Português' : 'Nenhuma edição disponível no momento')
+        : (isArchivePage ? 'No published English issues yet' : 'No English issues currently in stock');
+      const emptyText = currentLang === 'pt'
+        ? (isArchivePage
+          ? 'Ainda não há edições impressas em Português cadastradas neste catálogo. Volte em breve ou confira a versão em Inglês.'
+          : 'Todas as edições em Português cadastradas estão esgotadas ou em preparo na gráfica. Explore o arquivo completo para consultar edições históricas.')
+        : (isArchivePage
+          ? 'There are no published international English print editions in the catalog yet. Check back soon or switch to Portuguese.'
+          : 'No English print editions are currently available in stock. Browse the archive or check back soon for upcoming press runs.');
+      const emptyAction = !isArchivePage
+        ? `<a href="/arquivo" class="btn-brutal btn-outline-decay btn-sm">${currentLang === 'pt' ? 'Explorar Arquivo Completo' : 'Explore Full Archive'}</a>`
+        : '';
+
+      productsContainer.innerHTML = `
+        <div class="catalog-empty-state" role="status">
+          <div class="catalog-empty-state-icon" aria-hidden="true">☠</div>
+          <h3 class="pirata-title">${escapeHtml(emptyTitle)}</h3>
+          <p>${escapeHtml(emptyText)}</p>
+          ${emptyAction}
+        </div>
+      `;
+      return;
+    }
 
     let html = '';
     listToRender.forEach(zine => {
-      const stockBadge = zine.inStock
-        ? `<span class="tape-tag blood">${currentLang === 'pt' ? 'EM ESTOQUE' : 'IN STOCK'}</span>`
-        : `<span class="tape-tag dark">${currentLang === 'pt' ? 'ESGOTADO' : 'SOLD OUT'}</span>`;
+      const isSoldOut = !zine.inStock || zine.stockStatus === 'soldout';
+      const isLowStock = !isSoldOut && zine.stockStatus === 'low';
 
-      const buyBtn = zine.inStock
-        ? `<button class="btn-brutal btn-blood btn-sm" onclick="ArmamentoBelico.addToCart('${zine.id}')">
+      const stockBadge = isSoldOut
+        ? `<span class="tape-tag dark">${currentLang === 'pt' ? 'ESGOTADO' : 'SOLD OUT'}</span>`
+        : isLowStock
+          ? `<span class="tape-tag warning">${currentLang === 'pt' ? 'ÚLTIMAS UNIDADES' : 'LAST COPIES'}</span>`
+          : `<span class="tape-tag blood">${currentLang === 'pt' ? 'EM ESTOQUE' : 'IN STOCK'}</span>`;
+
+      const buyBtn = !isSoldOut
+        ? `<button class="btn-brutal btn-blood btn-sm" onclick="ArmamentoBelico.addToCart('${escapeHtml(zine.id)}')">
              <span class="inverted-cross">✝</span> ${currentLang === 'pt' ? 'Comprar Cópia' : 'Buy Copy'}
            </button>`
         : `<button class="btn-sold-out" disabled>${currentLang === 'pt' ? 'Esgotado' : 'Sold Out'}</button>`;
 
-      const coverHtml = zine.detailUrl
-        ? `<a href="${zine.detailUrl}" class="product-cover-link" aria-label="${currentLang === 'pt' ? `Ver detalhes de ${zine.title}` : `View details for ${zine.title}`}">
-             <img src="${zine.cover}" alt="${zine.title}" class="xerox-img" loading="lazy">
+      const safeTitle = escapeHtml(zine.title);
+      const safeCover = escapeHtml(zine.cover);
+      const safeDetailUrl = zine.detailUrl ? escapeHtml(zine.detailUrl) : '';
+      const formattedPrice = formatCurrency(zine.price, zine.currency);
+
+      const coverHtml = safeDetailUrl
+        ? `<a href="${safeDetailUrl}" class="product-cover-link" aria-label="${currentLang === 'pt' ? `Ver detalhes de ${safeTitle}` : `View details for ${safeTitle}`}">
+             <img src="${safeCover}" alt="${safeTitle}" class="xerox-img" loading="lazy">
            </a>`
-        : `<img src="${zine.cover}" alt="${zine.title}" class="xerox-img" loading="lazy">`;
+        : `<img src="${safeCover}" alt="${safeTitle}" class="xerox-img" loading="lazy">`;
 
-      const titleHtml = zine.detailUrl
-        ? `<h3 class="product-title pirata-title"><a href="${zine.detailUrl}">${zine.title}</a></h3>`
-        : `<h3 class="product-title pirata-title">${zine.title}</h3>`;
+      const titleHtml = safeDetailUrl
+        ? `<h3 class="product-title pirata-title"><a href="${safeDetailUrl}">${safeTitle}</a></h3>`
+        : `<h3 class="product-title pirata-title">${safeTitle}</h3>`;
 
-      const detailsLinkHtml = zine.detailUrl
-        ? `<a href="${zine.detailUrl}" class="product-details-link">
+      const detailsLinkHtml = safeDetailUrl
+        ? `<a href="${safeDetailUrl}" class="product-details-link">
              ${currentLang === 'pt' ? 'Ver detalhes da edição' : 'View issue details'} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
            </a>`
         : '';
 
+      const bandsHtml = zine.bands
+        ? `<p class="product-bands-list"><strong>${currentLang === 'pt' ? 'Destaques:' : 'Featuring:'}</strong> ${escapeHtml(zine.bands)}</p>`
+        : '';
+
       html += `
-        <article class="product-card" data-stock="${zine.inStock ? 'instock' : 'soldout'}">
+        <article class="product-card" data-stock="${isSoldOut ? 'soldout' : 'instock'}">
           <div class="product-badge-wrap">
             ${stockBadge}
           </div>
@@ -895,12 +844,12 @@
             ${coverHtml}
           </div>
           <div class="product-info">
-            <span class="product-edition-number">${zine.date}</span>
+            <span class="product-edition-number">${escapeHtml(zine.date || '')}</span>
             ${titleHtml}
-            <p class="product-bands-list"><strong>${currentLang === 'pt' ? 'Destaques:' : 'Featuring:'}</strong> ${zine.bands}</p>
+            ${bandsHtml}
             ${detailsLinkHtml}
             <div class="product-price-bar">
-              <span class="product-price">${zine.priceFormatted}</span>
+              <span class="product-price">${escapeHtml(formattedPrice)}</span>
               ${buyBtn}
             </div>
           </div>
@@ -909,6 +858,9 @@
     });
 
     productsContainer.innerHTML = html;
+    if (isArchivePage) {
+      applyActiveArchiveFilter();
+    }
   }
 
   function ensureCartSummaryElement(cartTotalVal) {
@@ -934,16 +886,16 @@
     if (!cartItemsContainer || !cartTotalVal || !cartCheckoutArea) return;
 
     const summaryEl = ensureCartSummaryElement(cartTotalVal);
+    const isPtUi = STATE.lang === 'pt';
 
     if (STATE.cart.length === 0) {
       if (STATE.showOrderThankYou) {
-        const isPtEmpty = STATE.lang === 'pt';
         cartItemsContainer.innerHTML = `
           <div class="cart-thank-you-box" role="status" aria-live="polite">
             <p class="cart-thank-you-icon" aria-hidden="true">☠</p>
-            <h4 class="cart-thank-you-title">${isPtEmpty ? 'Obrigado pelo seu pedido!' : 'Thank you for your order!'}</h4>
+            <h4 class="cart-thank-you-title">${isPtUi ? 'Obrigado pelo seu pedido!' : 'Thank you for your order!'}</h4>
             <p class="cart-thank-you-text">
-              ${isPtEmpty
+              ${isPtUi
                 ? 'Seu apoio fortalece o Armamento Bélico Zine e o verdadeiro underground. Em breve entraremos em contato para confirmar os detalhes do envio.'
                 : 'Your support keeps Armamento Bélico Zine and the true underground alive. We will follow up with your shipping details shortly.'}
             </p>
@@ -953,7 +905,7 @@
         cartItemsContainer.innerHTML = `
           <div class="cart-empty-message">
             <p style="font-size: 2.5rem; margin-bottom: 10px;">☠</p>
-            <p>${STATE.lang === 'pt' ? 'Seu caixão está vazio. Nenhum fanzine adicionado.' : 'Your coffin is empty. No zines summoned.'}</p>
+            <p>${isPtUi ? 'Seu caixão está vazio. Nenhum fanzine adicionado.' : 'Your coffin is empty. No zines summoned.'}</p>
           </div>
         `;
       }
@@ -961,52 +913,62 @@
         summaryEl.hidden = true;
         summaryEl.innerHTML = '';
       }
-      cartTotalVal.textContent = formatCurrency(0, STATE.lang === 'pt' ? 'R$' : 'US$');
+      cartTotalVal.textContent = formatCurrency(0, isPtUi ? 'R$' : '€');
       cartCheckoutArea.innerHTML = '';
       return;
     }
 
     let itemsHtml = '';
-    const currency = STATE.cart[0].currency;
+    const currency = STATE.cart[0].currency === '€' ? '€' : 'R$';
+    const isEurCart = currency === '€';
 
     STATE.cart.forEach(item => {
       const formattedPrice = formatCurrency(item.price, currency);
+      const safeId = escapeHtml(item.id);
+      const safeTitle = escapeHtml(item.title);
+      const safeCover = escapeHtml(item.cover);
 
       itemsHtml += `
         <div class="cart-item-row">
           <div class="cart-item-thumb">
-            <img src="${item.cover}" alt="${item.title}">
+            <img src="${safeCover}" alt="${safeTitle}">
           </div>
           <div>
-            <h4 class="cart-item-title">${item.title}</h4>
-            <span class="cart-item-unit-price">${formattedPrice} un</span>
+            <h4 class="cart-item-title">${safeTitle}</h4>
+            <span class="cart-item-unit-price">${escapeHtml(formattedPrice)} ${isPtUi ? 'un' : 'ea'}</span>
             <div class="cart-qty-ctrl">
-              <button class="qty-btn" onclick="ArmamentoBelico.updateQuantity('${item.id}', -1)">-</button>
+              <button class="qty-btn" onclick="ArmamentoBelico.updateQuantity('${safeId}', -1)">-</button>
               <span class="qty-number">${item.quantity}</span>
-              <button class="qty-btn" onclick="ArmamentoBelico.updateQuantity('${item.id}', 1)">+</button>
+              <button class="qty-btn" onclick="ArmamentoBelico.updateQuantity('${safeId}', 1)">+</button>
             </div>
           </div>
-          <button class="cart-item-remove-btn" title="Remover" onclick="ArmamentoBelico.removeFromCart('${item.id}')">✕</button>
+          <button class="cart-item-remove-btn" title="${isPtUi ? 'Remover' : 'Remove'}" onclick="ArmamentoBelico.removeFromCart('${safeId}')">✕</button>
         </div>
       `;
     });
 
-    const isPt = STATE.lang === 'pt';
     const totalQty = getCartItemCount();
     const subtotal = getCartSubtotal();
     const shipping = calculateShipping(totalQty, currency);
-    const total = subtotal + shipping;
+    const paypalSummary = isEurCart ? calculatePayPalEurSummary(subtotal + shipping) : null;
+    const total = isEurCart ? paypalSummary.total : roundHalfUp2(subtotal + shipping);
 
     if (summaryEl) {
-      const itemUnitLabel = isPt
+      const itemUnitLabel = isPtUi
         ? (totalQty === 1 ? 'edição' : 'edições')
         : (totalQty === 1 ? 'issue' : 'issues');
-      const subtotalLabel = isPt
-        ? `Subtotal (${totalQty} ${itemUnitLabel}):`
-        : `Subtotal (${totalQty} ${itemUnitLabel}):`;
-      const shippingLabel = isPt
-        ? 'Frete (Correios):'
-        : 'Shipping (Airmail):';
+      const subtotalLabel = `Subtotal (${totalQty} ${itemUnitLabel}):`;
+      const shippingLabel = isEurCart
+        ? (isPtUi ? 'Frete Internacional (Airmail):' : 'Shipping (Registered Airmail):')
+        : (isPtUi ? 'Frete (Correios):' : 'Shipping (Brazil Correios):');
+      const paypalFeeLineHtml = isEurCart
+        ? `
+          <div class="cart-summary-line cart-summary-line--fee">
+            <span>${isPtUi ? 'Taxa PayPal (Internacional):' : 'PayPal Fee:'}</span>
+            <strong id="cart-paypal-fee-val">${formatCurrency(paypalSummary.fee, currency)}</strong>
+          </div>
+        `
+        : '';
 
       summaryEl.hidden = false;
       summaryEl.innerHTML = `
@@ -1018,6 +980,7 @@
           <span>${shippingLabel}</span>
           <strong id="cart-shipping-val">${formatCurrency(shipping, currency)}</strong>
         </div>
+        ${paypalFeeLineHtml}
       `;
     }
 
@@ -1026,21 +989,21 @@
 
     if (STATE.pendingOrderConfirmation) {
       cartCheckoutArea.innerHTML = `
-        <div class="cart-order-confirm-box" role="region" aria-live="polite" aria-label="${isPt ? 'Confirmação de Pedido' : 'Order Confirmation'}">
+        <div class="cart-order-confirm-box" role="region" aria-live="polite" aria-label="${isPtUi ? 'Confirmação de Pedido' : 'Order Confirmation'}">
           <p class="cart-order-confirm-question">
-            ${isPt ? 'O pedido foi realizado com sucesso?' : 'Was the order placed successfully?'}
+            ${isPtUi ? 'O pedido foi realizado com sucesso?' : 'Was the order placed successfully?'}
           </p>
           <p class="cart-order-confirm-hint">
-            ${isPt
+            ${isPtUi
               ? 'Se você já concluiu o envio do pedido, confirme abaixo para limpar o carrinho.'
               : 'If you completed your checkout, confirm below to clear your cart.'}
           </p>
           <div class="cart-order-confirm-actions">
             <button type="button" id="cart-confirm-yes-btn" class="btn-confirm-yes">
-              <i class="fa-solid fa-check" aria-hidden="true"></i> ${isPt ? 'Sim' : 'Yes'}
+              <i class="fa-solid fa-check" aria-hidden="true"></i> ${isPtUi ? 'Sim' : 'Yes'}
             </button>
             <button type="button" id="cart-confirm-no-btn" class="btn-confirm-no">
-              <i class="fa-solid fa-xmark" aria-hidden="true"></i> ${isPt ? 'Não' : 'No'}
+              <i class="fa-solid fa-xmark" aria-hidden="true"></i> ${isPtUi ? 'Não' : 'No'}
             </button>
           </div>
         </div>
@@ -1053,34 +1016,39 @@
       return;
     }
 
-    // REGRA DE CHECKOUT: PT -> WhatsApp com pedido | EN -> PayPal
-    const returningLabel = isPt
+    // REGRA DE CHECKOUT GUIADA PELA MOEDA DO CARRINHO: R$ -> WhatsApp (Brasil) | € -> PayPal (Internacional)
+    const returningLabel = isPtUi
       ? 'Já sou cliente (não preciso informar novamente o endereço)'
       : 'I am a returning customer (no need to enter my address again)';
-    const legendText = isPt ? 'Endereço de Entrega' : 'Shipping Address';
-    const errorIconLabel = isPt ? 'Erro' : 'Error';
+    const legendText = isEurCart
+      ? (isPtUi ? 'Endereço de Entrega Internacional' : 'International Shipping Address')
+      : (isPtUi ? 'Endereço de Entrega' : 'Shipping Address (Brazil)');
 
-    const labels = isPt
+    const labels = isPtUi
       ? {
           fullName: 'Nome Completo',
           fullNameErr: 'Informe seu nome completo.',
-          zip: 'CEP',
-          zipErr: 'Informe o CEP.',
+          country: 'País',
+          countryErr: 'Informe o país de destino.',
+          zip: isEurCart ? 'Código Postal / ZIP' : 'CEP',
+          zipErr: isEurCart ? 'Informe o código postal.' : 'Informe o CEP.',
           street: 'Rua / Logradouro',
           streetErr: 'Informe a rua ou logradouro.',
           number: 'Número',
           numberErr: 'Informe o número.',
           complement: 'Complemento (opcional)',
-          neighborhood: 'Bairro',
+          neighborhood: isEurCart ? 'Bairro / Distrito (opcional)' : 'Bairro',
           neighborhoodErr: 'Informe o bairro.',
           city: 'Cidade',
           cityErr: 'Informe a cidade.',
-          state: 'Estado (UF)',
+          state: isEurCart ? 'Estado / Província' : 'Estado (UF)',
           stateErr: 'Informe o estado.'
         }
       : {
           fullName: 'Full Name',
           fullNameErr: 'Enter your full name.',
+          country: 'Country',
+          countryErr: 'Enter your destination country.',
           zip: 'Postal Code / ZIP',
           zipErr: 'Enter your postal code.',
           street: 'Street Address',
@@ -1088,7 +1056,7 @@
           number: 'Number',
           numberErr: 'Enter the street number.',
           complement: 'Apt / Suite (optional)',
-          neighborhood: 'District / Neighborhood',
+          neighborhood: isEurCart ? 'District / Neighborhood (optional)' : 'District / Neighborhood',
           neighborhoodErr: 'Enter your district or neighborhood.',
           city: 'City',
           cityErr: 'Enter your city.',
@@ -1097,12 +1065,23 @@
         };
 
     const reqAttr = STATE.isReturningCustomer ? '' : 'required';
+    const neighborhoodReqAttr = (!STATE.isReturningCustomer && !isEurCart) ? 'required' : '';
     const hiddenDisabledAttr = STATE.isReturningCustomer ? 'hidden disabled' : '';
 
-    const paymentFieldsetHtml = isPt
+    const countryFieldHtml = isEurCart
+      ? `
+          <div class="cart-address-field">
+            <label for="cart-addr-country">${labels.country} <span aria-hidden="true">*</span></label>
+            <input type="text" id="cart-addr-country" name="country" class="form-control cart-address-input" autocomplete="country-name" maxlength="80" data-error="err-cart-country" data-addr-key="country" ${reqAttr}>
+            <div id="err-cart-country" class="error-msg"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> ${labels.countryErr}</div>
+          </div>
+        `
+      : '';
+
+    const paymentFieldsetHtml = !isEurCart
       ? `
         <fieldset class="cart-payment-fieldset" id="cart-payment-fieldset">
-          <legend>Forma de Pagamento</legend>
+          <legend>${isPtUi ? 'Forma de Pagamento' : 'Payment Method'}</legend>
           <div class="cart-payment-options">
             <label class="cart-payment-option">
               <input type="radio" name="payment_method" value="pix" ${STATE.paymentMethod === 'pix' ? 'checked' : ''} required>
@@ -1115,7 +1094,7 @@
               <input type="radio" name="payment_method" value="card" ${STATE.paymentMethod === 'card' ? 'checked' : ''}>
               <span class="cart-payment-card">
                 <i class="fa-solid fa-credit-card cart-payment-icon" aria-hidden="true"></i>
-                <span class="cart-payment-label">Cartão de Crédito</span>
+                <span class="cart-payment-label">${isPtUi ? 'Cartão de Crédito' : 'Credit Card'}</span>
               </span>
             </label>
           </div>
@@ -1123,26 +1102,30 @@
       `
       : '';
 
-    const submitBtnHtml = isPt
+    const submitBtnHtml = !isEurCart
       ? `
         <button type="submit" class="btn-whatsapp-checkout">
-          <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;" aria-hidden="true"></i> Finalizar Pedido via WhatsApp
+          <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;" aria-hidden="true"></i> ${isPtUi ? 'Finalizar Pedido via WhatsApp' : 'Order via WhatsApp (BRL)'}
         </button>
         <p class="cart-checkout-note">
-          Seu pedido será gerado e enviado diretamente para o editor via WhatsApp.
+          ${isPtUi
+            ? 'Seu pedido será gerado e enviado diretamente para o editor via WhatsApp.'
+            : 'Your Brazilian order will be sent directly to the editor via WhatsApp.'}
         </p>
       `
       : `
         <button type="submit" class="btn-paypal-checkout">
-          <i class="fa-brands fa-paypal" style="font-size: 1.2rem;" aria-hidden="true"></i> Checkout with PayPal (Worldwide)
+          <i class="fa-brands fa-paypal" style="font-size: 1.2rem;" aria-hidden="true"></i> ${isPtUi ? 'Pagar com PayPal (Euro • €)' : 'Checkout with PayPal (EUR • Worldwide)'}
         </button>
         <p class="cart-checkout-note">
-          Safe international payments via PayPal. Registered worldwide airmail.
+          ${isPtUi
+            ? 'Pagamento internacional em Euro (€) via PayPal com taxa inclusa. Envio registrado mundial.'
+            : 'Safe international payment in Euro (€) via PayPal (fee included). Registered worldwide airmail.'}
         </p>
       `;
 
     cartCheckoutArea.innerHTML = `
-      <form id="cart-checkout-form" class="cart-checkout-form" novalidate aria-label="${isPt ? 'Finalizar Pedido' : 'Order Checkout'}">
+      <form id="cart-checkout-form" class="cart-checkout-form" novalidate aria-label="${isPtUi ? 'Finalizar Pedido' : 'Order Checkout'}">
         <div class="checkbox-inline cart-returning-option">
           <input type="checkbox" id="cart-returning-customer" name="returning_customer" ${STATE.isReturningCustomer ? 'checked' : ''}>
           <label for="cart-returning-customer">${returningLabel}</label>
@@ -1157,10 +1140,12 @@
             <div id="err-cart-name" class="error-msg"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> ${labels.fullNameErr}</div>
           </div>
 
+          ${countryFieldHtml}
+
           <div class="cart-address-grid">
             <div class="cart-address-field">
               <label for="cart-addr-zip">${labels.zip} <span aria-hidden="true">*</span></label>
-              <input type="text" id="cart-addr-zip" name="postal_code" class="form-control cart-address-input" inputmode="numeric" autocomplete="postal-code" maxlength="20" data-error="err-cart-zip" data-addr-key="zip" ${reqAttr}>
+              <input type="text" id="cart-addr-zip" name="postal_code" class="form-control cart-address-input" inputmode="${isEurCart ? 'text' : 'numeric'}" autocomplete="postal-code" maxlength="20" data-error="err-cart-zip" data-addr-key="zip" ${reqAttr}>
               <div id="err-cart-zip" class="error-msg"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> ${labels.zipErr}</div>
             </div>
 
@@ -1183,9 +1168,9 @@
           </div>
 
           <div class="cart-address-field">
-            <label for="cart-addr-neighborhood">${labels.neighborhood} <span aria-hidden="true">*</span></label>
-            <input type="text" id="cart-addr-neighborhood" name="neighborhood" class="form-control cart-address-input" autocomplete="address-level3" maxlength="80" data-error="err-cart-neighborhood" data-addr-key="neighborhood" ${reqAttr}>
-            <div id="err-cart-neighborhood" class="error-msg"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> ${labels.neighborhoodErr}</div>
+            <label for="cart-addr-neighborhood">${labels.neighborhood}${isEurCart ? '' : ' <span aria-hidden="true">*</span>'}</label>
+            <input type="text" id="cart-addr-neighborhood" name="neighborhood" class="form-control cart-address-input" autocomplete="address-level3" maxlength="80" ${isEurCart ? '' : 'data-error="err-cart-neighborhood"'} data-addr-key="neighborhood" ${neighborhoodReqAttr}>
+            ${isEurCart ? '' : `<div id="err-cart-neighborhood" class="error-msg"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> ${labels.neighborhoodErr}</div>`}
           </div>
 
           <div class="cart-address-grid">
@@ -1229,8 +1214,10 @@
       input.value = STATE.checkoutAddress[key] || '';
     });
 
+    const isOptionalAddressKey = (key) => key === 'complement' || (isEurCart && key === 'neighborhood');
+
     const syncFieldWhitespace = (input) => {
-      if (STATE.isReturningCustomer || input.dataset.addrKey === 'complement') {
+      if (STATE.isReturningCustomer || isOptionalAddressKey(input.dataset.addrKey)) {
         input.setCustomValidity('');
         return;
       }
@@ -1253,8 +1240,7 @@
           addressFieldset.disabled = STATE.isReturningCustomer;
 
           addressInputs.forEach(input => {
-            const isOptional = input.dataset.addrKey === 'complement';
-            if (!isOptional) {
+            if (!isOptionalAddressKey(input.dataset.addrKey)) {
               input.required = !STATE.isReturningCustomer;
             }
             if (STATE.isReturningCustomer) {
@@ -1285,27 +1271,29 @@
           if (firstInvalid) firstInvalid.focus();
           return;
         }
-        if (isPt) {
-          checkoutWhatsApp();
-        } else {
+        if (isEurCart) {
           checkoutPayPal();
+        } else {
+          checkoutWhatsApp();
         }
       });
     }
   }
 
-  function hasValidShippingAddress() {
+  function hasValidShippingAddress(isEurCart = false) {
     if (STATE.isReturningCustomer) return true;
     const a = STATE.checkoutAddress;
-    return [a.fullName, a.zip, a.street, a.number, a.neighborhood, a.city, a.state]
-      .every(val => typeof val === 'string' && val.trim().length > 0);
+    const requiredValues = isEurCart
+      ? [a.fullName, a.country, a.zip, a.street, a.number, a.city, a.state]
+      : [a.fullName, a.zip, a.street, a.number, a.neighborhood, a.city, a.state];
+    return requiredValues.every(val => typeof val === 'string' && val.trim().length > 0);
   }
 
-  // --- CHECKOUT VIA WHATSAPP (VERSÃO PT) ---
+  // --- CHECKOUT VIA WHATSAPP (VERSÃO PT / BRL) ---
   function checkoutWhatsApp() {
     if (STATE.cart.length === 0) return;
 
-    if (!hasValidShippingAddress()) {
+    if (!hasValidShippingAddress(false)) {
       const firstInvalid = document.querySelector('#cart-checkout-form :invalid');
       if (firstInvalid) firstInvalid.focus();
       return;
@@ -1353,44 +1341,176 @@
     message += `Obrigado pelo suporte ao Metal subterrâneo!`;
 
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${STATE.whatsappNumber}?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodedMessage}`;
     setPendingOrderConfirmation(true);
     renderCart();
     window.open(whatsappUrl, '_blank');
   }
 
-  // --- CHECKOUT VIA PAYPAL (VERSÃO EN) ---
+  // --- CHECKOUT VIA PAYPAL (VERSÃO EN / EUR COM TAXA GROSS-UP) ---
   function checkoutPayPal() {
     if (STATE.cart.length === 0) return;
 
-    if (!hasValidShippingAddress()) {
+    if (!hasValidShippingAddress(true)) {
       const firstInvalid = document.querySelector('#cart-checkout-form :invalid');
       if (firstInvalid) firstInvalid.focus();
       return;
     }
 
-    const currency = STATE.cart[0].currency || 'US$';
+    const currency = '€';
     const subtotal = getCartSubtotal();
     const shipping = calculateShipping(getCartItemCount(), currency);
-    const total = (subtotal + shipping).toFixed(2);
+    const paypalSummary = calculatePayPalEurSummary(subtotal + shipping);
+    const totalStr = paypalSummary.total.toFixed(2);
     const itemsDescription = STATE.cart.map(i => `${i.quantity}x ${i.title}`).join(', ');
     const a = STATE.checkoutAddress;
+
+    const addressParts = STATE.isReturningCustomer
+      ? []
+      : [
+          a.fullName.trim(),
+          `${a.street.trim()}, ${a.number.trim()}${a.complement.trim() ? ' (' + a.complement.trim() + ')' : ''}`,
+          a.neighborhood.trim(),
+          `${a.city.trim()} - ${a.state.trim()}`,
+          a.zip.trim(),
+          a.country.trim()
+        ].filter(Boolean);
+
     const addressSummary = STATE.isReturningCustomer
-      ? 'Returning customer (address on file)'
-      : `${a.fullName.trim()} — ${a.street.trim()}, ${a.number.trim()}${a.complement.trim() ? ' (' + a.complement.trim() + ')' : ''}, ${a.neighborhood.trim()}, ${a.city.trim()} - ${a.state.trim()}, ${a.zip.trim()}`;
+      ? (STATE.lang === 'pt' ? 'Cliente recorrente (endereço já cadastrado)' : 'Returning customer (address on file)')
+      : addressParts.join(', ');
 
-    // Cria requisição e modal de simulação/redirecionamento oficial PayPal
-    const confirmPayment = confirm(
-      `[ARMAMENTO BÉLICO INTERNATIONAL ORDER]\n\nItems: ${itemsDescription}\nSubtotal: US$ ${subtotal.toFixed(2)}\nShipping: US$ ${shipping.toFixed(2)}\nTotal: US$ ${total}\nShipping Address: ${addressSummary}\n\nProceed to secure PayPal Checkout to complete transaction?`
-    );
+    const paypalParams = new URLSearchParams({
+      cmd: '_xclick',
+      business: STORE_CONFIG.paypal.email,
+      item_name: `Armamento Belico Zine - ${itemsDescription}`.slice(0, 127),
+      amount: totalStr,
+      currency_code: 'EUR',
+      no_shipping: '2',
+      custom: `${itemsDescription} | ${addressSummary}`.slice(0, 255)
+    });
 
-    if (confirmPayment) {
-      // Redireciona para o fluxo do PayPal (ou abre URL de pagamento do PayPal Business)
-      const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=${encodeURIComponent(STATE.paypalBusinessEmail)}&item_name=${encodeURIComponent('Armamento Belico Zine Order - ' + itemsDescription)}&amount=${total}&currency_code=USD`;
+    if (!STATE.isReturningCustomer) {
+      paypalParams.set('first_name', a.fullName.trim().slice(0, 32));
+      paypalParams.set('address1', `${a.street.trim()}, ${a.number.trim()}`.slice(0, 100));
+      const addr2 = [a.complement.trim(), a.neighborhood.trim()].filter(Boolean).join(' - ');
+      if (addr2) paypalParams.set('address2', addr2.slice(0, 100));
+      paypalParams.set('city', a.city.trim().slice(0, 40));
+      paypalParams.set('state', a.state.trim().slice(0, 40));
+      paypalParams.set('zip', a.zip.trim().slice(0, 32));
+    }
+
+    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?${paypalParams.toString()}`;
+    const dialog = document.getElementById('paypal-checkout-confirm-dialog');
+
+    if (!dialog || typeof dialog.showModal !== 'function') {
       setPendingOrderConfirmation(true);
       renderCart();
       window.open(paypalUrl, '_blank');
-      showToast('Redirecting to PayPal secure gateway...');
+      showToast(STATE.lang === 'pt' ? 'Redirecionando para o PayPal...' : 'Redirecting to PayPal secure gateway...');
+      return;
+    }
+
+    pendingPayPalCheckoutUrl = paypalUrl;
+    const isPtUi = STATE.lang === 'pt';
+    const titleEl = document.getElementById('paypal-confirm-title');
+    const summaryEl = document.getElementById('paypal-confirm-summary');
+    const recipientEl = document.getElementById('paypal-confirm-recipient');
+    const cancelBtn = document.getElementById('paypal-confirm-cancel-btn');
+    const proceedLabel = document.getElementById('paypal-confirm-proceed-label');
+
+    if (titleEl) {
+      titleEl.textContent = isPtUi ? 'Confirmar Pedido Internacional (PayPal)' : 'Confirm International PayPal Order';
+    }
+    if (summaryEl) {
+      summaryEl.innerHTML = `
+        <div class="paypal-summary-row">
+          <span>${isPtUi ? 'Itens:' : 'Items:'}</span>
+          <strong>${escapeHtml(itemsDescription)}</strong>
+        </div>
+        <div class="paypal-summary-row">
+          <span>Subtotal:</span>
+          <strong>${escapeHtml(formatCurrency(subtotal, currency))}</strong>
+        </div>
+        <div class="paypal-summary-row">
+          <span>${isPtUi ? 'Frete (Registered Airmail):' : 'Shipping (Registered Airmail):'}</span>
+          <strong>${escapeHtml(formatCurrency(shipping, currency))}</strong>
+        </div>
+        <div class="paypal-summary-row">
+          <span>${isPtUi ? 'Taxa PayPal:' : 'PayPal Fee:'}</span>
+          <strong>${escapeHtml(formatCurrency(paypalSummary.fee, currency))}</strong>
+        </div>
+        <div class="paypal-summary-row paypal-summary-row--total">
+          <span>${isPtUi ? 'Total em Euro:' : 'Total (EUR):'}</span>
+          <strong>${escapeHtml(formatCurrency(paypalSummary.total, currency))}</strong>
+        </div>
+        <div class="paypal-summary-address">
+          <strong>${isPtUi ? 'Entrega:' : 'Shipping to:'}</strong> ${escapeHtml(addressSummary)}
+        </div>
+      `;
+    }
+    if (recipientEl) {
+      recipientEl.textContent = isPtUi
+        ? `Conta PayPal recebedora: ${STORE_CONFIG.paypal.email} (Moeda: EUR)`
+        : `PayPal recipient: ${STORE_CONFIG.paypal.email} (Currency: EUR)`;
+    }
+    if (cancelBtn) {
+      cancelBtn.textContent = isPtUi ? 'Cancelar' : 'Cancel';
+    }
+    if (proceedLabel) {
+      proceedLabel.textContent = isPtUi ? 'Ir para o PayPal' : 'Proceed to PayPal';
+    }
+
+    dialog.showModal();
+  }
+
+  function initStoreModals() {
+    const conflictDialog = document.getElementById('cart-currency-conflict-dialog');
+    const conflictClose = document.getElementById('cart-conflict-close-btn');
+    const conflictCancel = document.getElementById('cart-conflict-cancel-btn');
+    const conflictReplace = document.getElementById('cart-conflict-replace-btn');
+
+    const closeConflict = () => {
+      pendingCartReplacementProduct = null;
+      if (conflictDialog?.open) conflictDialog.close();
+    };
+    if (conflictClose) conflictClose.addEventListener('click', closeConflict);
+    if (conflictCancel) conflictCancel.addEventListener('click', closeConflict);
+    if (conflictReplace) {
+      conflictReplace.addEventListener('click', () => {
+        const nextProduct = pendingCartReplacementProduct;
+        pendingCartReplacementProduct = null;
+        if (conflictDialog?.open) conflictDialog.close();
+        if (nextProduct) {
+          STATE.cart = [];
+          pushProductToCart(nextProduct);
+        }
+      });
+    }
+
+    const paypalDialog = document.getElementById('paypal-checkout-confirm-dialog');
+    const paypalClose = document.getElementById('paypal-confirm-close-btn');
+    const paypalCancel = document.getElementById('paypal-confirm-cancel-btn');
+    const paypalProceed = document.getElementById('paypal-confirm-proceed-btn');
+
+    const closePayPal = () => {
+      pendingPayPalCheckoutUrl = null;
+      if (paypalDialog?.open) paypalDialog.close();
+    };
+    if (paypalClose) paypalClose.addEventListener('click', closePayPal);
+    if (paypalCancel) paypalCancel.addEventListener('click', closePayPal);
+    if (paypalProceed) {
+      paypalProceed.addEventListener('click', () => {
+        const targetUrl = pendingPayPalCheckoutUrl;
+        pendingPayPalCheckoutUrl = null;
+        if (paypalDialog?.open) paypalDialog.close();
+        if (targetUrl) {
+          setPendingOrderConfirmation(true);
+          renderCart();
+          window.open(targetUrl, '_blank');
+          showToast(STATE.lang === 'pt' ? 'Redirecionando para o PayPal...' : 'Redirecting to PayPal secure gateway...');
+        }
+      });
     }
   }
 
@@ -2205,269 +2325,32 @@
     if (!document.body.classList.contains('page-edicao')) return;
 
     const serverEdition = getServerEditionData();
-    if (serverEdition) {
-      const isPt = serverEdition.editionLang === 'pt';
-      editionPageState.edition = serverEdition;
+    if (!serverEdition) return;
 
-      const coverCaption = isPt
-        ? `Capa oficial — ${serverEdition.title}`
-        : `Official cover — ${serverEdition.title}`;
-      const extras = Array.isArray(serverEdition.extraPhotos) ? serverEdition.extraPhotos.slice(0, 5) : [];
-      editionPageState.photos = [
-        { src: serverEdition.cover, caption: coverCaption, isCover: true },
-        ...extras.map((item, i) => ({
-          src: typeof item === 'string' ? item : item.src,
-          caption: (typeof item === 'object' && item && item.caption)
-            ? item.caption
-            : (isPt ? `Foto extra ${i + 1} — ${serverEdition.title}` : `Extra photo ${i + 1} — ${serverEdition.title}`),
-          isCover: false
-        }))
-      ];
-      editionPageState.activeIndex = 0;
+    const isPt = serverEdition.editionLang === 'pt';
+    editionPageState.edition = serverEdition;
 
-      // Atualiza links de compartilhamento com a URL canônica atual
-      const currentUrl = window.location.href;
-      const shareText = isPt
-        ? `Confira ${serverEdition.title} — Armamento Bélico Zine:`
-        : `Check out ${serverEdition.title} — Armamento Bélico Zine:`;
-
-      const waShare = document.getElementById('edition-share-whatsapp');
-      const fbShare = document.getElementById('edition-share-facebook');
-      const xShare = document.getElementById('edition-share-x');
-      if (waShare) waShare.href = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${currentUrl}`)}`;
-      if (fbShare) fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
-      if (xShare) xShare.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`;
-
-      updateSingleLangNotice(serverEdition, STATE.lang);
-      setupYoutubeFacades(document.getElementById('edition-video-player-slot') || document);
-      return;
-    }
-
-    const isPt = STATE.lang === 'pt';
-    const catalog = ZINE_CATALOG[STATE.lang] || ZINE_CATALOG.pt;
-    const targetNum = Number(document.body.dataset.editionNumber || 58);
-    const edition = catalog.find(z => z.editionNumber === targetNum) || catalog[0];
-    if (!edition) return;
-
-    editionPageState.edition = edition;
-
-    // Monta galeria: capa principal + até 5 fotos extras (máximo 6 fotos)
     const coverCaption = isPt
-      ? `Capa oficial — ${edition.title}`
-      : `Official cover — ${edition.title}`;
-    const extras = Array.isArray(edition.extraPhotos) ? edition.extraPhotos.slice(0, 5) : [];
+      ? `Capa oficial — ${serverEdition.title}`
+      : `Official cover — ${serverEdition.title}`;
+    const extras = Array.isArray(serverEdition.extraPhotos) ? serverEdition.extraPhotos.slice(0, 5) : [];
     editionPageState.photos = [
-      { src: edition.cover, caption: coverCaption, isCover: true },
+      { src: serverEdition.cover, caption: coverCaption, isCover: true },
       ...extras.map((item, i) => ({
         src: typeof item === 'string' ? item : item.src,
-        caption: typeof item === 'string'
-          ? (isPt ? `Foto extra ${i + 1} — ${edition.title}` : `Extra photo ${i + 1} — ${edition.title}`)
-          : item.caption,
+        caption: (typeof item === 'object' && item && item.caption)
+          ? item.caption
+          : (isPt ? `Foto extra ${i + 1} — ${serverEdition.title}` : `Extra photo ${i + 1} — ${serverEdition.title}`),
         isCover: false
       }))
     ];
     editionPageState.activeIndex = 0;
 
-    // Título da página & Breadcrumb
-    document.title = `${edition.title.toUpperCase()} | Armamento Bélico Zine`;
-    const breadcrumbCurrent = document.getElementById('edition-breadcrumb-current');
-    if (breadcrumbCurrent) breadcrumbCurrent.textContent = edition.title;
-
-    const numTag = document.getElementById('edition-number-tag');
-    const yearTag = document.getElementById('edition-year-tag');
-    const titleEl = document.getElementById('edition-title');
-    const subtitleEl = document.getElementById('edition-subtitle');
-
-    if (numTag) numTag.textContent = isPt ? `EDIÇÃO #${edition.editionNumber}` : `ISSUE #${edition.editionNumber}`;
-    if (yearTag) yearTag.textContent = (edition.zineYear || '').toUpperCase();
-    if (titleEl) titleEl.textContent = edition.title;
-    if (subtitleEl) subtitleEl.textContent = edition.subtitle || '';
-
-    // Informações complementares (Mês, Ano, Ano da revista, Páginas)
-    const metaMonth = document.getElementById('edition-meta-month');
-    const metaYear = document.getElementById('edition-meta-year');
-    const metaExistence = document.getElementById('edition-meta-existence');
-    const metaPages = document.getElementById('edition-meta-pages');
-
-    if (metaMonth) metaMonth.textContent = edition.releaseMonth || '—';
-    if (metaYear) metaYear.textContent = edition.releaseYear ? String(edition.releaseYear) : '—';
-    if (metaExistence) metaExistence.textContent = edition.zineYear || '—';
-    if (metaPages) metaPages.textContent = `${edition.pages} ${isPt ? 'páginas' : 'pages'}`;
-
-    // Status de disponibilidade / estoque
-    const stockInfo = getStockPresentation(edition, isPt);
-    const stockPill = document.getElementById('edition-stock-pill');
-    const stockInline = document.getElementById('edition-stock-inline');
-    const soldoutAlert = document.getElementById('edition-soldout-alert');
-    const soldoutAlertText = document.getElementById('edition-soldout-alert-text');
-
-    if (stockPill) {
-      stockPill.className = `edition-stock-pill ${stockInfo.className}`;
-      stockPill.innerHTML = `<i class="${stockInfo.icon}" aria-hidden="true"></i> <span id="edition-stock-pill-text">${escapeHtml(stockInfo.badgeText)}</span>`;
-    }
-    if (stockInline) {
-      stockInline.className = `edition-stock-inline ${stockInfo.className}`;
-      stockInline.textContent = stockInfo.inlineText;
-    }
-    if (soldoutAlert) {
-      soldoutAlert.hidden = stockInfo.status !== 'soldout';
-      if (soldoutAlertText) {
-        soldoutAlertText.textContent = isPt
-          ? 'Esta edição física encontra-se esgotada em nossa tiragem original. O registro permanece no catálogo histórico do zine.'
-          : 'This physical print run is sold out. This page remains archived in the zine historical catalog.';
-      }
-    }
-
-    // Valor & Botão Comprar
-    const priceEl = document.getElementById('edition-price-value');
-    const buyBtn = document.getElementById('edition-btn-buy');
-    const buyBtnLabel = document.getElementById('edition-btn-buy-label');
-
-    if (priceEl) priceEl.textContent = edition.priceFormatted;
-    if (buyBtn && buyBtnLabel) {
-      if (stockInfo.status === 'soldout') {
-        buyBtn.disabled = true;
-        buyBtn.classList.add('is-disabled');
-        buyBtnLabel.textContent = isPt ? 'Edição Esgotada' : 'Sold Out';
-      } else {
-        buyBtn.disabled = false;
-        buyBtn.classList.remove('is-disabled');
-        buyBtnLabel.textContent = isPt
-          ? `Comprar Edição #${edition.editionNumber}`
-          : `Buy Issue #${edition.editionNumber}`;
-      }
-    }
-
-    // Resumo de envio / frete (conforme regra do item 4)
-    const shippingRule = SHIPPING_CONFIG[edition.currency] || SHIPPING_CONFIG['R$'];
-    const feeTextEl = document.getElementById('edition-shipping-fee-text');
-    const deadlineTextEl = document.getElementById('edition-shipping-deadline-text');
-
-    if (feeTextEl) {
-      const baseFormatted = formatCurrency(shippingRule.baseFee, edition.currency);
-      const addFormatted = formatCurrency(shippingRule.additionalFee, edition.currency);
-      feeTextEl.innerHTML = isPt
-        ? `<strong>Frete Correios:</strong> ${baseFormatted} para 1 edição (+ ${addFormatted} por edição adicional no mesmo pedido).`
-        : `<strong>Registered Airmail:</strong> ${baseFormatted} for 1 issue (+ ${addFormatted} per additional issue in the same order).`;
-    }
-    if (deadlineTextEl) {
-      const deadline = edition.shippingDeadline || (isPt
-        ? 'Envio via Impresso Registrado em até 3 dias úteis após a confirmação do pagamento.'
-        : 'Dispatched via Registered Airmail within 3 business days after payment confirmation.');
-      deadlineTextEl.innerHTML = isPt
-        ? `<strong>Postagem:</strong> ${escapeHtml(deadline)}`
-        : `<strong>Dispatch:</strong> ${escapeHtml(deadline)}`;
-    }
-
-    // Renderizar miniaturas da galeria
-    const thumbsGrid = document.getElementById('edition-thumbs-grid');
-    if (thumbsGrid) {
-      thumbsGrid.innerHTML = editionPageState.photos.map((photo, idx) => `
-        <button
-          type="button"
-          class="edition-thumb-btn ${idx === 0 ? 'is-active' : ''}"
-          data-photo-index="${idx}"
-          aria-pressed="${idx === 0 ? 'true' : 'false'}"
-          aria-label="${escapeHtml(photo.caption)}"
-        >
-          <img src="${escapeHtml(photo.src)}" alt="${escapeHtml(photo.caption)}" loading="lazy">
-          ${photo.isCover ? `<span class="edition-thumb-tag">${isPt ? 'Capa' : 'Cover'}</span>` : ''}
-        </button>
-      `).join('');
-    }
-    updateEditionGalleryView(0);
-
-    // Descrição & Entrevistas
-    const descEl = document.getElementById('edition-description-text');
-    if (descEl) descEl.textContent = edition.description || '';
-
-    const interviewsList = document.getElementById('edition-interviews-list');
-    if (interviewsList && Array.isArray(edition.interviews)) {
-      interviewsList.innerHTML = edition.interviews.map(item => `
-        <li class="edition-interview-item">
-          <span class="edition-interview-band">${escapeHtml(item.band)}</span>
-          <span class="edition-interview-meta">${escapeHtml(item.country)} • ${escapeHtml(item.style)}</span>
-        </li>
-      `).join('');
-    }
-
-    const extrasList = document.getElementById('edition-extras-list');
-    if (extrasList && Array.isArray(edition.extraContents)) {
-      extrasList.innerHTML = edition.extraContents.map(text => `
-        <li>${escapeHtml(text)}</li>
-      `).join('');
-    }
-
-    // Especificações Técnicas
-    const specsList = document.getElementById('edition-specs-list');
-    if (specsList && edition.specs) {
-      const specRows = isPt
-        ? [
-            { label: 'Formato / Dimensões', value: edition.specs.format },
-            { label: 'Papel / Impressão', value: edition.specs.paper },
-            { label: 'Idioma', value: edition.specs.language },
-            { label: 'Tiragem', value: edition.specs.printRun },
-            { label: 'Páginas', value: `${edition.pages} páginas` },
-            { label: 'Lançamento', value: `${edition.releaseMonth} / ${edition.releaseYear} (${edition.zineYear})` }
-          ]
-        : [
-            { label: 'Format / Dimensions', value: edition.specs.format },
-            { label: 'Paper / Print', value: edition.specs.paper },
-            { label: 'Language', value: edition.specs.language },
-            { label: 'Print Run', value: edition.specs.printRun },
-            { label: 'Pages', value: `${edition.pages} pages` },
-            { label: 'Release', value: `${edition.releaseMonth} / ${edition.releaseYear} (${edition.zineYear})` }
-          ];
-
-      specsList.innerHTML = specRows.map(row => `
-        <div class="edition-spec-row">
-          <dt>${escapeHtml(row.label)}</dt>
-          <dd>${escapeHtml(row.value)}</dd>
-        </div>
-      `).join('');
-    }
-
-    // Vídeo do YouTube incorporado
-    const videoSection = document.getElementById('edition-video-section');
-    const videoSlot = document.getElementById('edition-video-player-slot');
-    const videoExternalLink = document.getElementById('edition-video-external-link');
-    const videoSubtitle = document.getElementById('edition-video-subtitle');
-    const videoId = extractYoutubeVideoId(edition.youtubeUrl);
-
-    if (videoSection && videoSlot) {
-      if (videoId) {
-        videoSection.hidden = false;
-        if (videoExternalLink) {
-          videoExternalLink.href = edition.youtubeUrl;
-        }
-        if (videoSubtitle) {
-          videoSubtitle.textContent = isPt
-            ? 'Confira por dentro as páginas impressas, artes, diagramação e detalhes físicos desta edição diretamente no canal oficial do Armamento Bélico.'
-            : 'Take a look inside the printed pages, artwork, layout and physical finish of this issue on the official Armamento Bélico YouTube channel.';
-        }
-        const playAria = isPt
-          ? `Reproduzir vídeo: ${edition.title}`
-          : `Play video: ${edition.title}`;
-        videoSlot.innerHTML = `
-          <div class="youtube-video-container" data-youtube-id="${escapeHtml(videoId)}" data-youtube-title="${escapeHtml(edition.title)}">
-            <button type="button" class="youtube-facade-btn" aria-label="${escapeHtml(playAria)}">
-              <img src="https://i.ytimg.com/vi/${encodeURIComponent(videoId)}/hqdefault.jpg" alt="${escapeHtml(edition.title)}" class="youtube-facade-thumb" loading="lazy">
-              <span class="youtube-play-btn" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
-            </button>
-          </div>
-        `;
-        setupYoutubeFacades(videoSlot);
-      } else {
-        videoSection.hidden = true;
-        videoSlot.innerHTML = '';
-      }
-    }
-
-    // Links de compartilhamento social
+    // Atualiza links de compartilhamento com a URL canônica atual
     const currentUrl = window.location.href;
     const shareText = isPt
-      ? `Confira ${edition.title} — Armamento Bélico Zine:`
-      : `Check out ${edition.title} — Armamento Bélico Zine:`;
+      ? `Confira ${serverEdition.title} — Armamento Bélico Zine:`
+      : `Check out ${serverEdition.title} — Armamento Bélico Zine:`;
 
     const waShare = document.getElementById('edition-share-whatsapp');
     const fbShare = document.getElementById('edition-share-facebook');
@@ -2476,22 +2359,8 @@
     if (fbShare) fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
     if (xShare) xShare.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`;
 
-    // Navegação contextual (Anterior / Próxima)
-    const prevTitleEl = document.getElementById('edition-nav-prev-title');
-    const prevHintEl = document.getElementById('edition-nav-prev-hint');
-    const prevLinkEl = document.getElementById('edition-nav-prev');
-    const nextTitleEl = document.getElementById('edition-nav-next-title');
-    const nextHintEl = document.getElementById('edition-nav-next-hint');
-
-    if (edition.prevEdition && prevLinkEl && prevTitleEl && prevHintEl) {
-      prevLinkEl.href = edition.prevEdition.url || 'arquivo.html';
-      prevTitleEl.textContent = edition.prevEdition.title;
-      prevHintEl.textContent = isPt ? 'Ver no catálogo geral' : 'View in full archive';
-    }
-    if (!edition.nextEdition && nextTitleEl && nextHintEl) {
-      nextTitleEl.textContent = isPt ? 'Edição mais recente' : 'Latest release';
-      nextHintEl.textContent = isPt ? 'Em breve nas prensas' : 'Coming soon to print';
-    }
+    updateSingleLangNotice(serverEdition, STATE.lang);
+    setupYoutubeFacades(document.getElementById('edition-video-player-slot') || document);
   }
 
   function initEditionDetailPage() {
@@ -2889,9 +2758,14 @@
 
   // --- INICIALIZAÇÃO GERAL ---
   function init() {
-    // 0. Marcar aba ativa no menu com base na rota atual
+    // 0. Carregar configurações da loja (#store-config-data) e marcar aba ativa
+    STORE_CONFIG = loadStoreConfig();
+    STATE.whatsappNumber = STORE_CONFIG.whatsappNumber;
+    STATE.paypalBusinessEmail = STORE_CONFIG.paypal.email;
+
     updateActiveNavLink();
     initAdminLoginModal();
+    initStoreModals();
 
     // 1. Configurar listeners de idioma
     document.querySelectorAll('.lang-btn').forEach(btn => {

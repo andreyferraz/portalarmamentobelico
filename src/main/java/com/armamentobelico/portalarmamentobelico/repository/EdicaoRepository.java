@@ -19,6 +19,8 @@ public interface EdicaoRepository extends ListCrudRepository<Edicao, UUID> {
 
     List<Edicao> findByIdiomaOrderByNumeroEdicaoDesc(IdiomaEdicao idioma);
 
+    List<Edicao> findByPublicadoTrueOrderByNumeroEdicaoDesc();
+
     Optional<Edicao> findByNumeroEdicaoAndIdioma(Integer numeroEdicao, IdiomaEdicao idioma);
 
     Optional<Edicao> findByNumeroEdicaoAndIdiomaAndPublicadoTrue(Integer numeroEdicao, IdiomaEdicao idioma);

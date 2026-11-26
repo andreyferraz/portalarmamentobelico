@@ -231,6 +231,53 @@
     </form>
   </dialog>
 
+  <!-- MODAL DE CONFLITO DE MOEDA NO NECROCARRINHO (R$ vs €) -->
+  <dialog id="cart-currency-conflict-dialog" class="store-modal-dialog" closedby="any" aria-labelledby="cart-conflict-title">
+    <div class="store-modal-header">
+      <div class="store-modal-title-wrap">
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+        <h2 id="cart-conflict-title" class="pirata-title">Moedas Diferentes no Carrinho</h2>
+      </div>
+      <button type="button" class="store-modal-close" id="cart-conflict-close-btn" aria-label="Fechar aviso">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="store-modal-body">
+      <p id="cart-conflict-message" class="store-modal-text"></p>
+      <div class="store-modal-actions">
+        <button type="button" class="store-modal-btn-secondary" id="cart-conflict-cancel-btn">Manter carrinho atual</button>
+        <button type="button" class="store-modal-btn-primary" id="cart-conflict-replace-btn">Substituir carrinho</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL DE CONFIRMAÇÃO DE CHECKOUT PAYPAL (€) -->
+  <dialog id="paypal-checkout-confirm-dialog" class="store-modal-dialog" closedby="any" aria-labelledby="paypal-confirm-title">
+    <div class="store-modal-header">
+      <div class="store-modal-title-wrap">
+        <i class="fa-brands fa-paypal" aria-hidden="true"></i>
+        <h2 id="paypal-confirm-title" class="pirata-title">International PayPal Checkout</h2>
+      </div>
+      <button type="button" class="store-modal-close" id="paypal-confirm-close-btn" aria-label="Close modal">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="store-modal-body">
+      <div id="paypal-confirm-summary" class="paypal-confirm-summary"></div>
+      <p id="paypal-confirm-recipient" class="paypal-confirm-recipient"></p>
+      <div class="store-modal-actions">
+        <button type="button" class="store-modal-btn-secondary" id="paypal-confirm-cancel-btn">Cancel</button>
+        <button type="button" class="store-modal-btn-paypal" id="paypal-confirm-proceed-btn">
+          <i class="fa-brands fa-paypal" aria-hidden="true"></i>
+          <span id="paypal-confirm-proceed-label">Proceed to PayPal</span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Configurações da Loja (Frete BRL/EUR, PayPal e WhatsApp) -->
+  <script type="application/json" id="store-config-data" th:if="${lojaConfigJson != null}" th:utext="${lojaConfigJson}"></script>
+
   <!-- Polyfill condicional para Invoker Commands (command/commandfor) -->
   <script type="module">
     if (!('commandForElement' in HTMLButtonElement.prototype)) {

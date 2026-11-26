@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.armamentobelico.portalarmamentobelico.dto.EdicaoCatalogoItemDTO;
 import com.armamentobelico.portalarmamentobelico.dto.EdicaoDetalhesDTO;
 import com.armamentobelico.portalarmamentobelico.dto.EdicaoFormDTO;
 import com.armamentobelico.portalarmamentobelico.model.Edicao;
@@ -600,6 +601,94 @@ public class EdicaoService {
 
     private boolean isBlank(String valor) {
         return valor == null || valor.trim().isEmpty();
+    }
+
+    private static final int MAX_BANDAS_DESTAQUE_CARD = 10;
+
+    @Transactional(readOnly = true)
+    public Map<String, List<EdicaoCatalogoItemDTO>> listarCatalogoPublicoPorIdioma() {
+        return montarCatalogoPorIdioma(false, Integer.MAX_VALUE);
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, List<EdicaoCatalogoItemDTO>> listarDestaquesHomePorIdioma(int limite) {
+        int limiteSeguro = Math.max(0, limite);
+        return montarCatalogoPorIdioma(true, limiteSeguro);
+    }
+
+    private Map<String, List<EdicaoCatalogoItemDTO>> montarCatalogoPorIdioma(boolean apenasEmEstoque, int limitePorIdioma) {
+        List<Edicao> publicadas = edicaoRepository.findByPublicadoTrueOrderByNumeroEdicaoDesc();
+        Map<UUID, List<EdicaoEntrevista>> entrevistasPorEdicao = new HashMap<>();
+        if (!publicadas.isEmpty()) {
+            for (EdicaoEntrevista ent : entrevistaRepository.findAllByOrderByEdicaoIdAscOrdemAsc()) {
+                entrevistasPorEdicao.computeIfAbsent(ent.getEdicaoId(), k -> new ArrayList<>()).add(ent);
+            }
+        }
+
+        List<EdicaoCatalogoItemDTO> pt = new ArrayList<>();
+        List<EdicaoCatalogoItemDTO> en = new ArrayList<>();
+
+        for (Edicao edicao : publicadas) {
+            if (apenasEmEstoque && (edicao.getStatusEstoque() == null || !edicao.getStatusEstoque().isInStock())) {
+                continue;
+            }
+            List<EdicaoCatalogoItemDTO> destino = edicao.getIdioma() == IdiomaEdicao.EN ? en : pt;
+            if (destino.size() >= limitePorIdioma) {
+                continue;
+            }
+            destino.add(toCatalogoItemDTO(edicao, entrevistasPorEdicao.getOrDefault(edicao.getId(), List.of())));
+        }
+
+        Map<String, List<EdicaoCatalogoItemDTO>> resultado = new HashMap<>();
+        resultado.put("pt", List.copyOf(pt));
+        resultado.put("en", List.copyOf(en));
+        return resultado;
+    }
+
+    private EdicaoCatalogoItemDTO toCatalogoItemDTO(Edicao edicao, List<EdicaoEntrevista> entrevistas) {
+        String date = edicao.getMesLancamento() + " / " + edicao.getAnoLancamento() + " - " + edicao.getAnoRevista();
+        String bands = formatarDestaquesEntrevistas(entrevistas, edicao.getDescricao());
+        return new EdicaoCatalogoItemDTO(
+                edicao.getId(),
+                edicao.getNumeroEdicao(),
+                edicao.getIdioma().getSlug(),
+                edicao.getUrlPublica(),
+                edicao.getTitulo(),
+                edicao.getSubtitulo(),
+                edicao.getPreco(),
+                edicao.getMoeda().getSimbolo(),
+                "/uploads/" + edicao.getCapaPath(),
+                date,
+                bands,
+                edicao.getStatusEstoque().isInStock(),
+                edicao.getStatusEstoque().name().toLowerCase(Locale.ROOT),
+                edicao.getPaginas());
+    }
+
+    private String formatarDestaquesEntrevistas(List<EdicaoEntrevista> entrevistas, String descricaoFallback) {
+        if (entrevistas == null || entrevistas.isEmpty()) {
+            if (descricaoFallback == null) {
+                return "";
+            }
+            String limpa = descricaoFallback.trim();
+            return limpa.length() > 140 ? limpa.substring(0, 137) + "..." : limpa;
+        }
+        StringBuilder sb = new StringBuilder();
+        int limite = Math.min(entrevistas.size(), MAX_BANDAS_DESTAQUE_CARD);
+        for (int i = 0; i < limite; i++) {
+            EdicaoEntrevista ent = entrevistas.get(i);
+            if (i > 0) {
+                sb.append(", ");
+            }
+            sb.append(ent.getBanda());
+            if (!isBlank(ent.getPais()) && !"—".equals(ent.getPais().trim())) {
+                sb.append(" (").append(ent.getPais().trim()).append(')');
+            }
+        }
+        if (entrevistas.size() > MAX_BANDAS_DESTAQUE_CARD) {
+            sb.append("...");
+        }
+        return sb.toString();
     }
 
     private record FotoParaPersistir(String arquivoPath, String legenda) {

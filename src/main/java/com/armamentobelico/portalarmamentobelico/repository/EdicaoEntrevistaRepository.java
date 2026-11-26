@@ -16,6 +16,8 @@ public interface EdicaoEntrevistaRepository extends ListCrudRepository<EdicaoEnt
 
     List<EdicaoEntrevista> findByEdicaoIdOrderByOrdemAsc(UUID edicaoId);
 
+    List<EdicaoEntrevista> findAllByOrderByEdicaoIdAscOrdemAsc();
+
     @Modifying
     @Query("DELETE FROM edicao_entrevista WHERE edicao_id = :edicaoId")
     void deleteByEdicaoId(@Param("edicaoId") UUID edicaoId);

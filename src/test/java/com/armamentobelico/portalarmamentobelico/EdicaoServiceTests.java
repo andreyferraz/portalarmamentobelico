@@ -216,4 +216,39 @@ class EdicaoServiceTests {
 
         assertThat(edicaoService.resolverUrlPadraoPorNumero(58)).contains("/edicoes/pt/58");
     }
+
+    @Test
+    void deveListarDestaquesHomeApenasEmEstoqueECatalogoCompletoPorIdioma() throws IOException {
+        for (int num = 54; num <= 58; num++) {
+            EdicaoFormDTO form = criarFormBase(num, IdiomaEdicao.PT, "30.00");
+            if (num == 56) {
+                form.setStatusEstoque(StatusEstoque.LOW);
+            } else if (num == 55) {
+                form.setStatusEstoque(StatusEstoque.SOLDOUT);
+            }
+            edicaoService.criar(form);
+        }
+        EdicaoFormDTO rascunho = criarFormBase(59, IdiomaEdicao.PT, "30.00");
+        rascunho.setPublicado(false);
+        edicaoService.criar(rascunho);
+
+        EdicaoFormDTO en58 = criarFormBase(58, IdiomaEdicao.EN, "12.00");
+        edicaoService.criar(en58);
+
+        var destaquesHome = edicaoService.listarDestaquesHomePorIdioma(4);
+        assertThat(destaquesHome.get("pt"))
+                .extracting(item -> item.editionNumber())
+                .containsExactly(58, 57, 56, 54);
+        assertThat(destaquesHome.get("pt").get(2).stockStatus()).isEqualTo("low");
+        assertThat(destaquesHome.get("en"))
+                .extracting(item -> item.editionNumber())
+                .containsExactly(58);
+        assertThat(destaquesHome.get("en").get(0).currency()).isEqualTo("€");
+
+        var catalogoCompleto = edicaoService.listarCatalogoPublicoPorIdioma();
+        assertThat(catalogoCompleto.get("pt"))
+                .extracting(item -> item.editionNumber())
+                .containsExactly(58, 57, 56, 55, 54);
+        assertThat(catalogoCompleto.get("pt").get(0).bands()).contains("Diabolizer (Turquia)");
+    }
 }

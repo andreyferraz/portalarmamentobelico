@@ -156,10 +156,18 @@
                         <div class="edition-shipping-row">
                             <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
                             <p id="edition-shipping-fee-text" th:if="${isPt}">
-                                <strong>Frete Correios:</strong> R$ 13,00 para 1 edição (+ R$ 2,00 por edição adicional no mesmo pedido).
+                                <strong>Frete Correios:</strong>
+                                <span th:text="${lojaConfig != null ? lojaConfig.freteBrlBaseFormatado : 'R$ 13,00'}">R$ 13,00</span>
+                                para 1 edição (+
+                                <span th:text="${lojaConfig != null ? lojaConfig.freteBrlAdicionalFormatado : 'R$ 2,00'}">R$ 2,00</span>
+                                por edição adicional no mesmo pedido).
                             </p>
                             <p id="edition-shipping-fee-text" th:if="${!isPt}">
-                                <strong>Registered Worldwide Airmail:</strong> shipping calculated at checkout.
+                                <strong>Registered Worldwide Airmail:</strong>
+                                <span th:text="${lojaConfig != null ? lojaConfig.freteEurBaseFormatado : '€ 10.00'}">€ 10.00</span>
+                                for 1 issue (+
+                                <span th:text="${lojaConfig != null ? lojaConfig.freteEurAdicionalFormatado : '€ 3.00'}">€ 3.00</span>
+                                per additional issue in the same order).
                             </p>
                         </div>
                         <div class="edition-shipping-row">

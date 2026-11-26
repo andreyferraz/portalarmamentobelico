@@ -118,6 +118,9 @@ class EdicaoPublicControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Armamento Bélico #58 [ENG]")))
                 .andExpect(content().string(containsString("€ 12.00")))
+                .andExpect(content().string(containsString("€ 10.00")))
+                .andExpect(content().string(containsString("€ 3.00")))
+                .andExpect(content().string(containsString("id=\"store-config-data\"")))
                 .andExpect(content().string(containsString("English (International)")))
                 .andExpect(content().string(containsString("\"alternateLangUrl\":\"/edicoes/pt/58\"")));
     }
