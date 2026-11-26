@@ -571,9 +571,64 @@
     paypalBusinessEmail: 'armamento.belico.zine@gmail.com'
   };
 
+  let cachedServerEditionData = undefined;
+  function getServerEditionData() {
+    if (cachedServerEditionData !== undefined) return cachedServerEditionData;
+    const scriptEl = document.getElementById('edition-page-data');
+    if (!scriptEl) {
+      cachedServerEditionData = null;
+      return null;
+    }
+    try {
+      cachedServerEditionData = JSON.parse(scriptEl.textContent || 'null');
+    } catch (_) {
+      cachedServerEditionData = null;
+    }
+    return cachedServerEditionData;
+  }
+
+  function updateSingleLangNotice(serverEdition, uiLang) {
+    const notice = document.getElementById('edition-single-lang-notice');
+    const noticeText = document.getElementById('edition-single-lang-notice-text');
+    if (!notice || !noticeText || !serverEdition) return;
+
+    if (uiLang !== serverEdition.editionLang && !serverEdition.alternateLangUrl) {
+      const onlyPt = serverEdition.editionLang === 'pt';
+      if (uiLang === 'en') {
+        noticeText.textContent = onlyPt
+          ? `This physical issue (#${serverEdition.editionNumber}) was published exclusively in Brazilian Portuguese. Interface labels have been switched to English, while the issue content remains in its original Portuguese edition.`
+          : `This physical issue (#${serverEdition.editionNumber}) was published exclusively in English.`;
+      } else {
+        noticeText.textContent = onlyPt
+          ? `Esta edição física (#${serverEdition.editionNumber}) foi publicada exclusivamente em Português.`
+          : `Esta edição física (#${serverEdition.editionNumber}) foi publicada exclusivamente em Inglês. Os rótulos da interface foram ajustados para Português, mantendo o conteúdo original da edição impressa em Inglês.`;
+      }
+      notice.hidden = false;
+    } else {
+      notice.hidden = true;
+    }
+  }
+
   // Salvar idioma
   function setLanguage(lang) {
     if (lang !== 'pt' && lang !== 'en') lang = 'pt';
+
+    const serverEdition = getServerEditionData();
+    if (serverEdition) {
+      if (lang !== serverEdition.editionLang && serverEdition.alternateLangUrl) {
+        localStorage.setItem('ab_lang', lang);
+        window.location.href = serverEdition.alternateLangUrl;
+        return;
+      }
+      STATE.lang = lang;
+      localStorage.setItem('ab_lang', lang);
+      applyLanguage(lang);
+      updateSingleLangNotice(serverEdition, lang);
+      renderCart();
+      updateSubscriptionNavVisibility();
+      return;
+    }
+
     STATE.lang = lang;
     localStorage.setItem('ab_lang', lang);
     applyLanguage(lang);
@@ -626,8 +681,11 @@
 
   function addToCart(productId) {
     const currentLang = STATE.lang;
-    const catalog = ZINE_CATALOG[currentLang];
-    const product = catalog.find(p => p.id === productId);
+    const catalog = ZINE_CATALOG[currentLang] || [];
+    let product = catalog.find(p => p.id === productId);
+    if (!product && editionPageState.edition && editionPageState.edition.id === productId) {
+      product = editionPageState.edition;
+    }
 
     if (!product || !product.inStock) {
       showToast(currentLang === 'pt' ? 'Item esgotado ou indisponível!' : 'Item is sold out!');
@@ -707,9 +765,16 @@
   }
 
   function formatCurrency(value, currency) {
-    return currency === 'R$'
-      ? `R$ ${value.toFixed(2).replace('.', ',')}`
-      : `US$ ${value.toFixed(2)}`;
+    const num = Number(value || 0);
+    if (currency === 'R$') {
+      return `R$ ${num.toFixed(2).replace('.', ',')}`;
+    }
+    if (currency === '€') {
+      return STATE.lang === 'pt'
+        ? `€ ${num.toFixed(2).replace('.', ',')}`
+        : `€ ${num.toFixed(2)}`;
+    }
+    return `${currency || 'US$'} ${num.toFixed(2)}`;
   }
 
   function updateCartCountBadge() {
@@ -2139,6 +2204,45 @@
   function renderEditionDetailPage() {
     if (!document.body.classList.contains('page-edicao')) return;
 
+    const serverEdition = getServerEditionData();
+    if (serverEdition) {
+      const isPt = serverEdition.editionLang === 'pt';
+      editionPageState.edition = serverEdition;
+
+      const coverCaption = isPt
+        ? `Capa oficial — ${serverEdition.title}`
+        : `Official cover — ${serverEdition.title}`;
+      const extras = Array.isArray(serverEdition.extraPhotos) ? serverEdition.extraPhotos.slice(0, 5) : [];
+      editionPageState.photos = [
+        { src: serverEdition.cover, caption: coverCaption, isCover: true },
+        ...extras.map((item, i) => ({
+          src: typeof item === 'string' ? item : item.src,
+          caption: (typeof item === 'object' && item && item.caption)
+            ? item.caption
+            : (isPt ? `Foto extra ${i + 1} — ${serverEdition.title}` : `Extra photo ${i + 1} — ${serverEdition.title}`),
+          isCover: false
+        }))
+      ];
+      editionPageState.activeIndex = 0;
+
+      // Atualiza links de compartilhamento com a URL canônica atual
+      const currentUrl = window.location.href;
+      const shareText = isPt
+        ? `Confira ${serverEdition.title} — Armamento Bélico Zine:`
+        : `Check out ${serverEdition.title} — Armamento Bélico Zine:`;
+
+      const waShare = document.getElementById('edition-share-whatsapp');
+      const fbShare = document.getElementById('edition-share-facebook');
+      const xShare = document.getElementById('edition-share-x');
+      if (waShare) waShare.href = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${currentUrl}`)}`;
+      if (fbShare) fbShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+      if (xShare) xShare.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(currentUrl)}`;
+
+      updateSingleLangNotice(serverEdition, STATE.lang);
+      setupYoutubeFacades(document.getElementById('edition-video-player-slot') || document);
+      return;
+    }
+
     const isPt = STATE.lang === 'pt';
     const catalog = ZINE_CATALOG[STATE.lang] || ZINE_CATALOG.pt;
     const targetNum = Number(document.body.dataset.editionNumber || 58);
@@ -2831,7 +2935,12 @@
       yearSpan.textContent = new Date().getFullYear();
     }
 
-    // 5. Aplicar o estado salvo do LocalStorage
+    // 5. Sincronizar idioma com a edição aberta (se página pública dinâmica) e aplicar estado
+    const serverEdition = getServerEditionData();
+    if (serverEdition && (serverEdition.editionLang === 'pt' || serverEdition.editionLang === 'en')) {
+      STATE.lang = serverEdition.editionLang;
+      localStorage.setItem('ab_lang', STATE.lang);
+    }
     applyLanguage(STATE.lang);
     updateCartCountBadge();
     renderProducts();

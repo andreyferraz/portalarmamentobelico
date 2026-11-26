@@ -57,7 +57,7 @@
           <p class="nav-group-label">Conteúdo</p>
           <ul class="nav-list">
             <li>
-              <a th:href="@{/admin/edicoes}" class="nav-link" data-module-pending="true" data-module-name="Edições do Fanzine">
+              <a th:href="@{/admin/edicoes}" class="nav-link">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
                 </svg>
@@ -204,7 +204,7 @@
             </p>
           </div>
           <div class="page-actions">
-            <a th:href="@{/admin/edicoes/novo}" class="btn btn-primary" data-module-pending="true" data-module-name="Edições do Fanzine">
+            <a th:href="@{/admin/edicoes/nova}" class="btn btn-primary">
               Nova Edição
             </a>
             <a th:href="@{/admin/noticias/novo}" class="btn" data-module-pending="true" data-module-name="Notícias">
@@ -230,8 +230,11 @@
           <div class="kpi-grid">
             <article class="kpi-card">
               <span class="kpi-label">Edições publicadas</span>
-              <span class="kpi-value" th:text="${totalEdicoes ?: 0}">0</span>
-              <span class="kpi-meta">Catálogo do zine e arquivo</span>
+              <span class="kpi-value" th:text="${totalEdicoesPublicadas ?: 0}">0</span>
+              <span class="kpi-meta"
+                th:text="${resumoEdicoes != null ? resumoEdicoes.totalPt + ' PT (R$) • ' + resumoEdicoes.totalEn + ' EN (€) • ' + resumoEdicoes.totalRascunhos + ' rasc.' : 'Catálogo do zine e arquivo'}">
+                Catálogo do zine e arquivo
+              </span>
             </article>
 
             <article class="kpi-card">
@@ -271,14 +274,14 @@
                   </span>
                   <h3 class="module-card-title">Edições do Fanzine</h3>
                 </div>
-                <span class="status-badge is-neutral">CRUD</span>
+                <span class="status-badge is-success">Ativo</span>
               </div>
               <p class="module-card-desc">
-                Cadastre edições impressas, capas, galeria, faixas/entrevistas vinculadas e controle de disponibilidade.
+                Cadastre edições impressas em Português (R$) e Inglês (€), capas, galeria, entrevistas e controle de estoque.
               </p>
               <div class="module-card-footer">
                 <span class="module-route">/admin/edicoes</span>
-                <a th:href="@{/admin/edicoes}" class="btn btn-sm" data-module-pending="true" data-module-name="Edições do Fanzine">Gerenciar <span class="visually-hidden">Edições do Fanzine</span></a>
+                <a th:href="@{/admin/edicoes}" class="btn btn-sm">Gerenciar <span class="visually-hidden">Edições do Fanzine</span></a>
               </div>
             </article>
 
@@ -414,9 +417,9 @@
                 <tr data-module-row>
                   <th scope="row">Edições do Fanzine</th>
                   <td><code>/admin/edicoes</code></td>
-                  <td>Cadastro direto + entrevistas</td>
-                  <td><span class="status-badge is-neutral">Aguardando módulo</span></td>
-                  <td><a th:href="@{/admin/edicoes}" class="btn btn-sm" data-module-pending="true" data-module-name="Edições do Fanzine">Abrir <span class="visually-hidden">Edições do Fanzine</span></a></td>
+                  <td>Cadastro direto + entrevistas (PT / EN)</td>
+                  <td><span class="status-badge is-success">Ativo</span></td>
+                  <td><a th:href="@{/admin/edicoes}" class="btn btn-sm">Abrir <span class="visually-hidden">Edições do Fanzine</span></a></td>
                 </tr>
                 <tr data-module-row>
                   <th scope="row">Notícias</th>

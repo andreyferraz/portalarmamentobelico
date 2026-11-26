@@ -12,7 +12,7 @@
   <link rel="icon" th:href="@{/assets/logo-armamento-belico.png}" type="image/png">
 </head>
 
-<body class="page-home">
+<body th:class="${bodyClass != null ? bodyClass : 'page-home'}">
 
     <!-- Linha superior de sangue -->
   <div class="top-blood-bar"></div>

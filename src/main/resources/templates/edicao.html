@@ -1,24 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
-    th:replace="~{layout :: layout('Edição | Armamento Bélico Zine', ~{::content})}">
-<header>
-    <title th:text="${title}"></title>
-</header>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${isPt ? 'pt-BR' : 'en'}"
+    th:replace="~{layout :: layout(${pageTitle ?: 'Edição | Armamento Bélico Zine'}, ~{::content})}">
 
 <div th:fragment="content">
 
-
-    <!-- CONTEÚDO PRINCIPAL — TEMPLATE DA PÁGINA DE EDIÇÃO (#58) -->
+    <!-- CONTEÚDO PRINCIPAL — PÁGINA DINÂMICA DA EDIÇÃO -->
     <main class="main-wrapper">
 
         <!-- NAVEGAÇÃO CONTEXTUAL (BREADCRUMB) -->
         <nav class="edition-breadcrumb" aria-label="Caminho de navegação">
             <ol>
-                <li><a href="index.html" data-i18n="nav_home">Início</a></li>
-                <li><a href="arquivo.html" data-i18n="nav_archive">Edições e loja</a></li>
-                <li aria-current="page" id="edition-breadcrumb-current">Armamento Bélico #58</li>
+                <li><a th:href="@{/}" data-i18n="nav_home">Início</a></li>
+                <li><a th:href="@{/arquivo}" data-i18n="nav_archive">Edições e loja</a></li>
+                <li aria-current="page" id="edition-breadcrumb-current" th:text="${edicao.titulo}">Armamento Bélico</li>
             </ol>
         </nav>
+
+        <!-- AVISO DE EDIÇÃO EM IDIOMA ÚNICO (exibido via JS quando visitante alterna bandeira sem versão irmã) -->
+        <div class="edition-single-lang-notice" id="edition-single-lang-notice" hidden role="status">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+            <span id="edition-single-lang-notice-text"></span>
+        </div>
 
         <!-- BLOCO PRINCIPAL: GALERIA + INFORMAÇÕES E COMPRA -->
         <section class="edition-hero-grid" aria-labelledby="edition-title">
@@ -26,14 +28,15 @@
             <!-- COLUNA ESQUERDA: GALERIA DE IMAGENS (CAPA + ATÉ 5 FOTOS EXTRAS) -->
             <div class="edition-gallery-col">
                 <div class="edition-main-photo-wrap">
-                    <span class="edition-stock-pill is-available" id="edition-stock-pill">
-                        <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-                        <span id="edition-stock-pill-text">Disponível</span>
+                    <span class="edition-stock-pill" th:classappend="${' ' + edicao.statusEstoque.cssClass}" id="edition-stock-pill">
+                        <i th:class="${edicao.statusEstoque.iconClass}" aria-hidden="true"></i>
+                        <span id="edition-stock-pill-text" th:text="${edicao.statusEstoque.getLabel(edicao.idioma)}">Disponível</span>
                     </span>
 
                     <button type="button" class="edition-main-photo-btn" id="edition-main-photo-btn"
                         aria-label="Ampliar imagem da edição">
-                        <img src="assets/images/capa-edicao-58.png" alt="Capa da edição Armamento Bélico #58"
+                        <img th:src="@{/uploads/{file}(file=${edicao.capaPath})}"
+                            th:alt="${(isPt ? 'Capa oficial — ' : 'Official cover — ') + edicao.titulo}"
                             id="edition-main-photo" class="edition-main-photo">
                         <span class="edition-zoom-hint" aria-hidden="true">
                             <i class="fa-solid fa-magnifying-glass-plus"></i>
@@ -42,17 +45,33 @@
                     </button>
 
                     <div class="edition-photo-bar">
-                        <p class="edition-photo-caption" id="edition-photo-caption">
-                            Capa oficial — Armamento Bélico #58
+                        <p class="edition-photo-caption" id="edition-photo-caption"
+                            th:text="${(isPt ? 'Capa oficial — ' : 'Official cover — ') + edicao.titulo}">
+                            Capa oficial
                         </p>
-                        <span class="edition-photo-counter" id="edition-photo-counter">1 / 6</span>
+                        <span class="edition-photo-counter" id="edition-photo-counter"
+                            th:text="${'1 / ' + (1 + #lists.size(fotos))}">1 / 1</span>
                     </div>
                 </div>
 
                 <!-- Miniaturas abaixo da foto principal (Capa + até 5 fotos extras) -->
                 <div class="edition-thumbs-grid" id="edition-thumbs-grid" role="group"
                     aria-label="Galeria de fotos da edição">
-                    <!-- Renderizado dinamicamente via script.js (template suporta capa + até 5 fotos extras) -->
+                    <button type="button" class="edition-thumb-btn is-active" data-photo-index="0" aria-pressed="true"
+                        th:aria-label="${(isPt ? 'Capa oficial — ' : 'Official cover — ') + edicao.titulo}">
+                        <img th:src="@{/uploads/{file}(file=${edicao.capaPath})}"
+                            th:alt="${(isPt ? 'Capa oficial — ' : 'Official cover — ') + edicao.titulo}" loading="lazy">
+                        <span class="edition-thumb-tag" th:text="${isPt ? 'Capa' : 'Cover'}">Capa</span>
+                    </button>
+
+                    <button type="button" class="edition-thumb-btn"
+                        th:each="foto, stat : ${fotos}"
+                        th:attr="data-photo-index=${stat.index + 1}"
+                        aria-pressed="false"
+                        th:aria-label="${foto.legenda != null ? foto.legenda : ((isPt ? 'Foto extra ' : 'Extra photo ') + (stat.index + 1) + ' — ' + edicao.titulo)}">
+                        <img th:src="@{/uploads/{file}(file=${foto.arquivoPath})}"
+                            th:alt="${foto.legenda != null ? foto.legenda : ((isPt ? 'Foto extra ' : 'Extra photo ') + (stat.index + 1))}" loading="lazy">
+                    </button>
                 </div>
             </div>
 
@@ -60,33 +79,35 @@
             <div class="edition-info-col">
                 <div class="edition-heading-block">
                     <div class="edition-tags-row">
-                        <span class="tape-tag blood" id="edition-number-tag">EDIÇÃO #58</span>
-                        <span class="tape-tag dark" id="edition-year-tag">ANO 18</span>
+                        <span class="tape-tag blood" id="edition-number-tag"
+                            th:text="${(isPt ? 'EDIÇÃO #' : 'ISSUE #') + edicao.numeroEdicao}">EDIÇÃO #58</span>
+                        <span class="tape-tag dark" id="edition-year-tag"
+                            th:text="${#strings.toUpperCase(edicao.anoRevista)}">ANO 18</span>
                     </div>
 
-                    <h1 class="pirata-title edition-title" id="edition-title">Armamento Bélico #58</h1>
-                    <p class="edition-subtitle" id="edition-subtitle">
-                        Edição Nacional em Português • Especial Death &amp; Black Metal Subterrâneo
+                    <h1 class="pirata-title edition-title" id="edition-title" th:text="${edicao.titulo}">Armamento Bélico</h1>
+                    <p class="edition-subtitle" id="edition-subtitle" th:if="${edicao.subtitulo != null}" th:text="${edicao.subtitulo}">
+                        Subtítulo da edição
                     </p>
                 </div>
 
-                <!-- Informações Complementares (Mês, Ano, Ano de Existência e Páginas) -->
+                <!-- Informações Complementares (Mês, Ano, Ano da Revista e Páginas) -->
                 <dl class="edition-meta-grid" aria-label="Informações complementares da edição">
                     <div class="edition-meta-item">
                         <dt data-i18n="edition_meta_month">Mês de Lançamento</dt>
-                        <dd id="edition-meta-month">Agosto</dd>
+                        <dd id="edition-meta-month" th:text="${edicao.mesLancamento}">Agosto</dd>
                     </div>
                     <div class="edition-meta-item">
                         <dt data-i18n="edition_meta_year">Ano de Lançamento</dt>
-                        <dd id="edition-meta-year">2026</dd>
+                        <dd id="edition-meta-year" th:text="${edicao.anoLancamento}">2026</dd>
                     </div>
                     <div class="edition-meta-item">
                         <dt data-i18n="edition_meta_existence">Ano da Revista</dt>
-                        <dd id="edition-meta-existence">Ano 18</dd>
+                        <dd id="edition-meta-existence" th:text="${edicao.anoRevista}">Ano 18</dd>
                     </div>
                     <div class="edition-meta-item">
                         <dt data-i18n="edition_meta_pages">Páginas</dt>
-                        <dd id="edition-meta-pages">68 páginas</dd>
+                        <dd id="edition-meta-pages" th:text="${edicao.paginas + (isPt ? ' páginas' : ' pages')}">68 páginas</dd>
                     </div>
                 </dl>
 
@@ -94,50 +115,66 @@
                 <div class="edition-purchase-box">
                     <div class="edition-price-header">
                         <div>
-                            <span class="edition-price-label" data-i18n="edition_price_label">Valor da Edição
-                                Impressa</span>
-                            <div class="edition-price-value" id="edition-price-value">R$ 30,00</div>
+                            <span class="edition-price-label" data-i18n="edition_price_label">Valor da Edição Impressa</span>
+                            <div class="edition-price-value" id="edition-price-value" th:text="${edicao.precoFormatado}">R$ 30,00</div>
                         </div>
-                        <span class="edition-stock-inline is-available" id="edition-stock-inline">
+                        <span class="edition-stock-inline" th:classappend="${' ' + edicao.statusEstoque.cssClass}" id="edition-stock-inline"
+                            th:text="${edicao.statusEstoque.getInlineLabel(edicao.idioma)}">
                             Disponível em estoque
                         </span>
                     </div>
 
-                    <!-- Aviso exibido automaticamente pelo template quando status === 'soldout' -->
-                    <div class="edition-soldout-alert" id="edition-soldout-alert" hidden role="status">
+                    <!-- Aviso exibido quando status === SOLDOUT -->
+                    <div class="edition-soldout-alert" id="edition-soldout-alert" th:hidden="${edicao.statusEstoque.inStock}" role="status">
                         <i class="fa-solid fa-skull" aria-hidden="true"></i>
-                        <span id="edition-soldout-alert-text">
-                            Esta edição física encontra-se esgotada em nossa tiragem original. O registro permanece no
-                            catálogo histórico do zine.
+                        <span id="edition-soldout-alert-text"
+                            th:text="${isPt ? 'Esta edição física encontra-se esgotada em nossa tiragem original. O registro permanece no catálogo histórico do zine.' : 'This physical print run is sold out. This page remains archived in the zine historical catalog.'}">
+                            Esta edição física encontra-se esgotada em nossa tiragem original.
                         </span>
                     </div>
 
                     <div class="edition-cta-group">
-                        <button type="button" class="btn-brutal btn-blood edition-btn-buy" id="edition-btn-buy">
+                        <button type="button" class="btn-brutal btn-blood edition-btn-buy"
+                            th:classappend="${!edicao.statusEstoque.inStock} ? ' is-disabled' : ''"
+                            th:disabled="${!edicao.statusEstoque.inStock}"
+                            id="edition-btn-buy">
                             <span class="inverted-cross">✝</span>
-                            <span id="edition-btn-buy-label">Comprar Edição #58</span>
+                            <span id="edition-btn-buy-label"
+                                th:text="${!edicao.statusEstoque.inStock ? (isPt ? 'Edição Esgotada' : 'Sold Out') : (isPt ? 'Comprar Edição #' + edicao.numeroEdicao : 'Buy Issue #' + edicao.numeroEdicao)}">
+                                Comprar Edição
+                            </span>
                         </button>
-                        <a href="assinatura.html" class="btn-brutal btn-outline-decay edition-btn-subscribe"
+                        <a th:if="${isPt}" th:href="@{/assinatura}" class="btn-brutal btn-outline-decay edition-btn-subscribe"
                             id="edition-btn-subscribe">
                             <i class="fa-solid fa-scroll" aria-hidden="true"></i>
                             <span data-i18n="edition_cta_subscribe">Assinar o Zine</span>
                         </a>
                     </div>
 
-                    <!-- Resumo rápido de envio / frete (regra do item 4) -->
+                    <!-- Resumo rápido de envio / frete -->
                     <div class="edition-shipping-box" id="edition-shipping-box">
                         <div class="edition-shipping-row">
                             <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
-                            <p id="edition-shipping-fee-text">
-                                <strong>Frete Correios:</strong> R$ 13,00 para 1 edição (+ R$ 2,00 por edição adicional
-                                no mesmo pedido).
+                            <p id="edition-shipping-fee-text" th:if="${isPt}">
+                                <strong>Frete Correios:</strong> R$ 13,00 para 1 edição (+ R$ 2,00 por edição adicional no mesmo pedido).
+                            </p>
+                            <p id="edition-shipping-fee-text" th:if="${!isPt}">
+                                <strong>Registered Worldwide Airmail:</strong> shipping calculated at checkout.
                             </p>
                         </div>
                         <div class="edition-shipping-row">
                             <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
-                            <p id="edition-shipping-deadline-text">
-                                <strong>Postagem:</strong> Envio via Impresso Registrado em até 3 dias úteis após a
-                                confirmação do pagamento.
+                            <p id="edition-shipping-deadline-text" th:if="${isPt}">
+                                <strong>Postagem:</strong>
+                                <span th:text="${edicao.prazoPostagem != null ? edicao.prazoPostagem : 'Envio via Impresso Registrado em até 3 dias úteis após a confirmação do pagamento.'}">
+                                    Envio via Impresso Registrado em até 3 dias úteis após a confirmação do pagamento.
+                                </span>
+                            </p>
+                            <p id="edition-shipping-deadline-text" th:if="${!isPt}">
+                                <strong>Dispatch:</strong>
+                                <span th:text="${edicao.prazoPostagem != null ? edicao.prazoPostagem : 'Dispatched via Registered Worldwide Airmail within 3 business days after payment confirmation.'}">
+                                    Dispatched via Registered Worldwide Airmail within 3 business days after payment confirmation.
+                                </span>
                             </p>
                         </div>
                     </div>
@@ -182,29 +219,30 @@
                     Descrição &amp; Entrevistas
                 </h2>
 
-                <p class="edition-description-lead" id="edition-description-text">
-                    68 páginas em offset rústico pesado, capa em papel cartão com verniz fosco. Entrevistas profundas
-                    sobre a essência do Death e Black Metal obscuro, dezenas de resenhas de demos, fitas K7, zines e CDs
-                    do underground mundial.
+                <p class="edition-description-lead" id="edition-description-text" th:text="${edicao.descricao}">
+                    Descrição da edição.
                 </p>
 
-                <div class="edition-interviews-block">
+                <div class="edition-interviews-block" th:if="${!#lists.isEmpty(entrevistas)}">
                     <h3 class="edition-subsection-title">
                         <i class="fa-solid fa-skull" aria-hidden="true"></i>
                         <span data-i18n="edition_interviews_title">Hordas &amp; Artistas Entrevistados</span>
                     </h3>
                     <ul class="edition-interviews-list" id="edition-interviews-list">
-                        <!-- Renderizado dinamicamente via script.js -->
+                        <li class="edition-interview-item" th:each="ent : ${entrevistas}">
+                            <span class="edition-interview-band" th:text="${ent.banda}">Banda</span>
+                            <span class="edition-interview-meta" th:text="${ent.pais + ' • ' + ent.estilo}">País • Estilo</span>
+                        </li>
                     </ul>
                 </div>
 
-                <div class="edition-extras-block">
+                <div class="edition-extras-block" th:if="${!#lists.isEmpty(conteudosExtras)}">
                     <h3 class="edition-subsection-title">
                         <i class="fa-solid fa-book-skull" aria-hidden="true"></i>
                         <span data-i18n="edition_extras_title">Demais Conteúdos Presentes</span>
                     </h3>
                     <ul class="edition-extras-list" id="edition-extras-list">
-                        <!-- Renderizado dinamicamente via script.js -->
+                        <li th:each="extra : ${conteudosExtras}" th:text="${extra.descricao}">Conteúdo extra</li>
                     </ul>
                 </div>
             </article>
@@ -212,42 +250,64 @@
             <!-- Especificações Técnicas -->
             <aside class="edition-specs-card zine-box" aria-labelledby="edition-specs-heading">
                 <span class="tape-tag dark" data-i18n="edition_specs_tag">FICHA TÉCNICA</span>
-                <h2 class="pirata-title edition-section-title" id="edition-specs-heading"
-                    data-i18n="edition_specs_title">
+                <h2 class="pirata-title edition-section-title" id="edition-specs-heading" data-i18n="edition_specs_title">
                     Especificações do Zine
                 </h2>
 
                 <dl class="edition-specs-list" id="edition-specs-list">
-                    <!-- Renderizado dinamicamente via script.js -->
+                    <div class="edition-spec-row" th:if="${edicao.formato != null}">
+                        <dt th:text="${isPt ? 'Formato / Dimensões' : 'Format / Dimensions'}">Formato / Dimensões</dt>
+                        <dd th:text="${edicao.formato}">A5</dd>
+                    </div>
+                    <div class="edition-spec-row" th:if="${edicao.papelImpressao != null}">
+                        <dt th:text="${isPt ? 'Papel / Impressão' : 'Paper / Print'}">Papel / Impressão</dt>
+                        <dd th:text="${edicao.papelImpressao}">Offset 90g</dd>
+                    </div>
+                    <div class="edition-spec-row">
+                        <dt th:text="${isPt ? 'Idioma' : 'Language'}">Idioma</dt>
+                        <dd th:text="${edicao.idioma.getFichaTecnica(edicao.idioma)}">Português (Brasil)</dd>
+                    </div>
+                    <div class="edition-spec-row" th:if="${edicao.tiragem != null}">
+                        <dt th:text="${isPt ? 'Tiragem' : 'Print Run'}">Tiragem</dt>
+                        <dd th:text="${edicao.tiragem}">300 cópias</dd>
+                    </div>
+                    <div class="edition-spec-row">
+                        <dt th:text="${isPt ? 'Páginas' : 'Pages'}">Páginas</dt>
+                        <dd th:text="${edicao.paginas + (isPt ? ' páginas' : ' pages')}">68 páginas</dd>
+                    </div>
+                    <div class="edition-spec-row">
+                        <dt th:text="${isPt ? 'Lançamento' : 'Release'}">Lançamento</dt>
+                        <dd th:text="${edicao.mesLancamento + ' / ' + edicao.anoLancamento + ' (' + edicao.anoRevista + ')'}">Agosto / 2026</dd>
+                    </div>
                 </dl>
 
                 <div class="edition-specs-note" id="edition-specs-note">
                     <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
                     <span data-i18n="edition_specs_note">
-                        Publicação 100% independente, impressa fisicamente em papel, enviada protegida contra dobras e
-                        umidade.
+                        Publicação 100% independente, impressa fisicamente em papel, enviada protegida contra dobras e umidade.
                     </span>
                 </div>
             </aside>
 
         </section>
 
-        <!-- VÍDEO DO YOUTUBE INCORPORADO (RENDERIZADO PELO LINK DA EDIÇÃO) -->
+        <!-- VÍDEO DO YOUTUBE INCORPORADO (CONDICIONAL) -->
         <section class="edition-video-section zine-box" id="edition-video-section"
+            th:if="${youtubeVideoId != null}"
             aria-labelledby="edition-video-heading">
             <div class="edition-video-header">
                 <div>
                     <span class="tape-tag blood" data-i18n="edition_video_tag">FOLHEANDO O ZINE • YOUTUBE</span>
                     <h2 class="pirata-title edition-section-title" id="edition-video-heading"
-                        data-i18n="edition_video_title">
-                        Apresentação em Vídeo da Edição #58
+                        th:text="${isPt ? 'Apresentação em Vídeo da Edição #' + edicao.numeroEdicao : 'Issue #' + edicao.numeroEdicao + ' Video Showcase'}">
+                        Apresentação em Vídeo
                     </h2>
-                    <p class="edition-video-subtitle" id="edition-video-subtitle">
-                        Confira por dentro as páginas impressas, artes, diagramação e detalhes físicos desta edição
-                        diretamente no canal oficial do Armamento Bélico.
+                    <p class="edition-video-subtitle" id="edition-video-subtitle"
+                        th:text="${isPt ? 'Confira por dentro as páginas impressas, artes, diagramação e detalhes físicos desta edição diretamente no canal oficial do Armamento Bélico.' : 'Take a look inside the printed pages, artwork, layout and physical finish of this issue on the official Armamento Bélico YouTube channel.'}">
+                        Confira por dentro as páginas impressas desta edição.
                     </p>
                 </div>
-                <a href="https://www.youtube.com/watch?v=5J1o1DHkekE" target="_blank" rel="noopener noreferrer"
+                <a th:href="${edicao.youtubeUrl}" target="_blank" rel="noopener noreferrer"
                     class="btn-brutal btn-outline-decay btn-sm" id="edition-video-external-link">
                     <i class="fa-brands fa-youtube" aria-hidden="true"></i>
                     <span data-i18n="edition_video_watch_yt">Abrir no YouTube</span>
@@ -255,30 +315,54 @@
             </div>
 
             <div class="edition-video-frame-wrap" id="edition-video-player-slot">
-                <!-- Renderizado dinamicamente via script.js a partir da URL do YouTube da edição -->
+                <div class="youtube-video-container"
+                    th:attr="data-youtube-id=${youtubeVideoId},data-youtube-title=${edicao.titulo}">
+                    <button type="button" class="youtube-facade-btn"
+                        th:aria-label="${(isPt ? 'Reproduzir vídeo: ' : 'Play video: ') + edicao.titulo}">
+                        <img th:src="${'https://i.ytimg.com/vi/' + youtubeVideoId + '/hqdefault.jpg'}"
+                            th:alt="${edicao.titulo}" class="youtube-facade-thumb" loading="lazy">
+                        <span class="youtube-play-btn" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
+                    </button>
+                </div>
             </div>
         </section>
 
         <!-- NAVEGAÇÃO CONTEXTUAL ENTRE EDIÇÕES (ANTERIOR / COLEÇÃO / PRÓXIMA) -->
         <nav class="edition-context-nav" aria-label="Navegação entre edições">
-            <a href="arquivo.html" class="edition-nav-card edition-nav-prev" id="edition-nav-prev">
+            <a th:if="${edicaoAnterior != null}"
+                th:href="@{/edicoes/{idioma}/{numero}(idioma=${edicaoAnterior.idioma.slug},numero=${edicaoAnterior.numeroEdicao})}"
+                class="edition-nav-card edition-nav-prev" id="edition-nav-prev">
                 <span class="edition-nav-dir"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> <span
                         data-i18n="edition_nav_prev">Edição Anterior</span></span>
-                <strong class="edition-nav-name" id="edition-nav-prev-title">Armamento Bélico #57</strong>
-                <span class="edition-nav-hint" id="edition-nav-prev-hint">Ver no catálogo geral</span>
+                <strong class="edition-nav-name" id="edition-nav-prev-title" th:text="${edicaoAnterior.titulo}">Edição Anterior</strong>
+                <span class="edition-nav-hint" id="edition-nav-prev-hint" th:text="${isPt ? 'Ver detalhes da edição' : 'View issue details'}">Ver detalhes</span>
             </a>
+            <span th:if="${edicaoAnterior == null}" class="edition-nav-card edition-nav-prev is-disabled" id="edition-nav-prev" aria-disabled="true">
+                <span class="edition-nav-dir"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> <span
+                        data-i18n="edition_nav_prev">Edição Anterior</span></span>
+                <strong class="edition-nav-name" th:text="${isPt ? 'Início do acervo' : 'Start of archive'}">Início do acervo</strong>
+                <span class="edition-nav-hint" th:text="${isPt ? 'Sem edição anterior neste idioma' : 'No earlier issue in this language'}">Sem edição anterior</span>
+            </span>
 
-            <a href="arquivo.html" class="edition-nav-card edition-nav-all">
+            <a th:href="@{/arquivo}" class="edition-nav-card edition-nav-all">
                 <span class="edition-nav-dir"><i class="fa-solid fa-book-open" aria-hidden="true"></i> <span
                         data-i18n="edition_nav_catalog">Coleção Completa</span></span>
                 <strong class="edition-nav-name" data-i18n="nav_archive">Edições e loja</strong>
             </a>
 
-            <span class="edition-nav-card edition-nav-next is-disabled" id="edition-nav-next" aria-disabled="true">
+            <a th:if="${proximaEdicao != null}"
+                th:href="@{/edicoes/{idioma}/{numero}(idioma=${proximaEdicao.idioma.slug},numero=${proximaEdicao.numeroEdicao})}"
+                class="edition-nav-card edition-nav-next" id="edition-nav-next">
                 <span class="edition-nav-dir"><span data-i18n="edition_nav_next">Próxima Edição</span> <i
                         class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
-                <strong class="edition-nav-name" id="edition-nav-next-title">Edição mais recente</strong>
-                <span class="edition-nav-hint" id="edition-nav-next-hint">Em breve nas prensas</span>
+                <strong class="edition-nav-name" id="edition-nav-next-title" th:text="${proximaEdicao.titulo}">Próxima Edição</strong>
+                <span class="edition-nav-hint" id="edition-nav-next-hint" th:text="${isPt ? 'Ver detalhes da edição' : 'View issue details'}">Ver detalhes</span>
+            </a>
+            <span th:if="${proximaEdicao == null}" class="edition-nav-card edition-nav-next is-disabled" id="edition-nav-next" aria-disabled="true">
+                <span class="edition-nav-dir"><span data-i18n="edition_nav_next">Próxima Edição</span> <i
+                        class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                <strong class="edition-nav-name" id="edition-nav-next-title" th:text="${isPt ? 'Edição mais recente' : 'Latest release'}">Edição mais recente</strong>
+                <span class="edition-nav-hint" id="edition-nav-next-hint" th:text="${isPt ? 'Em breve nas prensas' : 'Coming soon to print'}">Em breve nas prensas</span>
             </span>
         </nav>
 
@@ -289,8 +373,9 @@
         aria-labelledby="edition-lightbox-title">
         <div class="edition-lightbox-header">
             <div>
-                <h2 class="pirata-title" id="edition-lightbox-title">Armamento Bélico #58</h2>
-                <span class="edition-lightbox-counter" id="edition-lightbox-counter">1 / 6</span>
+                <h2 class="pirata-title" id="edition-lightbox-title" th:text="${edicao.titulo}">Armamento Bélico</h2>
+                <span class="edition-lightbox-counter" id="edition-lightbox-counter"
+                    th:text="${'1 / ' + (1 + #lists.size(fotos))}">1 / 1</span>
             </div>
             <button type="button" class="cart-close-btn" id="edition-lightbox-close" autofocus
                 aria-label="Fechar ampliação">
@@ -303,9 +388,11 @@
                 <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
             </button>
             <figure class="edition-lightbox-figure">
-                <img src="assets/images/capa-edicao-58.png" alt="Capa da edição Armamento Bélico #58"
+                <img th:src="@{/uploads/{file}(file=${edicao.capaPath})}"
+                    th:alt="${(isPt ? 'Capa oficial — ' : 'Official cover — ') + edicao.titulo}"
                     id="edition-lightbox-img">
-                <figcaption id="edition-lightbox-caption">Capa oficial — Armamento Bélico #58</figcaption>
+                <figcaption id="edition-lightbox-caption"
+                    th:text="${(isPt ? 'Capa oficial — ' : 'Official cover — ') + edicao.titulo}">Capa oficial</figcaption>
             </figure>
             <button type="button" class="edition-lightbox-arrow edition-lightbox-next" id="edition-lightbox-next"
                 aria-label="Próxima foto">
@@ -313,6 +400,9 @@
             </button>
         </div>
     </dialog>
+
+    <!-- Dados estruturados da edição para interações de cliente (galeria, lightbox, idioma, carrinho) -->
+    <script type="application/json" id="edition-page-data" th:utext="${editionPageDataJson}"></script>
 
 </div>
 

@@ -76,6 +76,39 @@ public class FileUploadService {
     }
 
     /**
+     * Duplica fisicamente uma imagem existente no diretório de upload com um novo UUID.
+     * Garante independência de arquivos entre versões PT e EN de uma mesma edição.
+     *
+     * @param nomeArquivoOrigem Nome do arquivo original no diretório de upload
+     * @return Nome do novo arquivo copiado
+     * @throws FileUploadException Se o arquivo original não existir ou falhar a cópia
+     */
+    public String duplicarImagem(String nomeArquivoOrigem) {
+        if (nomeArquivoOrigem == null || nomeArquivoOrigem.isBlank()
+                || nomeArquivoOrigem.contains("..")
+                || nomeArquivoOrigem.contains("/")
+                || nomeArquivoOrigem.contains("\\")) {
+            throw new FileUploadException("Nome de arquivo de origem inválido para duplicação.");
+        }
+        if (!arquivoExiste(nomeArquivoOrigem)) {
+            throw new FileUploadException("Arquivo de origem não encontrado: " + nomeArquivoOrigem);
+        }
+        try {
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            Path origem = uploadPath.resolve(nomeArquivoOrigem);
+            String novoNome = UUID.randomUUID() + ".webp";
+            Path destino = uploadPath.resolve(novoNome);
+            Files.copy(origem, destino);
+            return novoNome;
+        } catch (IOException e) {
+            throw new FileUploadException("Não foi possível duplicar a imagem. Erro: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Remove uma imagem do diretório de upload.
      * 
      * @param nomeArquivo O nome do arquivo a ser removido

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
 
 @Configuration
@@ -16,7 +17,9 @@ public class DatabaseConfig {
 
     @Bean
     public DataSource dataSource() {
-        SQLiteDataSource ds = new SQLiteDataSource();
+        SQLiteConfig config = new SQLiteConfig();
+        config.enforceForeignKeys(true);
+        SQLiteDataSource ds = new SQLiteDataSource(config);
         ds.setUrl(datasourceUrl);
         return ds;
     }

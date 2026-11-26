@@ -4716,3 +4716,28 @@ dialog::backdrop {
   background: var(--color-blood-glow);
   box-shadow: 0 0 14px rgba(230, 0, 0, 0.55);
 }
+
+
+/* Banner de aviso quando a edição existe em apenas um idioma */
+.edition-single-lang-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 0.875rem 1.125rem;
+  border: 1px solid rgba(185, 28, 28, 0.55);
+  border-left: 4px solid #b91c1c;
+  background: rgba(24, 10, 10, 0.88);
+  color: #f3e8e8;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.edition-single-lang-notice[hidden] {
+  display: none;
+}
+
+.edition-single-lang-notice i {
+  color: #ef4444;
+  flex-shrink: 0;
+}

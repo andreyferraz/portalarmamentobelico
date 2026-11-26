@@ -291,4 +291,163 @@
     const alertEl = dismissBtn.closest(".admin-alert");
     if (alertEl) alertEl.remove();
   });
+
+  /* ------------------------------------------------------------------------
+     Formulário de Edições: Idioma -> Moeda reativa, Preview de Capa e Repeaters
+     ------------------------------------------------------------------------ */
+  const edicaoForm = document.querySelector("[data-edicao-form]");
+  if (edicaoForm) {
+    const maxExtraPhotos = Number(edicaoForm.dataset.maxExtraPhotos || 5);
+    const pricePrefixEl = document.getElementById("edicao-price-prefix");
+    const moedaDisplayEl = document.getElementById("edicao-moeda-display");
+    const specIdiomaEl = document.getElementById("edicao-spec-idioma-preview");
+    const idiomaRadios = edicaoForm.querySelectorAll('input[name="idioma"]');
+
+    function syncIdiomaMoedaUI() {
+      const checked = edicaoForm.querySelector('input[name="idioma"]:checked');
+      if (!checked) return;
+      if (pricePrefixEl) pricePrefixEl.textContent = checked.dataset.currencySymbol || "R$";
+      if (moedaDisplayEl) moedaDisplayEl.textContent = checked.dataset.currencyCode || "BRL";
+      if (specIdiomaEl) specIdiomaEl.textContent = checked.dataset.specLanguage || "Português (Brasil)";
+    }
+
+    idiomaRadios.forEach((radio) => radio.addEventListener("change", syncIdiomaMoedaUI));
+    syncIdiomaMoedaUI();
+
+    // Preview da capa selecionada
+    const capaInput = document.getElementById("capa");
+    const coverPreviewImg = document.getElementById("cover-preview-img");
+    const coverPreviewPlaceholder = document.getElementById("cover-preview-placeholder");
+    if (capaInput && coverPreviewImg) {
+      capaInput.addEventListener("change", () => {
+        const file = capaInput.files && capaInput.files[0];
+        if (!file) return;
+        const objectUrl = URL.createObjectURL(file);
+        coverPreviewImg.src = objectUrl;
+        coverPreviewImg.hidden = false;
+        if (coverPreviewPlaceholder) coverPreviewPlaceholder.hidden = true;
+      });
+    }
+
+    // Reindexar Entrevistas
+    const interviewsList = document.getElementById("interviews-list");
+    const addInterviewBtn = document.getElementById("add-interview-btn");
+
+    function reindexInterviews() {
+      if (!interviewsList) return;
+      const rows = interviewsList.querySelectorAll("[data-interview-row]");
+      rows.forEach((row, idx) => {
+        const inputs = row.querySelectorAll("input");
+        if (inputs[0]) inputs[0].name = `entrevistas[${idx}].banda`;
+        if (inputs[1]) inputs[1].name = `entrevistas[${idx}].pais`;
+        if (inputs[2]) inputs[2].name = `entrevistas[${idx}].estilo`;
+      });
+    }
+
+    if (addInterviewBtn && interviewsList) {
+      addInterviewBtn.addEventListener("click", () => {
+        const idx = interviewsList.querySelectorAll("[data-interview-row]").length;
+        const row = document.createElement("div");
+        row.className = "repeater-row repeater-row-3";
+        row.setAttribute("data-interview-row", "");
+        row.innerHTML = `
+          <input type="text" name="entrevistas[${idx}].banda" class="admin-input" placeholder="Banda (ex.: Diabolizer)">
+          <input type="text" name="entrevistas[${idx}].pais" class="admin-input" placeholder="País (ex.: Turquia)">
+          <input type="text" name="entrevistas[${idx}].estilo" class="admin-input" placeholder="Estilo (ex.: Death Metal)">
+          <button type="button" class="btn btn-ghost btn-sm" data-remove-row aria-label="Remover entrevista">Remover</button>
+        `;
+        interviewsList.appendChild(row);
+      });
+    }
+
+    // Reindexar Demais Conteúdos
+    const extrasList = document.getElementById("extra-contents-list");
+    const addExtraBtn = document.getElementById("add-extra-content-btn");
+
+    function reindexExtraContents() {
+      if (!extrasList) return;
+      const rows = extrasList.querySelectorAll("[data-extra-content-row]");
+      rows.forEach((row, idx) => {
+        const input = row.querySelector("input");
+        if (input) input.name = `conteudosExtras[${idx}]`;
+      });
+    }
+
+    if (addExtraBtn && extrasList) {
+      addExtraBtn.addEventListener("click", () => {
+        const idx = extrasList.querySelectorAll("[data-extra-content-row]").length;
+        const row = document.createElement("div");
+        row.className = "repeater-row repeater-row-1";
+        row.setAttribute("data-extra-content-row", "");
+        row.innerHTML = `
+          <input type="text" name="conteudosExtras[${idx}]" class="admin-input" placeholder="Ex.: Dossiê especial da cena underground">
+          <button type="button" class="btn btn-ghost btn-sm" data-remove-row aria-label="Remover item">Remover</button>
+        `;
+        extrasList.appendChild(row);
+      });
+    }
+
+    // Novas Fotos Extras (respeitando limite de 5)
+    const newPhotosList = document.getElementById("new-photos-list");
+    const addPhotoBtn = document.getElementById("add-extra-photo-btn");
+    const photoCounterEl = document.getElementById("extra-photos-counter");
+
+    function countActiveExtraPhotos() {
+      let existingKept = 0;
+      edicaoForm.querySelectorAll("[data-existing-photo]").forEach((card) => {
+        const removeBox = card.querySelector("[data-remove-existing-photo]");
+        if (!removeBox || !removeBox.checked) existingKept += 1;
+      });
+      const added = newPhotosList ? newPhotosList.querySelectorAll("[data-new-photo-row]").length : 0;
+      return existingKept + added;
+    }
+
+    function syncExtraPhotosLimit() {
+      const total = countActiveExtraPhotos();
+      if (addPhotoBtn) {
+        addPhotoBtn.disabled = total >= maxExtraPhotos;
+      }
+      if (photoCounterEl) {
+        photoCounterEl.textContent = `${total} de ${maxExtraPhotos} fotos extras utilizadas.`;
+      }
+    }
+
+    if (addPhotoBtn && newPhotosList) {
+      addPhotoBtn.addEventListener("click", () => {
+        if (countActiveExtraPhotos() >= maxExtraPhotos) {
+          showToast(`Limite máximo de ${maxExtraPhotos} fotos extras atingido.`);
+          return;
+        }
+        const row = document.createElement("div");
+        row.className = "repeater-row repeater-row-2";
+        row.setAttribute("data-new-photo-row", "");
+        row.innerHTML = `
+          <input type="file" name="novasFotos" accept="image/*" class="admin-input" required>
+          <input type="text" name="novasFotosLegendas" class="admin-input" placeholder="Legenda da foto extra">
+          <button type="button" class="btn btn-ghost btn-sm" data-remove-row aria-label="Remover foto extra">Remover</button>
+        `;
+        newPhotosList.appendChild(row);
+        syncExtraPhotosLimit();
+      });
+    }
+
+    edicaoForm.addEventListener("change", (event) => {
+      if (event.target.matches("[data-remove-existing-photo]")) {
+        syncExtraPhotosLimit();
+      }
+    });
+
+    edicaoForm.addEventListener("click", (event) => {
+      const removeBtn = event.target.closest("[data-remove-row]");
+      if (!removeBtn) return;
+      const row = removeBtn.closest(".repeater-row");
+      if (!row) return;
+      row.remove();
+      reindexInterviews();
+      reindexExtraContents();
+      syncExtraPhotosLimit();
+    });
+
+    syncExtraPhotosLimit();
+  }
 })();
