@@ -1,123 +1,124 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
     th:replace="~{layout :: layout('Notícias | Armamento Bélico Zine', ~{::content})}">
-<header>
-    <title th:text="${title}"></title>
-</header>
 
 <div th:fragment="content">
 
-     <main class="main-wrapper">
-    <div class="section-headline">
-      <span class="tape-tag blood">DESPACHOS DAS TREVAS</span>
-      <h1 class="gothic-title" data-i18n="news_section_title">Últimas Manifestações do Underground</h1>
-      <p class="sub-title" data-i18n="news_section_sub">
-        Resenhas, comunicados de gravadoras e anúncios exclusivos
-      </p>
-      <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
-    </div>
+    <main class="main-wrapper">
+        <div class="section-headline">
+            <span class="tape-tag blood" data-i18n="news_feed_tag">DESPACHOS DAS TREVAS</span>
+            <h1 class="gothic-title" data-i18n="news_section_title">Últimas Manifestações do Underground</h1>
+            <p class="sub-title" data-i18n="news_section_sub">
+                Resenhas, comunicados de gravadoras e anúncios exclusivos
+            </p>
+            <img th:src="@{/assets/divisor-edicoes.png}" alt="" class="editions-divider" aria-hidden="true">
+        </div>
 
-    <!-- LISTA DE NOTÍCIAS / FEED -->
-    <div class="news-feed-list">
+        <!-- Barra de Busca e Filtros Ativos -->
+        <section class="news-feed-toolbar" aria-label="Buscar notícias">
+            <form method="get" th:action="@{/noticias}" class="news-search-form">
+                <input type="hidden" name="tag" th:if="${feed.tagAtiva != null}" th:value="${feed.tagAtiva}">
+                <label for="news-search-input" class="visually-hidden" data-i18n="news_search_label">Buscar notícias</label>
+                <input id="news-search-input" name="busca" type="search" class="form-control news-search-input"
+                    th:value="${feed.buscaAtiva ?: ''}"
+                    data-i18n-placeholder="news_search_placeholder"
+                    placeholder="Buscar por banda, título, categoria ou tag...">
+                <button type="submit" class="btn-brutal btn-blood btn-sm" data-i18n="news_search_btn">Buscar</button>
+                <a th:if="${feed.temFiltrosAtivos()}" th:href="@{/noticias}"
+                    class="btn-brutal btn-outline-decay btn-sm" data-i18n="news_clear_filters">
+                    Limpar filtros
+                </a>
+            </form>
 
-      <!-- Notícia 1: Diabolizer -->
-      <article class="news-feed-item">
-        <div class="news-feed-thumb">
-          <img src="assets/images/capa-edicao-58.png" alt="Diabolizer Entrevista" class="xerox-img">
-        </div>
-        <div class="news-feed-content">
-          <span class="news-date">24 de Agosto, 2026 • Entrevista de Capa</span>
-          <a href="noticia-interna.html?id=1">
-            <h2 class="pirata-title">Diabolizer: A Fúria do Death Metal Turco Assola as Páginas da Edição #58</h2>
-          </a>
-          <p class="news-excerpt">
-            Conversamos profundamente com os integrantes da horda turca Diabolizer sobre a concepção de seu novo manifesto brutal, as raízes do Death Metal dos anos 90 e a cena extrema na Eurásia.
-          </p>
-          <div class="news-tags">
-            <span class="tape-tag dark">Death Metal</span>
-            <span class="tape-tag blood">Edição #58</span>
-            <span class="tape-tag dark">Turquia</span>
-          </div>
-          <div style="margin-top: 15px;">
-            <a href="noticia-interna.html?id=1" class="news-readmore" data-i18n="news_read_more">Ler Matéria Completa ☠</a>
-          </div>
-        </div>
-      </article>
+            <div class="news-active-filters" th:if="${feed.temFiltrosAtivos()}">
+                <span th:if="${feed.tagAtiva != null}" class="tape-tag blood">
+                    Tag: <span th:text="${feed.tagAtiva}">Death Metal</span>
+                </span>
+                <span th:if="${feed.buscaAtiva != null}" class="tape-tag dark">
+                    Busca: "<span th:text="${feed.buscaAtiva}">termo</span>"
+                </span>
+            </div>
+        </section>
 
-      <!-- Notícia 2: Coldwinter -->
-      <article class="news-feed-item">
-        <div class="news-feed-thumb">
-          <img src="assets/images/capa-edicao-57.jpg" alt="Coldwinter Tape" class="xerox-img">
+        <!-- Empty State -->
+        <div class="catalog-empty-state" role="status" th:if="${#lists.isEmpty(feed.itens)}" style="max-width: 900px; margin: 0 auto;">
+            <div class="catalog-empty-state-icon" aria-hidden="true">☠</div>
+            <h2 class="pirata-title" data-i18n="news_empty_title">Nenhuma notícia encontrada</h2>
+            <p data-i18n="news_empty_text">
+                Não há despachos publicados que correspondam aos filtros selecionados no momento.
+            </p>
+            <a th:if="${feed.temFiltrosAtivos()}" th:href="@{/noticias}"
+                class="btn-brutal btn-outline-decay btn-sm" data-i18n="news_clear_filters">
+                Limpar filtros
+            </a>
         </div>
-        <div class="news-feed-content">
-          <span class="news-date">10 de Julho, 2026 • Lançamento em Fita K7</span>
-          <a href="noticia-interna.html?id=2">
-            <h2 class="pirata-title">Coldwinter: Novo Álbum em Cassete Profissional e Distribuição Internacional</h2>
-          </a>
-          <p class="news-excerpt">
-            A horda brasileira Coldwinter anuncia seu mais recente trabalho em fita K7 com tiragem estritamente limitada, capa serigrafada e encarte especial. Detalhes completos da produção independente.
-          </p>
-          <div class="news-tags">
-            <span class="tape-tag dark">Black Metal</span>
-            <span class="tape-tag dark">Fita K7</span>
-            <span class="tape-tag blood">Brasil</span>
-          </div>
-          <div style="margin-top: 15px;">
-            <a href="noticia-interna.html?id=2" class="news-readmore" data-i18n="news_read_more">Ler Matéria Completa ☠</a>
-          </div>
-        </div>
-      </article>
 
-      <!-- Notícia 3: Patriarkh -->
-      <article class="news-feed-item">
-        <div class="news-feed-thumb">
-          <img src="assets/images/capa-edicao-55.jpg" alt="Patriarkh Entrevista" class="xerox-img">
-        </div>
-        <div class="news-feed-content">
-          <span class="news-date">18 de Maio, 2026 • Documento Histórico</span>
-          <a href="noticia-interna.html?id=3">
-            <h2 class="pirata-title">Patriarkh (ex-Batushka): Rituais Litúrgicos e a Ruptura Ortodoxa na Polônia</h2>
-          </a>
-          <p class="news-excerpt">
-            O compositor Bartłomiej Krysiuk abre o jogo sobre o renascimento da entidade litúrgica sob a alcunha Patriarkh, turnês na América do Sul e a sonoridade opressiva de seus novos cânticos sacrílegos.
-          </p>
-          <div class="news-tags">
-            <span class="tape-tag dark">Black Metal</span>
-            <span class="tape-tag dark">Polônia</span>
-            <span class="tape-tag dark">Edição #55</span>
-          </div>
-          <div style="margin-top: 15px;">
-            <a href="noticia-interna.html?id=3" class="news-readmore" data-i18n="news_read_more">Ler Matéria Completa ☠</a>
-          </div>
-        </div>
-      </article>
+        <!-- LISTA DE NOTÍCIAS / FEED -->
+        <div class="news-feed-list" th:if="${!#lists.isEmpty(feed.itens)}">
+            <article class="news-feed-item"
+                th:each="item : ${feed.itens}"
+                th:classappend="${item.noticia.imagemDestaquePath == null} ? ' news-feed-item--no-thumb' : ''">
 
-      <!-- Notícia 4: Lord Belial -->
-      <article class="news-feed-item">
-        <div class="news-feed-thumb">
-          <img src="assets/images/capa-edicao-56.jpg" alt="Lord Belial Zine" class="xerox-img">
-        </div>
-        <div class="news-feed-content">
-          <span class="news-date">02 de Março, 2026 • Resenha Exclusiva</span>
-          <a href="noticia-interna.html?id=4">
-            <h2 class="pirata-title">Lord Belial: A Eternidade do Black Metal Sueco em Entrevista Devastadora</h2>
-          </a>
-          <p class="news-excerpt">
-            Micke Backelin rememora os dias de glória do som de Gotemburgo nos anos 90, os segredos de 'Enter the Moonlight Gate' e a determinação implacável de continuar devastando palcos pelo planeta.
-          </p>
-          <div class="news-tags">
-            <span class="tape-tag dark">Black/Death</span>
-            <span class="tape-tag dark">Suécia</span>
-            <span class="tape-tag blood">Edição #56</span>
-          </div>
-          <div style="margin-top: 15px;">
-            <a href="noticia-interna.html?id=4" class="news-readmore" data-i18n="news_read_more">Ler Matéria Completa ☠</a>
-          </div>
-        </div>
-      </article>
+                <div class="news-feed-thumb" th:if="${item.noticia.imagemDestaquePath != null}">
+                    <a th:href="@{/noticias/{slug}(slug=${item.noticia.slug})}">
+                        <img th:src="@{/uploads/{file}(file=${item.noticia.imagemDestaquePath})}"
+                            th:alt="${item.noticia.tituloPt}" class="xerox-img" loading="lazy">
+                    </a>
+                </div>
 
-    </div>
-  </main>
+                <div class="news-feed-content">
+                    <span class="news-date"
+                        th:text="${item.noticia.dataComDestaquePt}"
+                        th:attr="data-text-pt=${item.noticia.dataComDestaquePt},data-text-en=${item.noticia.dataComDestaqueEn}">
+                        24 de Agosto de 2026
+                    </span>
+                    <a th:href="@{/noticias/{slug}(slug=${item.noticia.slug})}">
+                        <h2 class="pirata-title"
+                            th:text="${item.noticia.tituloPt}"
+                            th:attr="data-text-pt=${item.noticia.tituloPt},data-text-en=${item.noticia.tituloEnOuPt}">
+                            Título
+                        </h2>
+                    </a>
+                    <p class="news-excerpt"
+                        th:text="${item.noticia.resumoPt}"
+                        th:attr="data-text-pt=${item.noticia.resumoPt},data-text-en=${item.noticia.resumoEnOuPt}">
+                        Resumo
+                    </p>
+                    <div class="news-tags" th:if="${!#lists.isEmpty(item.tags)}">
+                        <a th:each="tag : ${item.tags}"
+                            th:href="@{/noticias(tag=${tag.nome})}"
+                            th:class="${'tape-tag ' + tag.cssClass}"
+                            th:text="${tag.nome}">Tag</a>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <a th:href="@{/noticias/{slug}(slug=${item.noticia.slug})}" class="news-readmore" data-i18n="news_read_more">
+                            Ler Matéria Completa ☠
+                        </a>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Paginação (10 por página, preservando tag e busca) -->
+        <nav class="news-pagination" aria-label="Paginação de notícias" th:if="${feed.totalPaginas > 1}">
+            <a th:if="${feed.temAnterior()}"
+                th:href="@{/noticias(pagina=${feed.paginaAtual - 1},tag=${feed.tagAtiva},busca=${feed.buscaAtiva})}"
+                class="btn-brutal btn-outline-decay btn-sm" data-i18n="news_page_prev">
+                ← Anterior
+            </a>
+            <span class="news-pagination-info">
+                <span data-i18n="news_page_label">Página</span>
+                <strong th:text="${feed.paginaAtual}">1</strong> /
+                <strong th:text="${feed.totalPaginas}">1</strong>
+            </span>
+            <a th:if="${feed.temProxima()}"
+                th:href="@{/noticias(pagina=${feed.paginaAtual + 1},tag=${feed.tagAtiva},busca=${feed.buscaAtiva})}"
+                class="btn-brutal btn-outline-decay btn-sm" data-i18n="news_page_next">
+                Próxima →
+            </a>
+        </nav>
+    </main>
 
 </div>
+
 </html>

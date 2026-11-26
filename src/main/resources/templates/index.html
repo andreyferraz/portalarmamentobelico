@@ -180,8 +180,8 @@
             </div>
         </section>
 
-        <!-- SEÇÃO: 2 ÚLTIMAS NOTÍCIAS PUBLICADAS -->
-        <section class="home-news-section">
+        <!-- SEÇÃO: 2 ÚLTIMAS NOTÍCIAS PUBLICADAS (ocultada quando houver 0 publicadas) -->
+        <section class="home-news-section" th:if="${ultimasNoticias != null and !#lists.isEmpty(ultimasNoticias)}">
             <div class="section-headline">
                 <h2 data-i18n="news_section_title">Últimas Manifestações do Underground</h2>
                 <p class="sub-title" data-i18n="news_section_sub">
@@ -190,36 +190,26 @@
                 <img th:src="@{/assets/divisor-edicoes.png}" alt="" class="editions-divider" aria-hidden="true">
             </div>
 
-            <div class="news-grid-duo">
-                <!-- Notícia 1 -->
-                <article class="news-card-home">
-                    <span class="news-date">24 de Agosto, 2026 • Notícia de Capa</span>
-                    <a href="noticia-interna.html?id=1" class="news-title-link">
-                        <h3 class="pirata-title">Diabolizer: A Fúria do Death Metal Turco Assola as Páginas da Edição
-                            #58</h3>
+            <div class="news-grid-duo" th:classappend="${#lists.size(ultimasNoticias) == 1} ? ' news-grid-duo--single' : ''">
+                <article class="news-card-home" th:each="noticia : ${ultimasNoticias}">
+                    <span class="news-date"
+                        th:text="${noticia.dataComDestaquePt}"
+                        th:attr="data-text-pt=${noticia.dataComDestaquePt},data-text-en=${noticia.dataComDestaqueEn}">
+                        24 de Agosto de 2026
+                    </span>
+                    <a th:href="@{/noticias/{slug}(slug=${noticia.slug})}" class="news-title-link">
+                        <h3 class="pirata-title"
+                            th:text="${noticia.tituloPt}"
+                            th:attr="data-text-pt=${noticia.tituloPt},data-text-en=${noticia.tituloEnOuPt}">
+                            Título da Notícia
+                        </h3>
                     </a>
-                    <p class="news-excerpt">
-                        Conversamos profundamente com os integrantes da horda turca Diabolizer sobre a concepção de seu
-                        novo manifesto brutal, as raízes do Death Metal dos anos 90 e a cena extrema na Eurásia.
+                    <p class="news-excerpt"
+                        th:text="${noticia.resumoPt}"
+                        th:attr="data-text-pt=${noticia.resumoPt},data-text-en=${noticia.resumoEnOuPt}">
+                        Resumo da notícia
                     </p>
-                    <a href="noticia-interna.html?id=1" class="news-readmore" data-i18n="news_read_more">
-                        Ler Matéria Completa ☠
-                    </a>
-                </article>
-
-                <!-- Notícia 2 -->
-                <article class="news-card-home">
-                    <span class="news-date">10 de Julho, 2026 • Lançamento em Fita K7</span>
-                    <a href="noticia-interna.html?id=2" class="news-title-link">
-                        <h3 class="pirata-title">Coldwinter: Novo Álbum em Cassete Profissional e Distribuição
-                            Internacional</h3>
-                    </a>
-                    <p class="news-excerpt">
-                        A horda brasileira Coldwinter anuncia seu mais recente trabalho em fita K7 com tiragem
-                        estritamente limitada, capa serigrafada e encarte especial. Detalhes completos da produção
-                        independente.
-                    </p>
-                    <a href="noticia-interna.html?id=2" class="news-readmore" data-i18n="news_read_more">
+                    <a th:href="@{/noticias/{slug}(slug=${noticia.slug})}" class="news-readmore" data-i18n="news_read_more">
                         Ler Matéria Completa ☠
                     </a>
                 </article>

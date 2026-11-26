@@ -42,6 +42,9 @@ public class SecurityConfig {
                                 "/static/**",
                                 "/uploads/**",
                                 "/edicoes/**",
+                                "/noticias",
+                                "/noticias/**",
+                                "/vendor/**",
                                 "/favicon.ico",
                                 "/webjars/**")
                         .permitAll()
@@ -73,6 +76,7 @@ public class SecurityConfig {
                     || path.startsWith("/img/")
                     || path.startsWith("/static/")
                     || path.startsWith("/uploads/")
+                    || path.startsWith("/vendor/")
                     || path.startsWith("/webjars/")
                     || "/favicon.ico".equals(path);
         }

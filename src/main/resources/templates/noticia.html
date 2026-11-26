@@ -1,160 +1,145 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
-    th:replace="~{layout :: layout('Noticia | Armamento Bélico Zine', ~{::content})}">
-<header>
-    <title th:text="${title}"></title>
-</header>
+    th:replace="~{layout :: layout(${pageTitle ?: 'Notícia | Armamento Bélico Zine'}, ~{::content})}">
 
 <div th:fragment="content">
 
     <main class="main-wrapper">
 
         <div style="margin-bottom: 25px;">
-            <a href="noticias.html" class="btn-brutal btn-outline-decay btn-sm">
+            <a th:href="@{/noticias}" class="btn-brutal btn-outline-decay btn-sm" data-i18n="news_back_feed">
                 ← Voltar ao Feed de Notícias
             </a>
         </div>
 
-        <article class="news-single-article">
+        <article class="news-single-article" th:attr="data-has-en=${noticia.temVersaoEn()}">
+            <!-- Aviso discreto quando visitante escolhe EN em matéria somente PT -->
+            <div id="news-pt-only-notice" class="news-pt-only-notice" role="status" hidden>
+                <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                <span>This article was published in Portuguese only.</span>
+            </div>
+
             <header class="article-header">
-                <span class="tape-tag blood">ENTREVISTA DE CAPA • EDIÇÃO #58</span>
-                <h1 class="pirata-title" id="article-main-title">
-                    Diabolizer: A Fúria do Death Metal Turco Devasta as Páginas do Armamento Bélico
+                <span class="tape-tag blood"
+                    th:if="${noticia.tagDestaquePt != null}"
+                    th:text="${noticia.tagDestaquePt}"
+                    th:attr="data-text-pt=${noticia.tagDestaquePt},data-text-en=${noticia.tagDestaqueEnOuPt}">
+                    DESTAQUE
+                </span>
+                <h1 class="pirata-title" id="article-main-title"
+                    th:text="${noticia.tituloPt}"
+                    th:attr="data-text-pt=${noticia.tituloPt},data-text-en=${noticia.tituloEnOuPt}">
+                    Título da Notícia
                 </h1>
                 <div class="article-meta">
-                    <span>📅 24 de Agosto de 2026</span>
-                    <span>✍ Por: Editoria Armamento Bélico</span>
-                    <span>🏴 Categoria: Death Metal / Entrevista Internacional</span>
+                    <span>
+                        📅 <span th:text="${noticia.dataFormatadaPt}"
+                            th:attr="data-text-pt=${noticia.dataFormatadaPt},data-text-en=${noticia.temVersaoEn() ? noticia.dataFormatadaEn : noticia.dataFormatadaPt}">
+                            24 de Agosto de 2026
+                        </span>
+                    </span>
+                    <span>
+                        ✍ <span data-i18n="news_meta_by">Por:</span> <span th:text="${noticia.autor}">Editoria Armamento Bélico</span>
+                    </span>
+                    <span>
+                        🏴 <span data-i18n="news_meta_category">Categoria:</span>
+                        <span th:text="${noticia.categoriaPt}"
+                            th:attr="data-text-pt=${noticia.categoriaPt},data-text-en=${noticia.categoriaEnOuPt}">
+                            Death Metal
+                        </span>
+                    </span>
                 </div>
             </header>
 
-            <!-- Imagem de Destaque da Matéria -->
-            <figure class="article-featured-img">
-                <img src="assets/images/capa-edicao-58.png" alt="Diabolizer Banda" class="xerox-img"
+            <!-- Imagem de Destaque (exibida apenas quando existir) -->
+            <figure class="article-featured-img" th:if="${noticia.imagemDestaquePath != null}">
+                <img th:src="@{/uploads/{file}(file=${noticia.imagemDestaquePath})}"
+                    th:alt="${noticia.tituloPt}" class="xerox-img"
                     style="max-height: 520px; width: 100%; object-fit: cover;">
-                <figcaption
+                <figcaption th:if="${noticia.legendaImagemPt != null}"
+                    th:text="${noticia.legendaImagemPt}"
+                    th:attr="data-text-pt=${noticia.legendaImagemPt},data-text-en=${noticia.legendaImagemEnOuPt}"
                     style="text-align: center; font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-paper-dim); margin-top: 8px;">
-                    Fotografia e colagem exclusiva publicada no fanzine impresso Armamento Bélico #58
+                    Legenda
                 </figcaption>
             </figure>
 
-            <!-- Corpo da Notícia / Transcrição da Entrevista -->
+            <!-- Corpo da Notícia (HTML sanitizado via HtmlSanitizerService / JSoup) -->
             <div class="article-body">
-
-                <!-- Conteúdo PT -->
-                <div class="lang-content-pt">
-                    <p>
-                        Direto das vielas sombrias de Istambul, o <strong>Diabolizer</strong> tem consolidado seu nome
-                        como uma das entidades mais furiosas e devastadoras do Death Metal moderno que bebe avidamente
-                        na fonte sagrada do underground dos anos 90 — riffs cortantes na linha de Deicide, Morbid Angel
-                        clássico e a brutalidade impiedosa de Vader e Angelcorpse.
-                    </p>
-                    <p>
-                        Tivemos a honra de conduzir uma conversa sem censura com a banda sobre as gravações de seus
-                        últimos manifestos, a situação do metal extremo na Eurásia e a relação visceral da banda com o
-                        formato físico de fanzines e fitas cassete.
-                    </p>
-
-                    <blockquote
-                        style="border-left: 3px solid var(--color-blood); background: #180808; padding: 15px 20px; font-style: italic; color: #ffcccc; margin: 25px 0;">
-                        "O Death Metal não foi feito para agradar massas ou alimentar playlists sintéticas de
-                        algoritmos. Ele é guerra espiritual, canalização de trevas e ódio canalizado em decibéis
-                        brutais." — Diabolizer
-                    </blockquote>
-
-                    <span class="interview-question">ARMAMENTO BÉLICO: Saudações guerreiros! Como foi a gênese do
-                        Diabolizer e o que moveu vocês a buscar uma sonoridade tão implacável e tradicional em tempos
-                        tão superficiais?</span>
-                    <span class="interview-answer">
-                        DIABOLIZER: Saudações aos maníacos do Brasil e leitores do Armamento Bélico! O Diabolizer nasceu
-                        da urgência de tocar o Death Metal que crescemos ouvindo. Queríamos algo veloz, blasfemo, com
-                        guitarras serradas e vocais cavernosos. Sem experimentalismos desnecessários, apenas a pura
-                        energia destrutiva da velha escola canalizada com precisão assassina.
-                    </span>
-
-                    <span class="interview-question">ARMAMENTO BÉLICO: Como é a cena underground em seu território e
-                        como vocês enxergam a conexão com a América do Sul?</span>
-                    <span class="interview-answer">
-                        DIABOLIZER: Istambul sempre teve um submundo vibrante e leal, apesar de todas as adversidades
-                        políticas e culturais. Para nós, o Brasil e a América do Sul são fontes sagradas de inspiração:
-                        Sarcófago, Sepultura clássico, Krisiun, Rebaelliun, Headhunter D.C. Sempre admiramos o fogo e a
-                        lealdade incondicional dos bangers sul-americanos.
-                    </span>
-
-                    <span class="interview-question">ARMAMENTO BÉLICO: Qual é a importância de veículos físicos e
-                        impressos como o Armamento Bélico hoje em dia?</span>
-                    <span class="interview-answer">
-                        DIABOLIZER: Vital! Sem fanzines físicos, fitas cassete e fita demo trocada por carta, o
-                        underground não teria existido. É uma honra absoluta estar na capa da edição #58 de vocês.
-                        Continuem imprimindo o caos e mantendo as prensas ensanguentadas!
-                    </span>
-
-                    <div
-                        style="background: #111; border: 1px dashed var(--color-blood); padding: 20px; margin-top: 35px; text-align: center;">
-                        <h4 class="pirata-title" style="font-size: 1.5rem; color: #fff;">Adquira a Edição #58 com a
-                            Entrevista Completa</h4>
-                        <p style="font-size: 0.85rem; color: var(--color-paper-dim); margin: 6px 0 15px;">
-                            A versão impressa contém 6 páginas exclusivas com a horda Diabolizer, além de Mare,
-                            Coldwinter, Mortem Solis e 70 resenhas de lançamentos.
-                        </p>
-                        <button class="btn-brutal btn-blood btn-sm" onclick="ArmamentoBelico.addToCart('zine-58-pt')">
-                            <span class="inverted-cross">✝</span> Comprar Edição #58 (R$ 30,00)
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Conteúdo EN -->
-                <div class="lang-content-en" style="display: none;">
-                    <p>
-                        Straight from the grim alleys of Istanbul, <strong>Diabolizer</strong> has carved its name as
-                        one of the most ferocious and punishing forces of true Death Metal, heavily rooted in the 90s
-                        sacred underground legacy — razor-sharp riffs channeling classic Morbid Angel, Deicide, and the
-                        relentless brutality of Vader and Angelcorpse.
-                    </p>
-                    <p>
-                        We conducted an uncensored interview regarding the creation of their latest recorded material,
-                        extreme metal underground reality across Eurasia, and their loyalty to physical zines and
-                        cassette tapes.
-                    </p>
-
-                    <blockquote
-                        style="border-left: 3px solid var(--color-blood); background: #180808; padding: 15px 20px; font-style: italic; color: #ffcccc; margin: 25px 0;">
-                        "Death Metal was never meant to please the masses or feed synthetic corporate playlists. It is
-                        spiritual warfare, darkness and hatred manifested into sonic decibels." — Diabolizer
-                    </blockquote>
-
-                    <span class="interview-question">ARMAMENTO BÉLICO: Hail comrades! What triggered the genesis of
-                        Diabolizer and what pushed you towards such ruthless traditional velocity?</span>
-                    <span class="interview-answer">
-                        DIABOLIZER: Greetings to all South American maniacs and readers of Armamento Bélico! Diabolizer
-                        was born from our need to play the precise Death Metal we grew up worshiping. Fast, blasphemous,
-                        with chainsaw guitars and cavernous growls. No soft compromises, just raw crushing energy
-                        executed with lethal precision.
-                    </span>
-
-                    <span class="interview-question">ARMAMENTO BÉLICO: What is the significance of printed physical
-                        zines like Armamento Bélico in 2026?</span>
-                    <span class="interview-answer">
-                        DIABOLIZER: Absolute lifeblood! Without printed zines, tape trading, and letters, the extreme
-                        underground would never exist. It is a genuine honor to grace the cover of your 58th issue. Keep
-                        the print presses burning!
-                    </span>
-
-                    <div
-                        style="background: #111; border: 1px dashed var(--color-blood); padding: 20px; margin-top: 35px; text-align: center;">
-                        <h4 class="pirata-title" style="font-size: 1.5rem; color: #fff;">Get Physical Print Issue #58
-                        </h4>
-                        <p style="font-size: 0.85rem; color: var(--color-paper-dim); margin: 6px 0 15px;">
-                            The international printed edition features 6 full pages with Diabolizer, plus Mare,
-                            Coldwinter, Mortem Solis, and 70 reviews.
-                        </p>
-                        <button class="btn-brutal btn-blood btn-sm" onclick="ArmamentoBelico.addToCart('zine-58-en')">
-                            <span class="inverted-cross">✝</span> Buy Issue #58 [ENG] (US$ 12.00)
-                        </button>
-                    </div>
-                </div>
-
+                <div class="lang-content-pt" th:utext="${noticia.conteudoHtmlPt}"></div>
+                <div class="lang-content-en" th:if="${noticia.temVersaoEn()}" th:utext="${noticia.conteudoHtmlEn}" style="display: none;"></div>
             </div>
+
+            <!-- Tags da Notícia -->
+            <div class="news-tags article-tags-bar" th:if="${!#lists.isEmpty(tags)}">
+                <a th:each="tag : ${tags}"
+                    th:href="@{/noticias(tag=${tag.nome})}"
+                    th:class="${'tape-tag ' + tag.cssClass}"
+                    th:text="${tag.nome}">Tag</a>
+            </div>
+
+            <!-- Card CTA Dinâmico de Edição Vinculada (PT -> R$ | EN -> €) -->
+            <section class="news-cta-card" th:if="${edicaoVinculadaPt != null or edicaoVinculadaEn != null}">
+                <!-- Variante PT -->
+                <div class="news-cta-lang-pt" th:if="${edicaoVinculadaPt != null}">
+                    <h4 class="pirata-title news-cta-title"
+                        th:text="${'Adquira a Edição #' + edicaoVinculadaPt.numeroEdicao + ' Impressa'}">
+                        Adquira a Edição Impressa
+                    </h4>
+                    <p class="news-cta-desc"
+                        th:text="${noticia.ctaTextoPt != null ? noticia.ctaTextoPt : (edicaoVinculadaPt.subtitulo != null ? edicaoVinculadaPt.subtitulo : edicaoVinculadaPt.descricao)}">
+                        Descrição da edição vinculada
+                    </p>
+                    <div class="news-cta-actions">
+                        <button type="button"
+                            th:if="${edicaoVinculadaPt.statusEstoque.inStock}"
+                            class="btn-brutal btn-blood btn-sm"
+                            th:attr="data-add-to-cart-id=${edicaoVinculadaPt.id}">
+                            <span class="inverted-cross">✝</span>
+                            <span th:text="${'Adicionar ao Necrocarrinho (' + edicaoVinculadaPt.precoFormatado + ')'}">
+                                Adicionar ao Necrocarrinho
+                            </span>
+                        </button>
+                        <a th:href="@{/edicoes/{idioma}/{num}(idioma=${edicaoVinculadaPt.idioma.slug},num=${edicaoVinculadaPt.numeroEdicao})}"
+                            class="btn-brutal btn-outline-decay btn-sm"
+                            th:text="${edicaoVinculadaPt.statusEstoque.inStock ? 'Ver detalhes da edição' : 'Ver detalhes da Edição #' + edicaoVinculadaPt.numeroEdicao}">
+                            Ver detalhes da edição
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Variante EN -->
+                <div class="news-cta-lang-en" th:if="${edicaoVinculadaEn != null}" style="display: none;">
+                    <h4 class="pirata-title news-cta-title"
+                        th:text="${'Get Physical Print Issue #' + edicaoVinculadaEn.numeroEdicao}">
+                        Get Physical Print Issue
+                    </h4>
+                    <p class="news-cta-desc"
+                        th:text="${noticia.ctaTextoEn != null ? noticia.ctaTextoEn : (edicaoVinculadaEn.subtitulo != null ? edicaoVinculadaEn.subtitulo : edicaoVinculadaEn.descricao)}">
+                        Linked issue description
+                    </p>
+                    <div class="news-cta-actions">
+                        <button type="button"
+                            th:if="${edicaoVinculadaEn.statusEstoque.inStock}"
+                            class="btn-brutal btn-blood btn-sm"
+                            th:attr="data-add-to-cart-id=${edicaoVinculadaEn.id}">
+                            <span class="inverted-cross">✝</span>
+                            <span th:text="${'Add to Death Cart (' + edicaoVinculadaEn.precoFormatado + ')'}">
+                                Add to Death Cart
+                            </span>
+                        </button>
+                        <a th:href="@{/edicoes/{idioma}/{num}(idioma=${edicaoVinculadaEn.idioma.slug},num=${edicaoVinculadaEn.numeroEdicao})}"
+                            class="btn-brutal btn-outline-decay btn-sm"
+                            th:text="${edicaoVinculadaEn.statusEstoque.inStock ? 'View issue details' : 'View Issue #' + edicaoVinculadaEn.numeroEdicao + ' details'}">
+                            View issue details
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <script type="application/json" id="catalog-page-data"
+                th:if="${catalogPageDataJson != null}"
+                th:utext="${catalogPageDataJson}"></script>
         </article>
 
     </main>

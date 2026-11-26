@@ -3,8 +3,10 @@ package com.armamentobelico.portalarmamentobelico.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.armamentobelico.portalarmamentobelico.service.EdicaoService;
+import com.armamentobelico.portalarmamentobelico.service.NoticiaService;
 import com.armamentobelico.portalarmamentobelico.utils.PublicJsonUtils;
 
 @Controller
@@ -13,9 +15,11 @@ public class PublicPagesController {
     private static final int LIMITE_DESTAQUES_HOME = 4;
 
     private final EdicaoService edicaoService;
+    private final NoticiaService noticiaService;
 
-    public PublicPagesController(EdicaoService edicaoService) {
+    public PublicPagesController(EdicaoService edicaoService, NoticiaService noticiaService) {
         this.edicaoService = edicaoService;
+        this.noticiaService = noticiaService;
     }
 
     @GetMapping("/")
@@ -24,6 +28,7 @@ public class PublicPagesController {
         model.addAttribute("catalogPageDataJson",
                 PublicJsonUtils.serializarCatalogoPorIdioma(
                         edicaoService.listarDestaquesHomePorIdioma(LIMITE_DESTAQUES_HOME)));
+        model.addAttribute("ultimasNoticias", noticiaService.listarUltimasPublicadasHome());
         return "index";
     }
 
@@ -41,7 +46,13 @@ public class PublicPagesController {
     }
 
     @GetMapping("/noticias")
-    public String noticias() {
+    public String noticias(
+            @RequestParam(required = false) String tag,
+            @RequestParam(required = false) String busca,
+            @RequestParam(defaultValue = "1") int pagina,
+            Model model) {
+        model.addAttribute("bodyClass", "page-noticias");
+        model.addAttribute("feed", noticiaService.listarFeedPublico(tag, busca, pagina));
         return "noticias";
     }
 

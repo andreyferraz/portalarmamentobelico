@@ -450,4 +450,213 @@
 
     syncExtraPhotosLimit();
   }
+
+  /* ------------------------------------------------------------------------
+     Formulário de Notícias: Auto-Slug, Abas PT/EN, Quill 2 Local e Tags
+     ------------------------------------------------------------------------ */
+  const noticiaForm = document.querySelector("[data-noticia-form]");
+  if (noticiaForm) {
+    const maxTags = Number(noticiaForm.dataset.maxTags || 8);
+    const modoEdicao = noticiaForm.dataset.modoEdicao === "true";
+
+    // Auto-slug a partir do Título PT
+    const tituloPtInput = document.getElementById("tituloPt");
+    const slugInput = document.getElementById("noticia-slug");
+    const slugRegenBtn = document.getElementById("noticia-slug-regen-btn");
+    let slugEditadoManualmente = modoEdicao || (slugInput && slugInput.value.trim().length > 0);
+
+    function gerarSlugJs(texto) {
+      return String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    if (slugInput && tituloPtInput) {
+      slugInput.addEventListener("input", () => {
+        slugEditadoManualmente = slugInput.value.trim().length > 0;
+      });
+      tituloPtInput.addEventListener("input", () => {
+        if (!slugEditadoManualmente) {
+          slugInput.value = gerarSlugJs(tituloPtInput.value);
+        }
+      });
+      if (slugRegenBtn) {
+        slugRegenBtn.addEventListener("click", () => {
+          slugInput.value = gerarSlugJs(tituloPtInput.value);
+          slugEditadoManualmente = false;
+        });
+      }
+    }
+
+    // Preview da imagem de destaque
+    const imgInput = document.getElementById("imagemDestaque");
+    const imgPreview = document.getElementById("noticia-img-preview");
+    const imgPlaceholder = document.getElementById("noticia-img-placeholder");
+    if (imgInput && imgPreview) {
+      imgInput.addEventListener("change", () => {
+        const file = imgInput.files && imgInput.files[0];
+        if (!file) return;
+        imgPreview.src = URL.createObjectURL(file);
+        imgPreview.hidden = false;
+        if (imgPlaceholder) imgPlaceholder.hidden = true;
+      });
+    }
+
+    // Abas PT / EN
+    const tabBtns = noticiaForm.querySelectorAll("[data-lang-tab]");
+    const tabPanels = noticiaForm.querySelectorAll("[data-lang-panel]");
+    tabBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.langTab;
+        tabBtns.forEach((b) => {
+          const active = b.dataset.langTab === target;
+          b.classList.toggle("is-active", active);
+          b.setAttribute("aria-selected", String(active));
+        });
+        tabPanels.forEach((panel) => {
+          panel.hidden = panel.dataset.langPanel !== target;
+        });
+      });
+    });
+
+    // Quill 2 Local + Blots customizados de Entrevista (.interview-question / .interview-answer)
+    const quillEditors = [];
+    if (typeof window.Quill !== "undefined") {
+      const Block = window.Quill.import("blots/block");
+      if (!window.Quill.imports["formats/interviewQuestion"]) {
+        class InterviewQuestionBlot extends Block {
+          static blotName = "interviewQuestion";
+          static tagName = "p";
+          static className = "interview-question";
+        }
+        window.Quill.register(InterviewQuestionBlot);
+      }
+      if (!window.Quill.imports["formats/interviewAnswer"]) {
+        class InterviewAnswerBlot extends Block {
+          static blotName = "interviewAnswer";
+          static tagName = "p";
+          static className = "interview-answer";
+        }
+        window.Quill.register(InterviewAnswerBlot);
+      }
+
+      function initQuillPair(editorId, toolbarId, textareaId, placeholder) {
+        const editorEl = document.getElementById(editorId);
+        const toolbarEl = document.getElementById(toolbarId);
+        const textareaEl = document.getElementById(textareaId);
+        if (!editorEl || !toolbarEl || !textareaEl) return;
+
+        const quill = new window.Quill(editorEl, {
+          theme: "snow",
+          placeholder,
+          modules: {
+            toolbar: toolbarEl,
+          },
+        });
+
+        const initialHtml = (textareaEl.value || "").trim();
+        if (initialHtml) {
+          quill.clipboard.dangerouslyPasteHTML(initialHtml);
+        }
+
+        function syncToTextarea() {
+          const html = typeof quill.getSemanticHTML === "function"
+            ? quill.getSemanticHTML()
+            : quill.root.innerHTML;
+          textareaEl.value = quill.getText().trim().length === 0 ? "" : html;
+        }
+
+        toolbarEl.querySelectorAll("[data-quill-interview]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const formatName = btn.dataset.quillInterview;
+            const otherFormat = formatName === "interviewQuestion" ? "interviewAnswer" : "interviewQuestion";
+            const range = quill.getSelection(true);
+            if (!range) return;
+            const current = quill.getFormat(range);
+            const willEnable = !current[formatName];
+            quill.format(otherFormat, false, "user");
+            quill.format(formatName, willEnable, "user");
+            syncToTextarea();
+          });
+        });
+
+        quill.on("selection-change", (range) => {
+          const fmt = range ? quill.getFormat(range) : {};
+          toolbarEl.querySelectorAll("[data-quill-interview]").forEach((btn) => {
+            const isActive = Boolean(fmt[btn.dataset.quillInterview]);
+            btn.classList.toggle("is-active", isActive);
+            btn.setAttribute("aria-pressed", String(isActive));
+          });
+        });
+
+        quill.on("text-change", syncToTextarea);
+        quillEditors.push({ syncToTextarea });
+      }
+
+      initQuillPair("quill-editor-pt", "quill-toolbar-pt", "conteudoHtmlPt", "Redija o corpo da matéria em Português...");
+      initQuillPair("quill-editor-en", "quill-toolbar-en", "conteudoHtmlEn", "Write the optional English version here...");
+
+      noticiaForm.addEventListener("submit", () => {
+        quillEditors.forEach((item) => item.syncToTextarea());
+      });
+    }
+
+    // Repeater de Tags (até maxTags)
+    const tagsList = document.getElementById("noticia-tags-list");
+    const addTagBtn = document.getElementById("add-noticia-tag-btn");
+    const tagsCounterEl = document.getElementById("noticia-tags-counter");
+
+    function reindexTags() {
+      if (!tagsList) return;
+      const rows = tagsList.querySelectorAll("[data-tag-row]");
+      rows.forEach((row, idx) => {
+        const input = row.querySelector("input");
+        const select = row.querySelector("select");
+        if (input) input.name = `tags[${idx}].nome`;
+        if (select) select.name = `tags[${idx}].estilo`;
+      });
+      if (addTagBtn) addTagBtn.disabled = rows.length >= maxTags;
+      if (tagsCounterEl) {
+        tagsCounterEl.textContent = `${rows.length} de ${maxTags} linha(s) de tag.`;
+      }
+    }
+
+    if (addTagBtn && tagsList) {
+      addTagBtn.addEventListener("click", () => {
+        const count = tagsList.querySelectorAll("[data-tag-row]").length;
+        if (count >= maxTags) {
+          showToast(`Limite máximo de ${maxTags} tags atingido.`);
+          return;
+        }
+        const row = document.createElement("div");
+        row.className = "repeater-row repeater-row-2";
+        row.setAttribute("data-tag-row", "");
+        row.innerHTML = `
+          <input type="text" name="tags[${count}].nome" class="admin-input" placeholder="Ex.: Death Metal, Edição #58, Turquia">
+          <select name="tags[${count}].estilo" class="admin-select">
+            <option value="DARK">Escura</option>
+            <option value="BLOOD">Vermelho Sangue</option>
+          </select>
+          <button type="button" class="btn btn-ghost btn-sm" data-remove-tag-row aria-label="Remover tag">Remover</button>
+        `;
+        tagsList.appendChild(row);
+        reindexTags();
+      });
+
+      tagsList.addEventListener("click", (event) => {
+        const removeBtn = event.target.closest("[data-remove-tag-row]");
+        if (!removeBtn) return;
+        const row = removeBtn.closest("[data-tag-row]");
+        if (row) {
+          row.remove();
+          reindexTags();
+        }
+      });
+
+      reindexTags();
+    }
+  }
 })();

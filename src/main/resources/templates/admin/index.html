@@ -66,7 +66,7 @@
               </a>
             </li>
             <li>
-              <a th:href="@{/admin/noticias}" class="nav-link" data-module-pending="true" data-module-name="Notícias">
+              <a th:href="@{/admin/noticias}" class="nav-link">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
                   <path d="M18 14h-8"></path>
@@ -207,7 +207,7 @@
             <a th:href="@{/admin/edicoes/nova}" class="btn btn-primary">
               Nova Edição
             </a>
-            <a th:href="@{/admin/noticias/novo}" class="btn" data-module-pending="true" data-module-name="Notícias">
+            <a th:href="@{/admin/noticias/nova}" class="btn">
               Nova Notícia
             </a>
           </div>
@@ -238,9 +238,12 @@
             </article>
 
             <article class="kpi-card">
-              <span class="kpi-label">Notícias ativas</span>
-              <span class="kpi-value" th:text="${totalNoticias ?: 0}">0</span>
-              <span class="kpi-meta">Conteúdo bilíngue PT / EN</span>
+              <span class="kpi-label">Notícias publicadas</span>
+              <span class="kpi-value" th:text="${totalNoticiasPublicadas ?: 0}">0</span>
+              <span class="kpi-meta"
+                th:text="${resumoNoticias != null ? resumoNoticias.totalComEn + ' com EN • ' + resumoNoticias.totalRascunhos + ' rasc.' : 'Conteúdo bilíngue PT / EN'}">
+                Conteúdo bilíngue PT / EN
+              </span>
             </article>
 
             <article class="kpi-card" th:classappend="${(eventosPendentes ?: 0) > 0} ? ' is-attention' : ''">
@@ -298,14 +301,14 @@
                   </span>
                   <h3 class="module-card-title">Notícias</h3>
                 </div>
-                <span class="status-badge is-neutral">CRUD</span>
+                <span class="status-badge is-success">Ativo</span>
               </div>
               <p class="module-card-desc">
                 Publique comunicados e novidades em português e inglês, com imagem otimizada e vínculo opcional com edições.
               </p>
               <div class="module-card-footer">
                 <span class="module-route">/admin/noticias</span>
-                <a th:href="@{/admin/noticias}" class="btn btn-sm" data-module-pending="true" data-module-name="Notícias">Gerenciar <span class="visually-hidden">Notícias</span></a>
+                <a th:href="@{/admin/noticias}" class="btn btn-sm">Gerenciar <span class="visually-hidden">Notícias</span></a>
               </div>
             </article>
 
@@ -425,8 +428,8 @@
                   <th scope="row">Notícias</th>
                   <td><code>/admin/noticias</code></td>
                   <td>Cadastro direto (PT / EN)</td>
-                  <td><span class="status-badge is-neutral">Aguardando módulo</span></td>
-                  <td><a th:href="@{/admin/noticias}" class="btn btn-sm" data-module-pending="true" data-module-name="Notícias">Abrir <span class="visually-hidden">Notícias</span></a></td>
+                  <td><span class="status-badge is-success">Ativo</span></td>
+                  <td><a th:href="@{/admin/noticias}" class="btn btn-sm">Abrir <span class="visually-hidden">Notícias</span></a></td>
                 </tr>
                 <tr data-module-row>
                   <th scope="row">Eventos</th>

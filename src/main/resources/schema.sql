@@ -61,3 +61,45 @@ CREATE TABLE IF NOT EXISTS edicao_conteudo_extra (
 	ordem INTEGER NOT NULL,
 	FOREIGN KEY (edicao_id) REFERENCES edicao(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS noticia (
+	id TEXT PRIMARY KEY,
+	slug TEXT NOT NULL UNIQUE,
+	titulo_pt TEXT NOT NULL,
+	titulo_en TEXT,
+	tag_destaque_pt TEXT,
+	tag_destaque_en TEXT,
+	categoria_pt TEXT NOT NULL,
+	categoria_en TEXT,
+	autor TEXT NOT NULL DEFAULT 'Editoria Armamento Bélico',
+	data_publicacao TEXT NOT NULL,
+	resumo_pt TEXT NOT NULL,
+	resumo_en TEXT,
+	conteudo_html_pt TEXT NOT NULL,
+	conteudo_html_en TEXT,
+	imagem_destaque_path TEXT,
+	legenda_imagem_pt TEXT,
+	legenda_imagem_en TEXT,
+	edicao_id TEXT,
+	cta_texto_pt TEXT,
+	cta_texto_en TEXT,
+	publicado INTEGER NOT NULL DEFAULT 1,
+	criado_em TEXT NOT NULL,
+	atualizado_em TEXT NOT NULL,
+	FOREIGN KEY (edicao_id) REFERENCES edicao(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_noticia_publicado_data
+	ON noticia (publicado, data_publicacao DESC, criado_em DESC);
+
+CREATE TABLE IF NOT EXISTS noticia_tag (
+	id TEXT PRIMARY KEY,
+	noticia_id TEXT NOT NULL,
+	nome TEXT NOT NULL,
+	estilo TEXT NOT NULL DEFAULT 'DARK' CHECK (estilo IN ('DARK', 'BLOOD')),
+	ordem INTEGER NOT NULL,
+	FOREIGN KEY (noticia_id) REFERENCES noticia(id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_noticia_tag_noticia_ordem
+	ON noticia_tag (noticia_id, ordem ASC);

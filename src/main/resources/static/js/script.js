@@ -41,8 +41,21 @@
       youtube_btn: 'Inscreva-se no Canal',
       news_section_title: 'Últimas Manifestações do Underground',
       news_section_sub: 'Resenhas, comunicados de gravadoras e anúncios exclusivos',
+      news_feed_tag: 'DESPACHOS DAS TREVAS',
       news_read_all: 'Ver Todas as Notícias',
       news_read_more: 'Ler Matéria Completa ☠',
+      news_back_feed: '← Voltar ao Feed de Notícias',
+      news_meta_by: 'Por:',
+      news_meta_category: 'Categoria:',
+      news_search_label: 'Buscar notícias',
+      news_search_placeholder: 'Buscar por banda, título, categoria ou tag...',
+      news_search_btn: 'Buscar',
+      news_clear_filters: 'Limpar filtros',
+      news_empty_title: 'Nenhuma notícia encontrada',
+      news_empty_text: 'Não há despachos publicados que correspondam aos filtros selecionados no momento.',
+      news_page_prev: '← Anterior',
+      news_page_next: 'Próxima →',
+      news_page_label: 'Página',
       footer_cult: 'Desde 2008 - ' + new Date().getFullYear() + ' • Armamento Bélico Fanzine • O Verdadeiro Culto ao Underground',
       footer_dev_prefix: 'Desenvolvido com devoção e ódio por',
       footer_dev_suffix: 'Puro metal infernal.',
@@ -161,8 +174,21 @@
       youtube_btn: 'Subscribe on YouTube',
       news_section_title: 'Latest Underground Broadcasts',
       news_section_sub: 'Reviews, label press dispatches and exclusive declarations',
+      news_feed_tag: 'DISPATCHES FROM THE DARK',
       news_read_all: 'View All News',
       news_read_more: 'Read Full Article ☠',
+      news_back_feed: '← Back to News Feed',
+      news_meta_by: 'By:',
+      news_meta_category: 'Category:',
+      news_search_label: 'Search news',
+      news_search_placeholder: 'Search by band, title, category or tag...',
+      news_search_btn: 'Search',
+      news_clear_filters: 'Clear filters',
+      news_empty_title: 'No news articles found',
+      news_empty_text: 'There are no published dispatches matching your current filters.',
+      news_page_prev: '← Previous',
+      news_page_next: 'Next →',
+      news_page_label: 'Page',
       footer_cult: 'Since 2008 - ' + new Date().getFullYear() + ' • Armamento Bélico Zine • Total Underground Worship',
       footer_dev_prefix: 'Developed with devotion and hatred by',
       footer_dev_suffix: 'Pure infernal metal.',
@@ -700,6 +726,45 @@
         el.placeholder = t[key];
       }
     });
+
+    // Atualiza textos dinâmicos bilíngues (notícias, datas, legendas e selos)
+    document.querySelectorAll('[data-text-pt], [data-text-en]').forEach(el => {
+      const value = lang === 'en'
+        ? (el.getAttribute('data-text-en') || el.getAttribute('data-text-pt'))
+        : (el.getAttribute('data-text-pt') || el.getAttribute('data-text-en'));
+      if (value !== null) {
+        el.textContent = value;
+      }
+    });
+
+    // Alterna corpo da matéria (.lang-content-pt / .lang-content-en), aviso somente PT e card CTA
+    const newsArticle = document.querySelector('.news-single-article');
+    if (newsArticle) {
+      const ptBlock = newsArticle.querySelector('.lang-content-pt');
+      const enBlock = newsArticle.querySelector('.lang-content-en');
+      const ptOnlyNotice = document.getElementById('news-pt-only-notice');
+      const hasEnContent = Boolean(enBlock && enBlock.textContent.trim().length > 0);
+
+      if (lang === 'en' && hasEnContent) {
+        if (ptBlock) ptBlock.style.display = 'none';
+        enBlock.style.display = '';
+        if (ptOnlyNotice) ptOnlyNotice.hidden = true;
+      } else {
+        if (ptBlock) ptBlock.style.display = '';
+        if (enBlock) enBlock.style.display = 'none';
+        if (ptOnlyNotice) ptOnlyNotice.hidden = lang !== 'en';
+      }
+
+      const ctaPt = newsArticle.querySelector('.news-cta-lang-pt');
+      const ctaEn = newsArticle.querySelector('.news-cta-lang-en');
+      if (lang === 'en' && ctaEn) {
+        if (ctaPt) ctaPt.style.display = 'none';
+        ctaEn.style.display = '';
+      } else if (ctaPt) {
+        ctaPt.style.display = '';
+        if (ctaEn) ctaEn.style.display = 'none';
+      }
+    }
 
     // Atualiza seletor de navegação da assinatura (Regra estrita)
     updateSubscriptionNavVisibility();
@@ -2790,6 +2855,15 @@
     if (cartOverlay) {
       cartOverlay.addEventListener('click', closeCartDrawer);
     }
+
+    document.addEventListener('click', (event) => {
+      const addBtn = event.target.closest('[data-add-to-cart-id]');
+      if (!addBtn) return;
+      const productId = addBtn.getAttribute('data-add-to-cart-id');
+      if (productId) {
+        addToCart(productId);
+      }
+    });
 
     const handleReturnToTab = () => {
       if (document.visibilityState === 'hidden') return;

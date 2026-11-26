@@ -1,6 +1,7 @@
 package com.armamentobelico.portalarmamentobelico.config;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -79,7 +80,9 @@ public class JdbcDialectConfig {
                 new IntegerToBooleanConverter(),
                 new BooleanToIntegerConverter(),
                 new InstantToStringConverter(),
-                new StringToInstantConverter()
+                new StringToInstantConverter(),
+                new LocalDateToStringConverter(),
+                new StringToLocalDateConverter()
         ));
     }
 
@@ -128,6 +131,22 @@ public class JdbcDialectConfig {
         @Override
         public Instant convert(String source) {
             return source == null || source.isBlank() ? null : Instant.parse(source);
+        }
+    }
+
+    @WritingConverter
+    static class LocalDateToStringConverter implements Converter<LocalDate, String> {
+        @Override
+        public String convert(LocalDate source) {
+            return source == null ? null : source.toString();
+        }
+    }
+
+    @ReadingConverter
+    static class StringToLocalDateConverter implements Converter<String, LocalDate> {
+        @Override
+        public LocalDate convert(String source) {
+            return source == null || source.isBlank() ? null : LocalDate.parse(source);
         }
     }
 }

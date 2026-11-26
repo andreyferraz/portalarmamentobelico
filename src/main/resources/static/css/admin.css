@@ -1579,3 +1579,148 @@ textarea {
   gap: 0.75rem;
   padding-block-start: 0.5rem;
 }
+
+
+/* ==========================================================================
+   Módulo de Notícias: Miniaturas, Abas PT/EN e Quill 2 Local
+   ========================================================================== */
+
+.noticia-thumb {
+  inline-size: 4rem;
+  block-size: 2.75rem;
+  object-fit: cover;
+  border-radius: var(--adm-radius-sm);
+  border: 1px solid var(--adm-border);
+  flex-shrink: 0;
+}
+
+.noticia-thumb-empty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 4rem;
+  block-size: 2.75rem;
+  border-radius: var(--adm-radius-sm);
+  border: 1px dashed var(--adm-border-strong);
+  background-color: var(--adm-surface-subtle);
+  color: var(--adm-text-muted);
+  font-family: var(--adm-font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.slug-input-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.slug-input-group .admin-input {
+  flex: 1 1 auto;
+}
+
+.lang-tabs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-block-end: 1px solid var(--adm-border);
+  padding-block-end: 0.75rem;
+  margin-block-end: 1.25rem;
+}
+
+.lang-tab-btn {
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-sm);
+  background-color: var(--adm-surface-subtle);
+  color: var(--adm-text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.lang-tab-btn.is-active {
+  background-color: var(--adm-accent);
+  border-color: var(--adm-accent);
+  color: #ffffff;
+}
+
+.quill-wrapper {
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-sm);
+  overflow: hidden;
+  background-color: var(--adm-bg);
+}
+
+.quill-wrapper .ql-toolbar.ql-snow {
+  border: 0;
+  border-block-end: 1px solid var(--adm-border);
+  background-color: var(--adm-surface-subtle);
+  padding: 0.5rem;
+}
+
+.quill-wrapper .ql-container.ql-snow {
+  border: 0;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  color: var(--adm-text);
+  min-block-size: 16rem;
+}
+
+.quill-wrapper .ql-editor {
+  min-block-size: 16rem;
+  line-height: 1.65;
+}
+
+.quill-wrapper .ql-editor.ql-blank::before {
+  color: var(--adm-text-muted);
+  font-style: normal;
+}
+
+.quill-wrapper .ql-snow .ql-stroke {
+  stroke: var(--adm-text);
+}
+
+.quill-wrapper .ql-snow .ql-fill {
+  fill: var(--adm-text);
+}
+
+.quill-wrapper .ql-snow .ql-picker {
+  color: var(--adm-text);
+}
+
+.quill-wrapper .ql-snow .ql-picker-options {
+  background-color: var(--adm-surface);
+  border-color: var(--adm-border);
+}
+
+.ql-interview-btn {
+  width: auto !important;
+  padding-inline: 0.5rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  border: 1px solid var(--adm-border) !important;
+  border-radius: 0.25rem !important;
+  color: var(--adm-text) !important;
+  margin-inline-end: 0.25rem !important;
+}
+
+.ql-interview-btn.is-active {
+  background-color: var(--adm-accent) !important;
+  border-color: var(--adm-accent) !important;
+  color: #ffffff !important;
+}
+
+.quill-wrapper .ql-editor p.interview-question {
+  color: #dc2626;
+  font-weight: 700;
+  margin-block-start: 0.75rem;
+}
+
+.quill-wrapper .ql-editor p.interview-answer {
+  border-inline-start: 3px solid var(--adm-border-strong);
+  padding-inline-start: 0.75rem;
+  margin-block-end: 0.75rem;
+}
