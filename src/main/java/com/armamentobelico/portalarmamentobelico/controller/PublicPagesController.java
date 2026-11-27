@@ -56,11 +56,6 @@ public class PublicPagesController {
         return "noticias";
     }
 
-    @GetMapping("/indique")
-    public String indique() {
-        return "indique";
-    }
-
     @GetMapping("/aliados")
     public String aliados() {
         return "aliados";

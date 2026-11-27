@@ -101,6 +101,17 @@
                 <span class="nav-badge" th:classappend="${(eventosPendentes ?: 0) > 0} ? ' is-alert' : ''" th:text="${eventosPendentes ?: 0}">0</span>
               </a>
             </li>
+            <li>
+              <a th:href="@{/admin/indicacoes}" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M9 18V5l12-2v13"></path>
+                  <circle cx="6" cy="18" r="3"></circle>
+                  <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <span class="nav-label">Indicações</span>
+                <span class="nav-badge" th:classappend="${(indicacoesPendentes ?: 0) > 0} ? ' is-alert' : ''" th:text="${indicacoesPendentes ?: 0}">0</span>
+              </a>
+            </li>
           </ul>
         </div>
       </nav>
@@ -385,13 +396,29 @@
                   <button type="button" class="btn btn-sm" id="add-interview-btn">+ Adicionar entrevista</button>
                 </div>
                 <div id="interviews-list" class="repeater-list">
-                  <div class="repeater-row repeater-row-3" th:each="ent, stat : *{entrevistas}" data-interview-row>
+                  <div class="repeater-row repeater-row-4" th:each="ent, stat : *{entrevistas}" data-interview-row>
+                    <select th:field="*{entrevistas[__${stat.index}__].indicacaoBandaId}" class="admin-select" data-interview-indicacao-select aria-label="Vincular indicação do radar">
+                      <option value="">— Indicação do radar (opcional) —</option>
+                      <option th:each="ind : ${indicacoesElegiveis}"
+                        th:value="${ind.id}"
+                        th:attr="data-banda=${ind.nomeBanda},data-pais=${ind.pais}"
+                        th:text="${ind.nomeBanda + ' (' + ind.pais + ') • ' + ind.status.labelAdmin}">
+                      </option>
+                    </select>
                     <input type="text" th:field="*{entrevistas[__${stat.index}__].banda}" class="admin-input" placeholder="Banda (ex.: Diabolizer)">
                     <input type="text" th:field="*{entrevistas[__${stat.index}__].pais}" class="admin-input" placeholder="País (ex.: Turquia)">
                     <input type="text" th:field="*{entrevistas[__${stat.index}__].estilo}" class="admin-input" placeholder="Estilo (ex.: Death Metal)">
                     <button type="button" class="btn btn-ghost btn-sm" data-remove-row aria-label="Remover entrevista">Remover</button>
                   </div>
                 </div>
+                <template id="interview-indicacao-options-template">
+                  <option value="">— Indicação do radar (opcional) —</option>
+                  <option th:each="ind : ${indicacoesElegiveis}"
+                    th:value="${ind.id}"
+                    th:attr="data-banda=${ind.nomeBanda},data-pais=${ind.pais}"
+                    th:text="${ind.nomeBanda + ' (' + ind.pais + ') • ' + ind.status.labelAdmin}">
+                  </option>
+                </template>
               </div>
 
               <!-- Lista dinâmica de Demais Conteúdos -->

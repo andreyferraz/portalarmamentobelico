@@ -1826,3 +1826,14 @@ textarea {
   --label-4: "Moderação";
   --label-5: "Ações";
 }
+
+/* Repeater de entrevistas com seletor de indicação do radar */
+.repeater-row-4 {
+  grid-template-columns: minmax(180px, 1.3fr) repeat(3, minmax(0, 1fr)) auto;
+}
+
+@media (max-width: 900px) {
+  .repeater-row-4 {
+    grid-template-columns: 1fr;
+  }
+}

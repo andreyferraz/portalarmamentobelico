@@ -105,14 +105,14 @@
               </a>
             </li>
             <li>
-              <a th:href="@{/admin/indicacoes}" class="nav-link" data-module-pending="true" data-module-name="Indicações de Bandas">
+              <a th:href="@{/admin/indicacoes}" class="nav-link">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M9 18V5l12-2v13"></path>
                   <circle cx="6" cy="18" r="3"></circle>
                   <circle cx="18" cy="16" r="3"></circle>
                 </svg>
                 <span class="nav-label">Indicações</span>
-                <span class="nav-badge">0</span>
+                <span class="nav-badge" th:classappend="${(indicacoesPendentes ?: 0) > 0} ? ' is-alert' : ''" th:text="${indicacoesPendentes ?: 0}">0</span>
               </a>
             </li>
           </ul>

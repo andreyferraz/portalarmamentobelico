@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    try {
+      var savedScheme = localStorage.getItem("abz-admin-color-scheme");
+      if (savedScheme === "light" || savedScheme === "dark") {
+        document.querySelector('meta[name="color-scheme"]').content = savedScheme;
+      }
+    } catch (e) {}
+  </script>
+  <title>Editar Indicação | Painel Admin — Armamento Bélico Zine</title>
+  <link rel="icon" th:href="@{/assets/logo-armamento-belico.png}" type="image/png">
+  <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+
+<body class="admin-body">
+  <a href="#admin-main-title" class="skip-link visually-hidden">Pular para o conteúdo principal</a>
+
+  <div class="admin-shell" id="admin-shell">
+    <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
+
+    <!-- Barra lateral -->
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Menu lateral">
+      <a th:href="@{/admin}" class="sidebar-brand">
+        <img th:src="@{/assets/logo-armamento-belico.png}" alt="" class="sidebar-brand-logo">
+        <span class="sidebar-brand-text">
+          <span class="sidebar-brand-title">Armamento Bélico</span>
+          <span class="sidebar-brand-sub">Painel Administrativo</span>
+        </span>
+      </a>
+
+      <nav class="sidebar-nav" aria-label="Módulos do painel">
+        <div class="nav-group">
+          <p class="nav-group-label">Geral</p>
+          <ul class="nav-list">
+            <li>
+              <a th:href="@{/admin}" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="9" rx="1"></rect>
+                  <rect x="14" y="3" width="7" height="5" rx="1"></rect>
+                  <rect x="14" y="12" width="7" height="9" rx="1"></rect>
+                  <rect x="3" y="16" width="7" height="5" rx="1"></rect>
+                </svg>
+                <span class="nav-label">Visão Geral</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-label">Conteúdo</p>
+          <ul class="nav-list">
+            <li>
+              <a th:href="@{/admin/edicoes}" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                </svg>
+                <span class="nav-label">Edições</span>
+                <span class="nav-badge" th:text="${totalEdicoes ?: 0}">0</span>
+              </a>
+            </li>
+            <li>
+              <a th:href="@{/admin/noticias}" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                </svg>
+                <span class="nav-label">Notícias</span>
+                <span class="nav-badge" th:text="${totalNoticias ?: 0}">0</span>
+              </a>
+            </li>
+            <li>
+              <a th:href="@{/admin/aliados}" class="nav-link" data-module-pending="true" data-module-name="Aliados">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                </svg>
+                <span class="nav-label">Aliados</span>
+                <span class="nav-badge">0</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="nav-group">
+          <p class="nav-group-label">Curadoria</p>
+          <ul class="nav-list">
+            <li>
+              <a th:href="@{/admin/eventos}" class="nav-link">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span class="nav-label">Eventos</span>
+                <span class="nav-badge" th:classappend="${(eventosPendentes ?: 0) > 0} ? ' is-alert' : ''" th:text="${eventosPendentes ?: 0}">0</span>
+              </a>
+            </li>
+            <li>
+              <a th:href="@{/admin/indicacoes}" class="nav-link" aria-current="page">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M9 18V5l12-2v13"></path>
+                  <circle cx="6" cy="18" r="3"></circle>
+                  <circle cx="18" cy="16" r="3"></circle>
+                </svg>
+                <span class="nav-label">Indicações</span>
+                <span class="nav-badge" th:classappend="${(indicacoesPendentes ?: 0) > 0} ? ' is-alert' : ''" th:text="${indicacoesPendentes ?: 0}">0</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a th:href="@{/indique}" class="sidebar-action" target="_blank" rel="noopener noreferrer">
+          <span class="sidebar-action-label">Ver página pública</span>
+        </a>
+        <button type="button" class="sidebar-action" id="theme-toggle-btn">
+          <span class="sidebar-action-label" id="theme-toggle-label">Alternar tema</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Barra superior -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <button type="button" class="icon-btn mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="admin-sidebar" aria-label="Abrir menu lateral">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <button type="button" class="icon-btn desktop-collapse-btn" id="sidebar-collapse-btn" aria-expanded="true" aria-controls="admin-sidebar" aria-label="Recolher menu lateral">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            <line x1="9" y1="3" x2="9" y2="21"></line>
+          </svg>
+        </button>
+
+        <div class="topbar-breadcrumb">
+          <a th:href="@{/admin}">Painel</a>
+          <span aria-hidden="true">/</span>
+          <a th:href="@{/admin/indicacoes}">Indicações</a>
+          <span aria-hidden="true">/</span>
+          <strong>Editar</strong>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <span class="topbar-user" title="Usuário autenticado">
+          <span class="topbar-user-dot" aria-hidden="true"></span>
+          <span class="topbar-user-name" sec:authentication="name">admin</span>
+        </span>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+          <button type="submit" class="btn btn-sm">Sair</button>
+        </form>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <div class="admin-container">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="admin-main-title" tabindex="-1">Editar Indicação de Banda</h1>
+            <p class="page-subtitle">Corrija grafia, país, material físico, link de audição ou notas internas.</p>
+          </div>
+          <div class="page-actions">
+            <a th:href="@{/admin/indicacoes}" class="btn">← Voltar para lista</a>
+          </div>
+        </div>
+
+        <div class="admin-alert is-error" role="alert" th:if="${mensagemErro}">
+          <span th:text="${mensagemErro}">Erro ao salvar.</span>
+          <button type="button" class="btn btn-ghost btn-sm" data-dismiss-alert>Fechar</button>
+        </div>
+
+        <form th:action="@{/admin/indicacoes/{id}/editar(id=${indicacaoForm.id})}"
+          th:object="${indicacaoForm}" method="post" class="admin-form-stack">
+
+          <section class="panel-card form-card">
+            <div class="form-card-header">
+              <h2 class="section-title">Dados da Horda &amp; Situação Editorial</h2>
+            </div>
+            <div class="form-card-body">
+              <div class="form-hint-box" style="margin-bottom: 1rem;">
+                <strong>Status atual:</strong>
+                <span class="status-badge"
+                  th:if="${indicacaoForm.statusAtual != null}"
+                  th:classappend="${' ' + indicacaoForm.statusAtual.adminBadgeClass}"
+                  th:text="${indicacaoForm.statusAtual.labelAdmin}">Pendente</span>
+                <span th:if="${indicacaoForm.numeroEdicaoPublicada != null}"
+                  th:text="${' • Publicada na Edição #' + indicacaoForm.numeroEdicaoPublicada}"></span>
+                <span th:if="${indicacaoForm.homonimo}">
+                  • <strong>Marcada como possível homônima</strong>
+                  <span th:if="${indicacaoForm.edicaoHomonimoReferencia != null}"
+                    th:text="${'(ref. ' + indicacaoForm.edicaoHomonimoReferencia + ')'}"></span>
+                </span>
+              </div>
+
+              <div class="form-grid form-grid-2">
+                <div class="form-field">
+                  <label for="ind-nome" class="form-label">Nome da Banda *</label>
+                  <input id="ind-nome" type="text" th:field="*{nomeBanda}" class="admin-input" required minlength="2" maxlength="120">
+                </div>
+
+                <div class="form-field">
+                  <label for="ind-pais" class="form-label">País *</label>
+                  <input id="ind-pais" type="text" th:field="*{pais}" class="admin-input" required minlength="2" maxlength="80">
+                </div>
+
+                <div class="form-field">
+                  <label for="ind-regiao" class="form-label">Estado / Região (opcional)</label>
+                  <input id="ind-regiao" type="text" th:field="*{regiao}" class="admin-input" maxlength="80">
+                </div>
+
+                <div class="form-field">
+                  <label for="ind-material" class="form-label">Material Físico Lançado *</label>
+                  <input id="ind-material" type="text" th:field="*{tituloMaterialFisico}" class="admin-input" required minlength="2" maxlength="140">
+                </div>
+
+                <div class="form-field form-span-2">
+                  <label for="ind-link" class="form-label">Link para Ouvir a Banda *</label>
+                  <input id="ind-link" type="url" th:field="*{linkAudicao}" class="admin-input" required maxlength="500">
+                </div>
+
+                <div class="form-field form-span-2">
+                  <label for="ind-homonimo" class="form-label">Esclarecimento de Homônimo (visível apenas no Admin)</label>
+                  <textarea id="ind-homonimo" rows="3" th:field="*{esclarecimentoHomonimo}" class="admin-textarea" maxlength="500"></textarea>
+                </div>
+
+                <div class="form-field form-span-2">
+                  <label for="ind-motivo" class="form-label">Motivo da Recusa (visível apenas no Admin)</label>
+                  <textarea id="ind-motivo" rows="2" th:field="*{motivoRecusa}" class="admin-textarea" maxlength="500"></textarea>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="form-submit-bar">
+            <a th:href="@{/admin/indicacoes}" class="btn">Cancelar</a>
+            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <div id="admin-toast-region" class="admin-toast-region" aria-live="polite" aria-atomic="true"></div>
+  <script th:src="@{/js/admin.js}" defer></script>
+</body>
+
+</html>

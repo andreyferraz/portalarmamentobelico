@@ -3606,6 +3606,99 @@ h1, h2, h3, h4, .gothic-title {
   color: #ff6b6b;
 }
 
+.band-status-pill {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border: 1px solid #3a3a3a;
+  background: #1a1a1a;
+  color: var(--color-bone);
+  white-space: nowrap;
+}
+
+.band-status-pill.is-radar {
+  border-color: #35699c;
+  background: #102030;
+  color: #b8dcff;
+}
+
+.band-status-pill.is-interviewing {
+  border-color: #b8860b;
+  background: #2b2109;
+  color: #ffe28a;
+}
+
+.band-status-pill.is-done {
+  border-color: #2e8b57;
+  background: #11261a;
+  color: #b4f0ca;
+}
+
+.band-check-alert {
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  border: 1px solid #b8860b;
+  border-left: 4px solid #e0a800;
+  background: #211906;
+  color: #fff2c6;
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.band-check-alert.is-interviewed {
+  border-color: #b31d28;
+  border-left-color: var(--color-blood-glow);
+  background: #230c0e;
+  color: #ffd7da;
+}
+
+.band-check-alert-body p {
+  margin: 0;
+}
+
+.band-check-alert-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.band-check-edition-link {
+  display: inline-block;
+  padding: 5px 12px;
+  background: #0d0d0d;
+  border: 1px solid var(--color-blood);
+  color: var(--color-bone);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.band-check-edition-link:hover,
+.band-check-edition-link:focus-visible {
+  background: var(--color-blood);
+  color: #fff;
+}
+
+.band-homonym-box {
+  background: #0d0d0d;
+  border: 1px dashed #4a4a4a;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.indicated-bands-empty {
+  text-align: center;
+  padding: 28px 20px;
+  border: 1px dashed #333;
+  background: #101010;
+  color: var(--color-paper-dim);
+  margin-bottom: 36px;
+}
+
 /* ==========================================================================
    ETAPA 8: PÁGINA DA EDIÇÃO (edicao.html) + LINKS NOS CARDS DO CATÁLOGO
    ========================================================================== */

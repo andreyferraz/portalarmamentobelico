@@ -45,6 +45,8 @@ public class SecurityConfig {
                                 "/noticias",
                                 "/noticias/**",
                                 "/eventos",
+                                "/indique",
+                                "/api/indicacoes/verificar",
                                 "/vendor/**",
                                 "/favicon.ico",
                                 "/webjars/**")

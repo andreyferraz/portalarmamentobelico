@@ -108,7 +108,7 @@
               </a>
             </li>
             <li>
-              <a th:href="@{/admin/indicacoes}" class="nav-link" data-module-pending="true" data-module-name="Indicações de Bandas">
+              <a th:href="@{/admin/indicacoes}" class="nav-link">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M9 18V5l12-2v13"></path>
                   <circle cx="6" cy="18" r="3"></circle>
@@ -348,14 +348,14 @@
                   </span>
                   <h3 class="module-card-title">Indicações de Bandas</h3>
                 </div>
-                <span class="status-badge is-warning">Curadoria</span>
+                <span class="status-badge is-success">Ativo</span>
               </div>
               <p class="module-card-desc">
                 Gerencie o ciclo editorial das bandas indicadas: pendente, aceita, em entrevista, concluída e publicada na edição.
               </p>
               <div class="module-card-footer">
                 <span class="module-route">/admin/indicacoes</span>
-                <a th:href="@{/admin/indicacoes}" class="btn btn-sm" data-module-pending="true" data-module-name="Indicações de Bandas">Moderar <span class="visually-hidden">Indicações de Bandas</span></a>
+                <a th:href="@{/admin/indicacoes}" class="btn btn-sm">Moderar <span class="visually-hidden">Indicações de Bandas</span></a>
               </div>
             </article>
 
@@ -442,8 +442,8 @@
                   <th scope="row">Indicações de Bandas</th>
                   <td><code>/admin/indicacoes</code></td>
                   <td>Submissão pública + ciclo editorial</td>
-                  <td><span class="status-badge is-warning">Fila de curadoria</span></td>
-                  <td><a th:href="@{/admin/indicacoes}" class="btn btn-sm" data-module-pending="true" data-module-name="Indicações de Bandas">Abrir <span class="visually-hidden">Indicações de Bandas</span></a></td>
+                  <td><span class="status-badge is-success">Ativo</span></td>
+                  <td><a th:href="@{/admin/indicacoes}" class="btn btn-sm">Abrir <span class="visually-hidden">Indicações de Bandas</span></a></td>
                 </tr>
                 <tr data-module-row>
                   <th scope="row">Aliados</th>

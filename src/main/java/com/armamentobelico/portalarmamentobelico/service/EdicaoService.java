@@ -48,18 +48,21 @@ public class EdicaoService {
     private final EdicaoEntrevistaRepository entrevistaRepository;
     private final EdicaoConteudoExtraRepository conteudoExtraRepository;
     private final FileUploadService fileUploadService;
+    private final IndicacaoBandaService indicacaoBandaService;
 
     public EdicaoService(
             EdicaoRepository edicaoRepository,
             EdicaoFotoRepository fotoRepository,
             EdicaoEntrevistaRepository entrevistaRepository,
             EdicaoConteudoExtraRepository conteudoExtraRepository,
-            FileUploadService fileUploadService) {
+            FileUploadService fileUploadService,
+            IndicacaoBandaService indicacaoBandaService) {
         this.edicaoRepository = edicaoRepository;
         this.fotoRepository = fotoRepository;
         this.entrevistaRepository = entrevistaRepository;
         this.conteudoExtraRepository = conteudoExtraRepository;
         this.fileUploadService = fileUploadService;
+        this.indicacaoBandaService = indicacaoBandaService;
     }
 
     public record ResumoAdminEdicoes(
@@ -244,8 +247,9 @@ public class EdicaoService {
 
             Edicao salva = edicaoRepository.save(edicao);
             salvarFotos(salva.getId(), fotosParaSalvar);
-            salvarEntrevistas(salva.getId(), form.getEntrevistas());
+            List<EdicaoEntrevista> entrevistasSalvas = salvarEntrevistas(salva.getId(), form.getEntrevistas());
             salvarConteudosExtras(salva.getId(), form.getConteudosExtras());
+            indicacaoBandaService.sincronizarComEdicao(salva, entrevistasSalvas);
             return salva;
         } catch (RuntimeException ex) {
             limparArquivosSilenciosamente(arquivosCriados);
@@ -322,10 +326,12 @@ public class EdicaoService {
             salvarFotos(id, todasFotos);
 
             entrevistaRepository.deleteByEdicaoId(id);
-            salvarEntrevistas(id, form.getEntrevistas());
+            List<EdicaoEntrevista> entrevistasSalvas = salvarEntrevistas(id, form.getEntrevistas());
 
             conteudoExtraRepository.deleteByEdicaoId(id);
             salvarConteudosExtras(id, form.getConteudosExtras());
+
+            indicacaoBandaService.sincronizarComEdicao(atualizada, entrevistasSalvas);
 
             limparArquivosSilenciosamente(arquivosParaRemoverAposSalvar);
             return atualizada;
@@ -342,6 +348,7 @@ public class EdicaoService {
 
         List<EdicaoFoto> fotos = fotoRepository.findByEdicaoIdOrderByOrdemAsc(id);
 
+        indicacaoBandaService.reverterOuReatribuirPorEdicaoExcluida(id);
         edicaoRepository.deleteById(id);
 
         List<String> arquivosParaRemover = new ArrayList<>();
@@ -544,9 +551,10 @@ public class EdicaoService {
         }
     }
 
-    private void salvarEntrevistas(UUID edicaoId, List<EdicaoFormDTO.EntrevistaItem> entrevistas) {
+    private List<EdicaoEntrevista> salvarEntrevistas(UUID edicaoId, List<EdicaoFormDTO.EntrevistaItem> entrevistas) {
+        List<EdicaoEntrevista> salvas = new ArrayList<>();
         if (entrevistas == null || entrevistas.isEmpty()) {
-            return;
+            return salvas;
         }
         int ordem = 1;
         for (EdicaoFormDTO.EntrevistaItem item : entrevistas) {
@@ -558,8 +566,9 @@ public class EdicaoService {
             EdicaoEntrevista entidade = new EdicaoEntrevista(
                     UUID.randomUUID(), edicaoId, item.getBanda().trim(), pais, estilo, ordem++,
                     item.getIndicacaoBandaId(), true);
-            entrevistaRepository.save(entidade);
+            salvas.add(entrevistaRepository.save(entidade));
         }
+        return salvas;
     }
 
     private void salvarConteudosExtras(UUID edicaoId, List<String> conteudosExtras) {

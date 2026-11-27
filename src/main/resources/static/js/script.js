@@ -121,6 +121,27 @@
       suggest_submit_btn: 'Enviar Indicação',
       suggest_list_tag: 'REGISTRO DE INDICAÇÕES',
       suggest_list_title: 'Hordas Já Indicadas',
+      suggest_rule_1_title: 'Material Físico Lançado:',
+      suggest_rule_1_text: 'Priorizamos hordas que possuam ao menos um registro físico (CD, K7, Vinil ou Split/Demo em mídia física).',
+      suggest_rule_2_title: 'Sonoridade Extrema:',
+      suggest_rule_2_text: 'Death Metal, Black Metal, Grindcore, Doom, Thrash/Crossover e vertentes underground sem vínculo comercial ou letras cristãs.',
+      suggest_rule_3_title: 'Sem Duplicidade:',
+      suggest_rule_3_text: 'O sistema verifica automaticamente se a banda já foi entrevistada em alguma edição publicada ou já consta no radar de indicações.',
+      suggest_hint_name: 'Informe o nome oficial da horda (mínimo 2 caracteres).',
+      suggest_err_name: 'Informe o nome da banda (mínimo 2 caracteres).',
+      suggest_hint_country: 'País de origem da banda (usado na verificação de duplicidade).',
+      suggest_err_country: 'Informe o país de origem da banda.',
+      suggest_hint_region: 'UF, estado ou província, se aplicável.',
+      suggest_hint_release: 'Nome do álbum, EP, demo ou split lançado em formato físico (CD, K7, Vinil).',
+      suggest_err_release: 'Informe o título do material físico lançado pela banda.',
+      suggest_hint_url: 'Informe a URL completa (iniciando com https:// ou http://) — Bandcamp, YouTube, Spotify, etc.',
+      suggest_err_url: 'Informe uma URL válida iniciando com https:// ou http://.',
+      suggest_homonym_confirm: 'Confirmo que se trata de outra banda diferente com o mesmo nome neste mesmo país.',
+      suggest_homonym_label: 'Esclarecimento de Homônimo (obrigatório quando houver conflito)',
+      suggest_homonym_hint: 'Informe cidade/estado, ano de formação, subgênero ou link do Metal Archives/Bandcamp que diferencie as bandas (15 a 500 caracteres).',
+      suggest_empty_list: 'Nenhuma horda aprovada no radar público no momento. Envie sua indicação acima para análise da curadoria.',
+      suggest_card_release: 'Material físico:',
+      suggest_listen_btn: 'Ouvir Horda',
       edition_zoom_hint: 'Ampliar',
       edition_meta_month: 'Mês de Lançamento',
       edition_meta_year: 'Ano de Lançamento',
@@ -254,6 +275,27 @@
       suggest_submit_btn: 'Submit Suggestion',
       suggest_list_tag: 'SUGGESTIONS LOG',
       suggest_list_title: 'Already Suggested Hordes',
+      suggest_rule_1_title: 'Physical Release:',
+      suggest_rule_1_text: 'We prioritize hordes with at least one physical release (CD, Tape, Vinyl or physical Split/Demo).',
+      suggest_rule_2_title: 'Extreme Sound:',
+      suggest_rule_2_text: 'Death Metal, Black Metal, Grindcore, Doom, Thrash/Crossover and underground styles with no commercial ties or Christian lyrics.',
+      suggest_rule_3_title: 'No Duplicates:',
+      suggest_rule_3_text: 'The system automatically checks whether the band was already interviewed in a published issue or is already on the radar.',
+      suggest_hint_name: 'Enter the official horde name (minimum 2 characters).',
+      suggest_err_name: 'Enter the band name (minimum 2 characters).',
+      suggest_hint_country: 'Band country of origin (used for duplicate detection).',
+      suggest_err_country: 'Enter the band country of origin.',
+      suggest_hint_region: 'State or province, if applicable.',
+      suggest_hint_release: 'Name of the album, EP, demo or split released in physical format (CD, Tape, Vinyl).',
+      suggest_err_release: 'Enter the title of the physical release.',
+      suggest_hint_url: 'Enter the full URL (starting with https:// or http://) — Bandcamp, YouTube, Spotify, etc.',
+      suggest_err_url: 'Enter a valid URL starting with https:// or http://.',
+      suggest_homonym_confirm: 'I confirm this is a different band sharing the same name in the same country.',
+      suggest_homonym_label: 'Homonym Clarification (required when a conflict is detected)',
+      suggest_homonym_hint: 'Provide city/state, year formed, subgenre or Metal Archives/Bandcamp link distinguishing the bands (15 to 500 characters).',
+      suggest_empty_list: 'No hordes approved on the public radar yet. Submit your suggestion above for curation review.',
+      suggest_card_release: 'Physical release:',
+      suggest_listen_btn: 'Listen to Horde',
       edition_zoom_hint: 'Zoom',
       edition_meta_month: 'Release Month',
       edition_meta_year: 'Release Year',
@@ -1850,219 +1892,175 @@
   }
 
   // --- ETAPA 5: PÁGINA INDIQUE UMA HORDA (indique.html) ---
-  const BAND_INDICATIONS_STORAGE_KEY = 'ab_band_indications_v1';
-  const BAND_INDICATIONS_SEED = [
-    {
-      name: 'Diabolizer',
-      country: 'Turquia',
-      region: 'Istambul',
-      releaseTitle: 'Khalkedonian Death (CD / Vinil)',
-      listenUrl: 'https://diabolizer.bandcamp.com'
-    },
-    {
-      name: 'Coldwinter',
-      country: 'Brasil',
-      region: 'SC',
-      releaseTitle: 'The Winter Has Come (Fita K7)',
-      listenUrl: 'https://bandcamp.com'
-    },
-    {
-      name: 'Mortem Solis',
-      country: 'Brasil',
-      region: 'SP',
-      releaseTitle: 'Necro Rites of Desecration (CD)',
-      listenUrl: 'https://bandcamp.com'
-    }
-  ];
+  let lastBandCheckResult = null;
 
-  function normalizeBandKeyPart(value) {
-    return String(value || '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, ' ');
-  }
-
-  function loadBandIndications() {
-    try {
-      const saved = JSON.parse(localStorage.getItem(BAND_INDICATIONS_STORAGE_KEY) || 'null');
-      if (Array.isArray(saved) && saved.length > 0) {
-        return saved;
-      }
-    } catch (_) {
-      // Fallback para lista inicial
-    }
-    return [...BAND_INDICATIONS_SEED];
-  }
-
-  function saveBandIndications(list) {
-    try {
-      localStorage.setItem(BAND_INDICATIONS_STORAGE_KEY, JSON.stringify(list));
-    } catch (_) {
-      // Ignora erro de quota do localStorage
-    }
-  }
-
-  function isDuplicateBandIndication(list, bandName, country) {
-    const normName = normalizeBandKeyPart(bandName);
-    const normCountry = normalizeBandKeyPart(country);
-    return list.some(
-      item =>
-        normalizeBandKeyPart(item.name) === normName &&
-        normalizeBandKeyPart(item.country) === normCountry
-    );
-  }
-
-  function isSafeHttpUrl(urlStr) {
-    try {
-      const parsed = new URL(urlStr);
-      return parsed.protocol === 'http:' || parsed.protocol === 'https:';
-    } catch (_) {
-      return false;
-    }
-  }
-
-  function renderIndicatedBands(list) {
-    const grid = document.getElementById('indicated-bands-grid');
+  function syncIndiqueI18nDynamic() {
+    const isEn = STATE.lang === 'en';
     const countEl = document.getElementById('indicated-bands-count');
-    if (!grid) return;
-
-    if (countEl) {
-      countEl.textContent =
-        list.length === 1
-          ? '1 horda registrada para avaliação do zine.'
-          : `${list.length} hordas registradas para avaliação do zine.`;
+    if (countEl && countEl.dataset.count !== undefined) {
+      const n = Number(countEl.dataset.count || 0);
+      if (isEn) {
+        countEl.textContent = n === 1
+          ? '1 horde approved on the zine radar.'
+          : `${n} hordes approved on the zine radar.`;
+      } else {
+        countEl.textContent = n === 1
+          ? '1 horda aprovada no radar do zine.'
+          : `${n} hordas aprovadas no radar do zine.`;
+      }
     }
 
-    const fragment = document.createDocumentFragment();
-    list.forEach(band => {
-      const card = document.createElement('article');
-      card.className = 'indicated-band-card';
-
-      const header = document.createElement('div');
-      header.className = 'indicated-band-header';
-
-      const title = document.createElement('h3');
-      title.className = 'indicated-band-name pirata-title';
-      title.textContent = band.name;
-
-      const badge = document.createElement('span');
-      badge.className = 'tape-tag dark';
-      badge.textContent = band.country;
-
-      header.append(title, badge);
-
-      const origin = document.createElement('p');
-      origin.className = 'indicated-band-origin';
-      origin.textContent = band.region ? `${band.country} • ${band.region}` : band.country;
-
-      const release = document.createElement('p');
-      release.className = 'indicated-band-release';
-      const releaseStrong = document.createElement('strong');
-      releaseStrong.textContent = 'Material físico: ';
-      release.append(releaseStrong, document.createTextNode(band.releaseTitle));
-
-      card.append(header, origin, release);
-
-      if (isSafeHttpUrl(band.listenUrl)) {
-        const link = document.createElement('a');
-        link.className = 'indicated-band-link';
-        link.href = band.listenUrl;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        const icon = document.createElement('i');
-        icon.className = 'fa-solid fa-headphones';
-        icon.setAttribute('aria-hidden', 'true');
-        link.append(icon, document.createTextNode(' Ouvir Horda'));
-        card.append(link);
-      }
-
-      fragment.append(card);
+    document.querySelectorAll('.band-status-pill[data-pt][data-en]').forEach(pill => {
+      pill.textContent = isEn ? pill.dataset.en : pill.dataset.pt;
     });
 
-    grid.replaceChildren(fragment);
+    const alertTextEl = document.getElementById('band-check-alert-text');
+    if (alertTextEl && alertTextEl.dataset.pt && alertTextEl.dataset.en) {
+      alertTextEl.textContent = isEn ? alertTextEl.dataset.en : alertTextEl.dataset.pt;
+    }
+
+    document.querySelectorAll('#band-check-alert-links .band-check-edition-link[data-num]').forEach(link => {
+      const num = link.dataset.num;
+      link.textContent = isEn ? `View Issue #${num}` : `Ver Edição #${num}`;
+    });
+  }
+
+  function applyBandVerificationUI(result) {
+    lastBandCheckResult = result;
+    const alertBox = document.getElementById('band-check-alert');
+    const alertText = document.getElementById('band-check-alert-text');
+    const alertLinks = document.getElementById('band-check-alert-links');
+    const homonymBox = document.getElementById('band-homonym-box');
+    const homonymConfirm = document.getElementById('band-homonym-confirm');
+    const homonymNotes = document.getElementById('band-homonym-notes');
+
+    if (!alertBox || !alertText || !homonymBox) return;
+
+    if (!result || result.situacao === 'DISPONIVEL') {
+      alertBox.hidden = true;
+      alertBox.classList.remove('is-interviewed', 'is-indicated');
+      alertText.textContent = '';
+      delete alertText.dataset.pt;
+      delete alertText.dataset.en;
+      if (alertLinks) {
+        alertLinks.innerHTML = '';
+        alertLinks.hidden = true;
+      }
+      homonymBox.hidden = true;
+      if (homonymConfirm) homonymConfirm.required = false;
+      if (homonymNotes) homonymNotes.required = false;
+      return;
+    }
+
+    const isEn = STATE.lang === 'en';
+    alertBox.hidden = false;
+    alertBox.classList.toggle('is-interviewed', result.situacao === 'JA_ENTREVISTADA');
+    alertBox.classList.toggle('is-indicated', result.situacao !== 'JA_ENTREVISTADA');
+    alertText.dataset.pt = result.mensagemPt || '';
+    alertText.dataset.en = result.mensagemEn || '';
+    alertText.textContent = isEn ? (result.mensagemEn || result.mensagemPt || '') : (result.mensagemPt || '');
+
+    if (alertLinks) {
+      alertLinks.innerHTML = '';
+      if (Array.isArray(result.edicoes) && result.edicoes.length > 0) {
+        result.edicoes.forEach(ed => {
+          const a = document.createElement('a');
+          a.href = ed.url;
+          a.className = 'band-check-edition-link';
+          a.dataset.num = String(ed.numeroEdicao);
+          a.textContent = isEn ? `View Issue #${ed.numeroEdicao}` : `Ver Edição #${ed.numeroEdicao}`;
+          alertLinks.appendChild(a);
+        });
+        alertLinks.hidden = false;
+      } else {
+        alertLinks.hidden = true;
+      }
+    }
+
+    homonymBox.hidden = false;
+    if (homonymConfirm) homonymConfirm.required = true;
+    if (homonymNotes) homonymNotes.required = true;
   }
 
   function initIndiquePage() {
-    if (!document.body.classList.contains('page-indique')) return;
-
-    let indications = loadBandIndications();
-    renderIndicatedBands(indications);
-
     const form = document.getElementById('band-suggest-form');
+    if (!form) return;
+
+    syncIndiqueI18nDynamic();
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setTimeout(syncIndiqueI18nDynamic, 0);
+      });
+    });
+
     const feedbackEl = document.getElementById('band-submit-feedback');
     const nameInput = document.getElementById('band-name');
     const countryInput = document.getElementById('band-country');
+    const homonymBox = document.getElementById('band-homonym-box');
+    const homonymConfirm = document.getElementById('band-homonym-confirm');
+    const homonymNotes = document.getElementById('band-homonym-notes');
 
-    if (!form) return;
+    if (homonymBox && !homonymBox.hidden) {
+      if (homonymConfirm) homonymConfirm.required = true;
+      if (homonymNotes) homonymNotes.required = true;
+    }
 
     setupAccessibleFormValidation(form);
 
-    const clearDuplicateFeedback = () => {
+    let checkTimer = null;
+    let checkAbortController = null;
+
+    const triggerVerification = () => {
+      const nome = nameInput ? nameInput.value.trim() : '';
+      const pais = countryInput ? countryInput.value.trim() : '';
+
       if (feedbackEl && feedbackEl.classList.contains('is-error')) {
         feedbackEl.hidden = true;
         feedbackEl.classList.remove('is-error');
         feedbackEl.textContent = '';
       }
+
+      if (nome.length < 2 || pais.length < 2) {
+        applyBandVerificationUI(null);
+        return;
+      }
+
+      clearTimeout(checkTimer);
+      checkTimer = setTimeout(async () => {
+        if (checkAbortController) checkAbortController.abort();
+        checkAbortController = new AbortController();
+        try {
+          const url = `/api/indicacoes/verificar?nome=${encodeURIComponent(nome)}&pais=${encodeURIComponent(pais)}`;
+          const resp = await fetch(url, { signal: checkAbortController.signal });
+          if (!resp.ok) return;
+          const data = await resp.json();
+          applyBandVerificationUI(data);
+        } catch (err) {
+          if (err && err.name !== 'AbortError') {
+            // Ignora falha transitória de rede na checagem auxiliar
+          }
+        }
+      }, 350);
     };
 
-    if (nameInput) nameInput.addEventListener('input', clearDuplicateFeedback);
-    if (countryInput) countryInput.addEventListener('input', clearDuplicateFeedback);
+    if (nameInput) nameInput.addEventListener('input', triggerVerification);
+    if (countryInput) {
+      countryInput.addEventListener('input', triggerVerification);
+      countryInput.addEventListener('change', triggerVerification);
+    }
 
     form.addEventListener('submit', (e) => {
-      e.preventDefault();
+      const hasConflict = lastBandCheckResult && lastBandCheckResult.situacao !== 'DISPONIVEL';
+      if (hasConflict || (homonymBox && !homonymBox.hidden)) {
+        if (homonymConfirm) homonymConfirm.required = true;
+        if (homonymNotes) homonymNotes.required = true;
+      }
 
       if (!form.checkValidity()) {
+        e.preventDefault();
         const firstInvalid = form.querySelector(':invalid');
         if (firstInvalid) firstInvalid.focus();
-        return;
       }
-
-      const formData = new FormData(form);
-      const bandName = String(formData.get('band_name') || '').trim();
-      const country = String(formData.get('country') || '').trim();
-      const region = String(formData.get('region') || '').trim();
-      const releaseTitle = String(formData.get('release_title') || '').trim();
-      const listenUrl = String(formData.get('listen_url') || '').trim();
-
-      indications = loadBandIndications();
-
-      if (isDuplicateBandIndication(indications, bandName, country)) {
-        if (feedbackEl) {
-          feedbackEl.hidden = false;
-          feedbackEl.classList.add('is-error');
-          feedbackEl.setAttribute('role', 'alert');
-          feedbackEl.textContent = `❌ Essa banda já foi indicada! Já existe um registro para "${bandName}" (${country}) no Armamento Bélico Zine.`;
-          feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        if (nameInput) {
-          nameInput.focus();
-        }
-        return;
-      }
-
-      const newIndication = {
-        name: bandName,
-        country,
-        region,
-        releaseTitle,
-        listenUrl
-      };
-
-      indications.unshift(newIndication);
-      saveBandIndications(indications);
-      renderIndicatedBands(indications);
-
-      if (feedbackEl) {
-        feedbackEl.hidden = false;
-        feedbackEl.classList.remove('is-error');
-        feedbackEl.setAttribute('role', 'status');
-        feedbackEl.textContent = `☠ Indicação recebida! A horda "${bandName}" (${country}) foi registrada com sucesso para avaliação de entrevista.`;
-        feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-
-      form.reset();
     });
   }
 

@@ -15,7 +15,7 @@
                 Conhece alguma banda de Metal Extremo com material físico lançado que merece ser entrevistada no
                 Armamento Bélico Zine? Envie sua indicação abaixo.
             </p>
-            <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+            <img th:src="@{/assets/divisor-edicoes.png}" alt="" class="editions-divider" aria-hidden="true">
         </div>
 
         <!-- CRITÉRIOS PARA INDICAÇÃO -->
@@ -27,16 +27,19 @@
             </div>
             <ul class="events-rules-list">
                 <li>
-                    <strong>Material Físico Lançado:</strong> Priorizamos hordas que possuam ao menos um registro físico
-                    (CD, K7, Vinil ou Split/Demo em mídia física).
+                    <strong data-i18n="suggest_rule_1_title">Material Físico Lançado:</strong>
+                    <span data-i18n="suggest_rule_1_text">Priorizamos hordas que possuam ao menos um registro físico
+                        (CD, K7, Vinil ou Split/Demo em mídia física).</span>
                 </li>
                 <li>
-                    <strong>Sonoridade Extrema:</strong> Death Metal, Black Metal, Grindcore, Doom, Thrash/Crossover e
-                    vertentes underground sem vínculo comercial ou letras cristãs.
+                    <strong data-i18n="suggest_rule_2_title">Sonoridade Extrema:</strong>
+                    <span data-i18n="suggest_rule_2_text">Death Metal, Black Metal, Grindcore, Doom, Thrash/Crossover e
+                        vertentes underground sem vínculo comercial ou letras cristãs.</span>
                 </li>
                 <li>
-                    <strong>Sem Duplicidade:</strong> O sistema verifica automaticamente se a banda já foi indicada
-                    anteriormente com o mesmo nome e país.
+                    <strong data-i18n="suggest_rule_3_title">Sem Duplicidade:</strong>
+                    <span data-i18n="suggest_rule_3_text">O sistema verifica automaticamente se a banda já foi
+                        entrevistada em alguma edição publicada ou já consta no radar de indicações.</span>
                 </li>
             </ul>
         </section>
@@ -53,24 +56,38 @@
             </div>
 
             <div class="event-form-container">
+                <div th:if="${indicacaoSucesso}" class="event-submit-feedback" role="status" aria-live="polite"
+                    th:text="${indicacaoSucesso}"></div>
+
+                <div th:if="${indicacaoErro}" class="event-submit-feedback event-submit-feedback--error is-error"
+                    role="alert" aria-live="assertive" th:text="${indicacaoErro}"></div>
+
                 <div id="band-submit-feedback" class="event-submit-feedback" role="status" aria-live="polite" hidden>
                 </div>
 
-                <form id="band-suggest-form" action="#indicar-banda" method="POST" novalidate
-                    aria-labelledby="band-form-heading">
+                <form id="band-suggest-form" th:action="@{/indique}" th:object="${indicacaoForm}" method="POST"
+                    novalidate aria-labelledby="band-form-heading">
+
+                    <!-- Honeypot anti-bot -->
+                    <div style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;"
+                        aria-hidden="true">
+                        <label for="band-website">Website</label>
+                        <input type="text" id="band-website" th:field="*{website}" tabindex="-1" autocomplete="off">
+                    </div>
+
                     <!-- Nome da Banda -->
                     <div class="field form-group">
                         <label for="band-name"><span data-i18n="suggest_field_name">Nome da Banda</span> <span
                                 class="req-mark" aria-hidden="true">*</span></label>
-                        <span id="band-name-hint" class="hint">Informe o nome oficial da horda (mínimo 2
-                            caracteres).</span>
-                        <input type="text" id="band-name" name="band_name" class="form-control" required minlength="2"
-                            maxlength="120" autocorrect="off" autocapitalize="none" spellcheck="false"
+                        <span id="band-name-hint" class="hint" data-i18n="suggest_hint_name">Informe o nome oficial da
+                            horda (mínimo 2 caracteres).</span>
+                        <input type="text" id="band-name" th:field="*{bandName}" class="form-control" required
+                            minlength="2" maxlength="120" autocorrect="off" autocapitalize="none" spellcheck="false"
                             enterkeyhint="next" aria-describedby="band-name-hint" data-error="band-name-error"
                             placeholder="Ex: Diabolizer">
                         <div id="band-name-error" class="error-msg">
-                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o nome da banda (mínimo
-                            2 caracteres).
+                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                            <span data-i18n="suggest_err_name">Informe o nome da banda (mínimo 2 caracteres).</span>
                         </div>
                     </div>
 
@@ -79,9 +96,9 @@
                         <div class="field form-group">
                             <label for="band-country"><span data-i18n="suggest_field_country">País</span> <span
                                     class="req-mark" aria-hidden="true">*</span></label>
-                            <span id="band-country-hint" class="hint">País de origem da banda (usado na verificação de
-                                duplicidade).</span>
-                            <input type="text" id="band-country" name="country" list="band-countries-list"
+                            <span id="band-country-hint" class="hint" data-i18n="suggest_hint_country">País de origem da
+                                banda (usado na verificação de duplicidade).</span>
+                            <input type="text" id="band-country" th:field="*{country}" list="band-countries-list"
                                 class="form-control" required minlength="2" maxlength="80" autocomplete="country-name"
                                 enterkeyhint="next" aria-describedby="band-country-hint" data-error="band-country-error"
                                 placeholder="Ex: Brasil">
@@ -108,18 +125,68 @@
                                 <option value="Turquia"></option>
                             </datalist>
                             <div id="band-country-error" class="error-msg">
-                                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o país de origem da
-                                banda.
+                                <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                                <span data-i18n="suggest_err_country">Informe o país de origem da banda.</span>
                             </div>
                         </div>
 
                         <div class="field form-group">
                             <label for="band-region"><span data-i18n="suggest_field_region">Estado / Região
                                     (opcional)</span></label>
-                            <span id="band-region-hint" class="hint">UF, estado ou província, se aplicável.</span>
-                            <input type="text" id="band-region" name="region" class="form-control" maxlength="80"
-                                autocomplete="address-level1" enterkeyhint="next" aria-describedby="band-region-hint"
-                                placeholder="Ex: SP, Minas Gerais, Baviera">
+                            <span id="band-region-hint" class="hint" data-i18n="suggest_hint_region">UF, estado ou
+                                província, se aplicável.</span>
+                            <input type="text" id="band-region" th:field="*{region}" class="form-control"
+                                maxlength="80" autocomplete="address-level1" enterkeyhint="next"
+                                aria-describedby="band-region-hint" placeholder="Ex: SP, Minas Gerais, Baviera">
+                        </div>
+                    </div>
+
+                    <!-- ALERTA DE VERIFICAÇÃO EM TEMPO REAL / CONFLITO -->
+                    <div id="band-check-alert" class="band-check-alert"
+                        th:classappend="${verificacaoConflito != null and verificacaoConflito.situacao == 'JA_ENTREVISTADA'} ? ' is-interviewed' : (${verificacaoConflito != null} ? ' is-indicated' : '')"
+                        th:hidden="${verificacaoConflito == null}" role="status" aria-live="polite">
+                        <div class="band-check-alert-body">
+                            <p id="band-check-alert-text"
+                                th:text="${verificacaoConflito != null ? verificacaoConflito.mensagemPt : ''}"
+                                th:attr="data-pt=${verificacaoConflito != null ? verificacaoConflito.mensagemPt : ''},data-en=${verificacaoConflito != null ? verificacaoConflito.mensagemEn : ''}">
+                            </p>
+                            <div id="band-check-alert-links" class="band-check-alert-links"
+                                th:if="${verificacaoConflito != null and !#lists.isEmpty(verificacaoConflito.edicoes)}">
+                                <a th:each="ed : ${verificacaoConflito.edicoes}" th:href="@{${ed.url}}"
+                                    class="band-check-edition-link"
+                                    th:text="${'Ver ' + ed.titulo}"
+                                    th:attr="data-num=${ed.numeroEdicao}">Ver Edição #58</a>
+                            </div>
+                            <div id="band-check-alert-links" class="band-check-alert-links"
+                                th:if="${verificacaoConflito == null or #lists.isEmpty(verificacaoConflito.edicoes)}"
+                                hidden></div>
+                        </div>
+                    </div>
+
+                    <!-- BLOCO CONDICIONAL DE ESCLARECIMENTO DE HOMÔNIMO -->
+                    <div id="band-homonym-box" class="band-homonym-box"
+                        th:hidden="${verificacaoConflito == null}">
+                        <div class="checkbox-field">
+                            <div class="checkbox-inline">
+                                <input type="checkbox" id="band-homonym-confirm" th:field="*{confirmarHomonimo}">
+                                <label for="band-homonym-confirm" data-i18n="suggest_homonym_confirm">
+                                    Confirmo que se trata de outra banda diferente com o mesmo nome neste mesmo país.
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="field form-group" style="margin-top: 14px; margin-bottom: 0;">
+                            <label for="band-homonym-notes" data-i18n="suggest_homonym_label">
+                                Esclarecimento de Homônimo (obrigatório quando houver conflito)
+                            </label>
+                            <span id="band-homonym-hint" class="hint" data-i18n="suggest_homonym_hint">
+                                Informe cidade/estado, ano de formação, subgênero ou link do Metal Archives/Bandcamp que
+                                diferencie as bandas (15 a 500 caracteres).
+                            </span>
+                            <textarea id="band-homonym-notes" th:field="*{esclarecimentoHomonimo}"
+                                class="form-control" rows="3" minlength="15" maxlength="500"
+                                aria-describedby="band-homonym-hint"
+                                placeholder="Ex.: Horda de Black Metal formada em Belo Horizonte/MG em 2022, diferente da banda de São Paulo..."></textarea>
                         </div>
                     </div>
 
@@ -127,14 +194,15 @@
                     <div class="field form-group">
                         <label for="band-release"><span data-i18n="suggest_field_release">Título do Material Físico
                                 Lançado</span> <span class="req-mark" aria-hidden="true">*</span></label>
-                        <span id="band-release-hint" class="hint">Nome do álbum, EP, demo ou split lançado em formato
-                            físico (CD, K7, Vinil).</span>
-                        <input type="text" id="band-release" name="release_title" class="form-control" required
+                        <span id="band-release-hint" class="hint" data-i18n="suggest_hint_release">Nome do álbum, EP,
+                            demo ou split lançado em formato físico (CD, K7, Vinil).</span>
+                        <input type="text" id="band-release" th:field="*{releaseTitle}" class="form-control" required
                             minlength="2" maxlength="140" enterkeyhint="next" aria-describedby="band-release-hint"
                             data-error="band-release-error" placeholder="Ex: Khalkedonian Death (CD / K7)">
                         <div id="band-release-error" class="error-msg">
-                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o título do material
-                            físico lançado pela banda.
+                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                            <span data-i18n="suggest_err_release">Informe o título do material físico lançado pela
+                                banda.</span>
                         </div>
                     </div>
 
@@ -142,15 +210,16 @@
                     <div class="field form-group">
                         <label for="band-url"><span data-i18n="suggest_field_url">Link para Ouvir a Banda na
                                 Internet</span> <span class="req-mark" aria-hidden="true">*</span></label>
-                        <span id="band-url-hint" class="hint">Informe a URL completa (iniciando com https:// ou http://)
-                            — Bandcamp, YouTube, Spotify, etc.</span>
-                        <input type="url" id="band-url" name="listen_url" class="form-control" required inputmode="url"
-                            autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="done"
-                            aria-describedby="band-url-hint" data-error="band-url-error"
+                        <span id="band-url-hint" class="hint" data-i18n="suggest_hint_url">Informe a URL completa
+                            (iniciando com https:// ou http://) — Bandcamp, YouTube, Spotify, etc.</span>
+                        <input type="url" id="band-url" th:field="*{listenUrl}" class="form-control" required
+                            inputmode="url" autocorrect="off" autocapitalize="none" spellcheck="false"
+                            enterkeyhint="done" aria-describedby="band-url-hint" data-error="band-url-error"
                             placeholder="https://banda.bandcamp.com">
                         <div id="band-url-error" class="error-msg">
-                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe uma URL válida iniciando
-                            com https:// ou http://.
+                            <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+                            <span data-i18n="suggest_err_url">Informe uma URL válida iniciando com https:// ou
+                                http://.</span>
                         </div>
                     </div>
 
@@ -170,10 +239,39 @@
                 <span class="tape-tag dark" data-i18n="suggest_list_tag">REGISTRO DE INDICAÇÕES</span>
                 <h2 id="indicated-bands-heading" class="pirata-title" data-i18n="suggest_list_title">Hordas Já Indicadas
                 </h2>
-                <p class="sub-title" id="indicated-bands-count" aria-live="polite"></p>
+                <p class="sub-title" id="indicated-bands-count" aria-live="polite"
+                    th:attr="data-count=${totalIndicacoesPublicas}">
+                    <span th:text="${totalIndicacoesPublicas == 1 ? '1 horda aprovada no radar do zine.' : totalIndicacoesPublicas + ' hordas aprovadas no radar do zine.'}">
+                        0 hordas aprovadas no radar do zine.
+                    </span>
+                </p>
             </div>
-            <div class="indicated-bands-grid" id="indicated-bands-grid">
-                <!-- Preenchido dinamicamente via script.js -->
+
+            <div th:if="${#lists.isEmpty(indicacoesPublicas)}" class="indicated-bands-empty">
+                <p data-i18n="suggest_empty_list">Nenhuma horda aprovada no radar público no momento. Envie sua indicação
+                    acima para análise da curadoria.</p>
+            </div>
+
+            <div class="indicated-bands-grid" id="indicated-bands-grid" th:if="${!#lists.isEmpty(indicacoesPublicas)}">
+                <article class="indicated-band-card" th:each="band : ${indicacoesPublicas}">
+                    <div class="indicated-band-header">
+                        <h3 class="indicated-band-name pirata-title" th:text="${band.nomeBanda}">Nome da Banda</h3>
+                        <span class="band-status-pill"
+                            th:classappend="${' ' + band.statusCssClass}"
+                            th:text="${band.statusLabelPt}"
+                            th:attr="data-pt=${band.statusLabelPt},data-en=${band.statusLabelEn}">No Radar</span>
+                    </div>
+                    <p class="indicated-band-origin" th:text="${band.localidadeFormatada()}">País • Região</p>
+                    <p class="indicated-band-release">
+                        <strong data-i18n="suggest_card_release">Material físico:</strong>
+                        <span th:text="${band.tituloMaterialFisico}">Título</span>
+                    </p>
+                    <a class="indicated-band-link" th:href="${band.linkAudicao}" target="_blank"
+                        rel="noopener noreferrer">
+                        <i class="fa-solid fa-headphones" aria-hidden="true"></i>
+                        <span data-i18n="suggest_listen_btn">Ouvir Horda</span>
+                    </a>
+                </article>
             </div>
         </section>
     </main>

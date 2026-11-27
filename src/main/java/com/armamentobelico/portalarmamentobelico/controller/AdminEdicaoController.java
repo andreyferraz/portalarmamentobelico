@@ -20,15 +20,18 @@ import com.armamentobelico.portalarmamentobelico.model.Edicao;
 import com.armamentobelico.portalarmamentobelico.model.IdiomaEdicao;
 import com.armamentobelico.portalarmamentobelico.model.StatusEstoque;
 import com.armamentobelico.portalarmamentobelico.service.EdicaoService;
+import com.armamentobelico.portalarmamentobelico.service.IndicacaoBandaService;
 
 @Controller
 @RequestMapping("/admin/edicoes")
 public class AdminEdicaoController {
 
     private final EdicaoService edicaoService;
+    private final IndicacaoBandaService indicacaoBandaService;
 
-    public AdminEdicaoController(EdicaoService edicaoService) {
+    public AdminEdicaoController(EdicaoService edicaoService, IndicacaoBandaService indicacaoBandaService) {
         this.edicaoService = edicaoService;
+        this.indicacaoBandaService = indicacaoBandaService;
     }
 
     @GetMapping({ "", "/" })
@@ -154,6 +157,7 @@ public class AdminEdicaoController {
         model.addAttribute("statusOptions", StatusEstoque.values());
         model.addAttribute("maxFotosExtras", EdicaoService.MAX_FOTOS_EXTRAS);
         model.addAttribute("totalEdicoes", resumo.total());
+        model.addAttribute("indicacoesElegiveis", indicacaoBandaService.listarElegiveisParaEdicao());
     }
 
     private void garantirLinhasIniciais(EdicaoFormDTO form) {

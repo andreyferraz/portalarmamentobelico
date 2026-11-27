@@ -332,11 +332,14 @@
     // Reindexar Entrevistas
     const interviewsList = document.getElementById("interviews-list");
     const addInterviewBtn = document.getElementById("add-interview-btn");
+    const indicacaoOptionsTemplate = document.getElementById("interview-indicacao-options-template");
 
     function reindexInterviews() {
       if (!interviewsList) return;
       const rows = interviewsList.querySelectorAll("[data-interview-row]");
       rows.forEach((row, idx) => {
+        const select = row.querySelector("[data-interview-indicacao-select]");
+        if (select) select.name = `entrevistas[${idx}].indicacaoBandaId`;
         const inputs = row.querySelectorAll("input");
         if (inputs[0]) inputs[0].name = `entrevistas[${idx}].banda`;
         if (inputs[1]) inputs[1].name = `entrevistas[${idx}].pais`;
@@ -344,13 +347,31 @@
       });
     }
 
+    if (interviewsList) {
+      interviewsList.addEventListener("change", (event) => {
+        const select = event.target.closest("[data-interview-indicacao-select]");
+        if (!select) return;
+        const opt = select.options[select.selectedIndex];
+        if (!opt || !opt.value) return;
+        const row = select.closest("[data-interview-row]");
+        if (!row) return;
+        const inputs = row.querySelectorAll("input");
+        if (inputs[0] && opt.dataset.banda) inputs[0].value = opt.dataset.banda;
+        if (inputs[1] && opt.dataset.pais) inputs[1].value = opt.dataset.pais;
+      });
+    }
+
     if (addInterviewBtn && interviewsList) {
       addInterviewBtn.addEventListener("click", () => {
         const idx = interviewsList.querySelectorAll("[data-interview-row]").length;
         const row = document.createElement("div");
-        row.className = "repeater-row repeater-row-3";
+        row.className = "repeater-row repeater-row-4";
         row.setAttribute("data-interview-row", "");
+        const optionsHtml = indicacaoOptionsTemplate
+          ? indicacaoOptionsTemplate.innerHTML
+          : '<option value="">— Indicação do radar (opcional) —</option>';
         row.innerHTML = `
+          <select name="entrevistas[${idx}].indicacaoBandaId" class="admin-select" data-interview-indicacao-select aria-label="Vincular indicação do radar">${optionsHtml}</select>
           <input type="text" name="entrevistas[${idx}].banda" class="admin-input" placeholder="Banda (ex.: Diabolizer)">
           <input type="text" name="entrevistas[${idx}].pais" class="admin-input" placeholder="País (ex.: Turquia)">
           <input type="text" name="entrevistas[${idx}].estilo" class="admin-input" placeholder="Estilo (ex.: Death Metal)">
@@ -674,9 +695,10 @@
       const btn = event.target.closest("[data-open-recusar-dialog]");
       if (!btn) return;
       recusarForm.action = btn.dataset.recusarAction || recusarForm.action;
-      const titulo = btn.dataset.recusarTitulo || "este evento";
+      const titulo = btn.dataset.recusarTitulo || "este item";
       if (recusarMessage) {
-        recusarMessage.textContent = `Recusar "${titulo}"? O evento permanecerá no histórico administrativo e não aparecerá na agenda pública.`;
+        recusarMessage.textContent = btn.dataset.recusarMensagem
+          || `Recusar "${titulo}"? O evento permanecerá no histórico administrativo e não aparecerá na agenda pública.`;
       }
       if (recusarMotivoInput) recusarMotivoInput.value = "";
       recusarDialog.showModal();

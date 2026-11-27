@@ -133,3 +133,41 @@ CREATE INDEX IF NOT EXISTS idx_evento_status_data
 
 CREATE INDEX IF NOT EXISTS idx_evento_estado_status_data
 	ON evento (estado, status_moderacao, data_evento);
+
+CREATE TABLE IF NOT EXISTS indicacao_banda (
+	id TEXT PRIMARY KEY,
+	nome_banda TEXT NOT NULL,
+	nome_banda_normalizado TEXT NOT NULL,
+	pais TEXT NOT NULL,
+	pais_normalizado TEXT NOT NULL,
+	regiao TEXT,
+	titulo_material_fisico TEXT NOT NULL,
+	link_audicao TEXT NOT NULL,
+	status TEXT NOT NULL DEFAULT 'PENDENTE' CHECK (
+		status IN (
+			'PENDENTE',
+			'RECUSADA',
+			'APROVADA',
+			'EM_ENTREVISTA',
+			'ENTREVISTA_CONCLUIDA',
+			'PUBLICADA'
+		)
+	),
+	homonimo INTEGER NOT NULL DEFAULT 0 CHECK (homonimo IN (0, 1)),
+	esclarecimento_homonimo TEXT,
+	edicao_homonimo_referencia TEXT,
+	motivo_recusa TEXT,
+	edicao_publicada_id TEXT,
+	numero_edicao_publicada INTEGER,
+	moderado_em TEXT,
+	publicada_em TEXT,
+	criado_em TEXT NOT NULL,
+	atualizado_em TEXT NOT NULL,
+	FOREIGN KEY (edicao_publicada_id) REFERENCES edicao(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_indicacao_banda_chave_status
+	ON indicacao_banda (nome_banda_normalizado, pais_normalizado, status);
+
+CREATE INDEX IF NOT EXISTS idx_indicacao_banda_status_criado
+	ON indicacao_banda (status, criado_em DESC);
