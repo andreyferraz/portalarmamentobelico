@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 "/edicoes/**",
                                 "/noticias",
                                 "/noticias/**",
+                                "/eventos",
                                 "/vendor/**",
                                 "/favicon.ico",
                                 "/webjars/**")

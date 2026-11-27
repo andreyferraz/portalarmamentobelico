@@ -3330,6 +3330,13 @@ h1, h2, h3, h4, .gothic-title {
   line-height: 1.5;
 }
 
+.event-submit-feedback--error {
+  background: #230f11;
+  border-color: #9e1b24;
+  border-left-color: #e63946;
+  color: #ffd8db;
+}
+
 /* Modal/Dialog de Flyer */
 .flyer-dialog {
   margin: auto;

@@ -659,4 +659,82 @@
       reindexTags();
     }
   }
+
+  /* ------------------------------------------------------------------------
+     Módulo de Eventos: Dialog de Recusa, Lightbox de Flyer e Form Admin
+     ------------------------------------------------------------------------ */
+  const recusarDialog = document.getElementById("admin-recusar-dialog");
+  const recusarForm = document.getElementById("admin-recusar-form");
+  const recusarMessage = document.getElementById("admin-recusar-message");
+  const recusarMotivoInput = document.getElementById("admin-recusar-motivo");
+  const recusarCancelBtn = document.getElementById("admin-recusar-cancel");
+
+  if (recusarDialog && recusarForm) {
+    document.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-open-recusar-dialog]");
+      if (!btn) return;
+      recusarForm.action = btn.dataset.recusarAction || recusarForm.action;
+      const titulo = btn.dataset.recusarTitulo || "este evento";
+      if (recusarMessage) {
+        recusarMessage.textContent = `Recusar "${titulo}"? O evento permanecerá no histórico administrativo e não aparecerá na agenda pública.`;
+      }
+      if (recusarMotivoInput) recusarMotivoInput.value = "";
+      recusarDialog.showModal();
+    });
+
+    if (recusarCancelBtn) {
+      recusarCancelBtn.addEventListener("click", () => recusarDialog.close());
+    }
+  }
+
+  const adminFlyerDialog = document.getElementById("admin-flyer-dialog");
+  const adminFlyerImg = document.getElementById("admin-flyer-img");
+  const adminFlyerTitle = document.getElementById("admin-flyer-title");
+  const adminFlyerClose = document.getElementById("admin-flyer-close");
+
+  if (adminFlyerDialog && adminFlyerImg) {
+    document.addEventListener("click", (event) => {
+      const btn = event.target.closest("[data-admin-flyer-src]");
+      if (!btn) return;
+      adminFlyerImg.src = btn.dataset.adminFlyerSrc || "";
+      adminFlyerImg.alt = `Flyer ampliado: ${btn.dataset.adminFlyerTitle || ""}`;
+      if (adminFlyerTitle) {
+        adminFlyerTitle.textContent = btn.dataset.adminFlyerTitle || "Flyer do Evento";
+      }
+      adminFlyerDialog.showModal();
+    });
+
+    if (adminFlyerClose) {
+      adminFlyerClose.addEventListener("click", () => adminFlyerDialog.close());
+    }
+    adminFlyerDialog.addEventListener("click", (event) => {
+      if (event.target === adminFlyerDialog) adminFlyerDialog.close();
+    });
+  }
+
+  const eventoAdminForm = document.querySelector("[data-evento-form]");
+  if (eventoAdminForm) {
+    const flyerInput = document.getElementById("ev-admin-flyer");
+    const flyerPreview = document.getElementById("evento-flyer-preview");
+    const flyerPlaceholder = document.getElementById("evento-flyer-placeholder");
+    if (flyerInput && flyerPreview) {
+      flyerInput.addEventListener("change", () => {
+        const file = flyerInput.files && flyerInput.files[0];
+        if (!file) return;
+        flyerPreview.src = URL.createObjectURL(file);
+        flyerPreview.hidden = false;
+        if (flyerPlaceholder) flyerPlaceholder.hidden = true;
+      });
+    }
+
+    const statusSelect = document.getElementById("ev-admin-status");
+    const motivoWrap = document.getElementById("ev-admin-motivo-wrap");
+    if (statusSelect && motivoWrap) {
+      const syncMotivoVisibility = () => {
+        motivoWrap.hidden = statusSelect.value !== "RECUSADO";
+      };
+      statusSelect.addEventListener("change", syncMotivoVisibility);
+      syncMotivoVisibility();
+    }
+  }
 })();

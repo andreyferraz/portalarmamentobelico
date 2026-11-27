@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="pt-BR"
     th:replace="~{layout :: layout('Eventos | Armamento Bélico Zine', ~{::content})}">
-<header>
-    <title th:text="${title}"></title>
-</header>
 
 <div th:fragment="content">
 
@@ -16,7 +13,7 @@
                 Shows, festivais e rituais do underground nacional. Eventos futuros aparecem primeiro e passam a "Já
                 aconteceu" automaticamente no dia seguinte.
             </p>
-            <img src="assets/images/divisor-edicoes.png" alt="" class="editions-divider" aria-hidden="true">
+            <img th:src="@{/assets/divisor-edicoes.png}" alt="" class="editions-divider" aria-hidden="true">
         </div>
 
         <!-- DIRETRIZES & REGRAS DE PUBLICAÇÃO -->
@@ -50,65 +47,83 @@
         <!-- BARRA DE FILTRO POR ESTADO E BOTÃO DE CADASTRO -->
         <section class="events-toolbar" aria-label="Filtros de eventos">
             <search class="events-search-wrap">
-                <form id="events-filter-form" class="events-filter-form" action="eventos.html" method="GET">
+                <form id="events-filter-form" class="events-filter-form" th:action="@{/eventos}" method="GET">
                     <div class="events-filter-group">
                         <label for="event-state-filter" data-i18n="events_filter_state_label">Filtrar por Estado
                             (UF):</label>
                         <select id="event-state-filter" name="estado" class="form-control events-select">
-                            <option value="all" data-i18n="events_filter_all_states">Todos os Estados</option>
-                            <option value="AC">AC - Acre</option>
-                            <option value="AL">AL - Alagoas</option>
-                            <option value="AP">AP - Amapá</option>
-                            <option value="AM">AM - Amazonas</option>
-                            <option value="BA">BA - Bahia</option>
-                            <option value="CE">CE - Ceará</option>
-                            <option value="DF">DF - Distrito Federal</option>
-                            <option value="ES">ES - Espírito Santo</option>
-                            <option value="GO">GO - Goiás</option>
-                            <option value="MA">MA - Maranhão</option>
-                            <option value="MT">MT - Mato Grosso</option>
-                            <option value="MS">MS - Mato Grosso do Sul</option>
-                            <option value="MG">MG - Minas Gerais</option>
-                            <option value="PA">PA - Pará</option>
-                            <option value="PB">PB - Paraíba</option>
-                            <option value="PR">PR - Paraná</option>
-                            <option value="PE">PE - Pernambuco</option>
-                            <option value="PI">PI - Piauí</option>
-                            <option value="RJ">RJ - Rio de Janeiro</option>
-                            <option value="RN">RN - Rio Grande do Norte</option>
-                            <option value="RS">RS - Rio Grande do Sul</option>
-                            <option value="RO">RO - Rondônia</option>
-                            <option value="RR">RR - Roraima</option>
-                            <option value="SC">SC - Santa Catarina</option>
-                            <option value="SP">SP - São Paulo</option>
-                            <option value="SE">SE - Sergipe</option>
-                            <option value="TO">TO - Tocantins</option>
+                            <option value="all" th:selected="${estadoSelecionado == 'all'}" data-i18n="events_filter_all_states">Todos os Estados</option>
+                            <option th:each="uf : ${estados}"
+                                th:value="${uf.name()}"
+                                th:text="${uf.rotulo}"
+                                th:selected="${estadoSelecionado == uf.name()}">SP - São Paulo</option>
                         </select>
                     </div>
 
                     <div class="events-filter-group">
                         <label for="event-status-filter" data-i18n="events_filter_status_label">Status:</label>
                         <select id="event-status-filter" name="status" class="form-control events-select">
-                            <option value="all">Todos (Futuros primeiro)</option>
-                            <option value="upcoming">Vai acontecer</option>
-                            <option value="past">Já aconteceu</option>
+                            <option value="all" th:selected="${statusSelecionado == 'all'}">Todos (Futuros primeiro)</option>
+                            <option value="upcoming" th:selected="${statusSelecionado == 'upcoming'}">Vai acontecer</option>
+                            <option value="past" th:selected="${statusSelecionado == 'past'}">Já aconteceu</option>
                         </select>
                     </div>
                 </form>
             </search>
 
             <div class="events-toolbar-actions">
-                <span class="events-count-indicator" id="events-count-indicator" aria-live="polite"></span>
+                <span class="events-count-indicator" id="events-count-indicator" aria-live="polite"
+                    th:text="${totalEventos == 1 ? '1 evento encontrado' : totalEventos + ' eventos encontrados'}">
+                    0 eventos encontrados
+                </span>
                 <a href="#cadastrar-evento" class="btn-brutal btn-blood">
                     ☠ <span data-i18n="events_cta_submit">Cadastrar Evento</span>
                 </a>
             </div>
         </section>
 
-        <!-- LISTAGEM DE EVENTOS (FUTUROS PRIMEIRO, DEPOIS PASSADOS) -->
+        <!-- LISTAGEM DE EVENTOS APROVADOS (FUTUROS PRIMEIRO, DEPOIS PASSADOS) -->
         <section class="events-list-section" aria-label="Lista de eventos">
             <div class="events-grid" id="events-grid">
-                <!-- Preenchido dinamicamente via script.js -->
+                <div class="events-empty-state" th:if="${#lists.isEmpty(eventos)}">
+                    <p>Nenhum evento aprovado encontrado para os filtros selecionados.</p>
+                </div>
+
+                <article class="event-card"
+                    th:each="ev : ${eventos}"
+                    th:classappend="${ev.passado} ? ' is-past' : ''">
+                    <div class="event-flyer-wrap">
+                        <span class="event-status-badge"
+                            th:classappend="${ev.passado} ? ' past' : ' upcoming'"
+                            th:text="${ev.passado ? 'Já aconteceu' : 'Vai acontecer'}">Vai acontecer</span>
+                        <button type="button" class="event-flyer-btn"
+                            th:attr="data-flyer-src=${ev.flyerUrl},data-flyer-title=${ev.titulo},aria-label=${'Ampliar flyer de ' + ev.titulo}">
+                            <img th:src="${ev.flyerUrl}" th:alt="${'Flyer do evento ' + ev.titulo}"
+                                class="xerox-img" loading="lazy">
+                        </button>
+                    </div>
+                    <div class="event-card-body">
+                        <h3 class="pirata-title event-card-title" th:text="${ev.titulo}">Título do Evento</h3>
+                        <ul class="event-meta-list">
+                            <li>
+                                <span class="event-meta-label">Local:</span>
+                                <span><span th:text="${ev.cidade}">Cidade</span> / <strong th:text="${ev.estado}">UF</strong></span>
+                            </li>
+                            <li>
+                                <span class="event-meta-label">Data:</span>
+                                <span th:text="${ev.dataFormatada}">12/12/2026</span>
+                            </li>
+                            <li>
+                                <span class="event-meta-label">Horário:</span>
+                                <span th:text="${ev.horario}">20:00</span>
+                            </li>
+                            <li>
+                                <span class="event-meta-label">Organizador:</span>
+                                <span th:text="${ev.contatoOrganizador}">Contato</span>
+                            </li>
+                        </ul>
+                    </div>
+                </article>
             </div>
         </section>
 
@@ -125,17 +140,30 @@
             </div>
 
             <div class="event-form-container">
-                <div id="event-submit-feedback" class="event-submit-feedback" role="status" aria-live="polite" hidden>
+                <div id="event-submit-feedback" class="event-submit-feedback" role="status" aria-live="polite"
+                    th:if="${eventoSucesso != null}" th:text="${eventoSucesso}">
                 </div>
 
-                <form id="event-submit-form" action="#cadastrar-evento" method="POST" novalidate
-                    aria-labelledby="event-form-heading">
+                <div id="event-submit-error" class="event-submit-feedback event-submit-feedback--error" role="alert"
+                    th:if="${eventoErro != null}" th:text="${eventoErro}">
+                </div>
+
+                <form id="event-submit-form" th:action="@{/eventos}" method="POST" enctype="multipart/form-data"
+                    novalidate aria-labelledby="event-form-heading">
+
+                    <!-- Honeypot anti-bot -->
+                    <div class="visually-hidden" aria-hidden="true">
+                        <label for="ev-website">Website</label>
+                        <input type="text" id="ev-website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
+
                     <!-- Título do Evento -->
                     <div class="field form-group">
                         <label for="ev-title">Título do Evento <span class="req-mark"
                                 aria-hidden="true">*</span></label>
                         <input type="text" id="ev-title" name="title" class="form-control" required minlength="3"
-                            maxlength="120" aria-describedby="ev-title-hint" data-error="ev-title-error"
+                            maxlength="120" th:value="${eventoForm != null ? eventoForm.title : ''}"
+                            aria-describedby="ev-title-hint" data-error="ev-title-error"
                             placeholder="Ex: Necro Ritual Fest VI - São Paulo">
                         <span id="ev-title-hint" class="hint">Informe o nome oficial do show ou festival (mínimo 3
                             caracteres).</span>
@@ -149,7 +177,7 @@
                     <div class="field form-group">
                         <label for="ev-flyer">Flyer do Evento (Imagem) <span class="req-mark"
                                 aria-hidden="true">*</span></label>
-                        <span id="ev-flyer-hint" class="hint">Envie o flyer oficial em JPG, PNG ou WEBP.</span>
+                        <span id="ev-flyer-hint" class="hint">Envie o flyer oficial em JPG, PNG ou WEBP (até 10MB).</span>
                         <input type="file" id="ev-flyer" name="flyer" class="form-control form-control-file"
                             accept="image/*" required aria-describedby="ev-flyer-hint" data-error="ev-flyer-error">
                         <div id="ev-flyer-error" class="error-msg">
@@ -166,7 +194,8 @@
                     <div class="form-row-2col">
                         <div class="field form-group">
                             <label for="ev-city">Cidade <span class="req-mark" aria-hidden="true">*</span></label>
-                            <input type="text" id="ev-city" name="city" class="form-control" required
+                            <input type="text" id="ev-city" name="city" class="form-control" required minlength="2"
+                                maxlength="100" th:value="${eventoForm != null ? eventoForm.city : ''}"
                                 autocomplete="address-level2" data-error="ev-city-error"
                                 placeholder="Ex: Belo Horizonte">
                             <div id="ev-city-error" class="error-msg">
@@ -180,33 +209,10 @@
                             <select id="ev-state" name="state" class="form-control" required
                                 autocomplete="address-level1" data-error="ev-state-error">
                                 <option value="">Selecione o estado...</option>
-                                <option value="AC">AC - Acre</option>
-                                <option value="AL">AL - Alagoas</option>
-                                <option value="AP">AP - Amapá</option>
-                                <option value="AM">AM - Amazonas</option>
-                                <option value="BA">BA - Bahia</option>
-                                <option value="CE">CE - Ceará</option>
-                                <option value="DF">DF - Distrito Federal</option>
-                                <option value="ES">ES - Espírito Santo</option>
-                                <option value="GO">GO - Goiás</option>
-                                <option value="MA">MA - Maranhão</option>
-                                <option value="MT">MT - Mato Grosso</option>
-                                <option value="MS">MS - Mato Grosso do Sul</option>
-                                <option value="MG">MG - Minas Gerais</option>
-                                <option value="PA">PA - Pará</option>
-                                <option value="PB">PB - Paraíba</option>
-                                <option value="PR">PR - Paraná</option>
-                                <option value="PE">PE - Pernambuco</option>
-                                <option value="PI">PI - Piauí</option>
-                                <option value="RJ">RJ - Rio de Janeiro</option>
-                                <option value="RN">RN - Rio Grande do Norte</option>
-                                <option value="RS">RS - Rio Grande do Sul</option>
-                                <option value="RO">RO - Rondônia</option>
-                                <option value="RR">RR - Roraima</option>
-                                <option value="SC">SC - Santa Catarina</option>
-                                <option value="SP">SP - São Paulo</option>
-                                <option value="SE">SE - Sergipe</option>
-                                <option value="TO">TO - Tocantins</option>
+                                <option th:each="uf : ${estados}"
+                                    th:value="${uf.name()}"
+                                    th:text="${uf.rotulo}"
+                                    th:selected="${eventoForm != null and eventoForm.state == uf.name()}">SP - São Paulo</option>
                             </select>
                             <div id="ev-state-error" class="error-msg">
                                 <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Selecione o estado (UF) do
@@ -221,6 +227,8 @@
                             <label for="ev-date">Data do Evento <span class="req-mark"
                                     aria-hidden="true">*</span></label>
                             <input type="date" id="ev-date" name="date" class="form-control" required
+                                th:attr="min=${hojeIso}"
+                                th:value="${eventoForm != null and eventoForm.date != null ? eventoForm.date : ''}"
                                 data-error="ev-date-error">
                             <div id="ev-date-error" class="error-msg">
                                 <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe a data do evento.
@@ -230,6 +238,7 @@
                         <div class="field form-group">
                             <label for="ev-time">Horário <span class="req-mark" aria-hidden="true">*</span></label>
                             <input type="time" id="ev-time" name="time" class="form-control" required
+                                th:value="${eventoForm != null ? eventoForm.time : ''}"
                                 data-error="ev-time-error">
                             <div id="ev-time-error" class="error-msg">
                                 <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o horário de início
@@ -243,9 +252,11 @@
                         <div class="field form-group">
                             <label for="ev-organizer-contact">Contato do Organizador <span class="req-mark"
                                     aria-hidden="true">*</span></label>
-                            <span id="ev-org-hint" class="hint">WhatsApp, e-mail ou @ do produtor/casa de show.</span>
-                            <input type="text" id="ev-organizer-contact" name="organizer_contact" class="form-control"
-                                required aria-describedby="ev-org-hint" data-error="ev-org-error"
+                            <span id="ev-org-hint" class="hint">WhatsApp, e-mail ou @ do produtor/casa de show (visível no site).</span>
+                            <input type="text" id="ev-organizer-contact" name="organizerContact" class="form-control"
+                                required minlength="3" maxlength="150"
+                                th:value="${eventoForm != null ? eventoForm.organizerContact : ''}"
+                                aria-describedby="ev-org-hint" data-error="ev-org-error"
                                 placeholder="Ex: (11) 99999-8888 / @produtora">
                             <div id="ev-org-error" class="error-msg">
                                 <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe o contato do
@@ -256,10 +267,12 @@
                         <div class="field form-group">
                             <label for="ev-publisher-whatsapp">WhatsApp de quem está publicando <span class="req-mark"
                                     aria-hidden="true">*</span></label>
-                            <span id="ev-pub-hint" class="hint">Número com DDD para validação da publicação.</span>
-                            <input type="tel" id="ev-publisher-whatsapp" name="publisher_whatsapp" class="form-control"
+                            <span id="ev-pub-hint" class="hint">Uso exclusivo da editoria para validação (não é exibido no site).</span>
+                            <input type="tel" id="ev-publisher-whatsapp" name="publisherWhatsapp" class="form-control"
                                 required autocomplete="tel" inputmode="tel" autocorrect="off" spellcheck="false"
-                                pattern="[\d\s\(\)\+\-]{10,20}" aria-describedby="ev-pub-hint" data-error="ev-pub-error"
+                                pattern="[\d\s\(\)\+\-]{10,20}"
+                                th:value="${eventoForm != null ? eventoForm.publisherWhatsapp : ''}"
+                                aria-describedby="ev-pub-hint" data-error="ev-pub-error"
                                 placeholder="Ex: (11) 98888-7777">
                             <div id="ev-pub-error" class="error-msg">
                                 <i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Informe um número de
@@ -274,12 +287,14 @@
                                 aria-hidden="true">*</span></legend>
                         <div class="radio-group-inline">
                             <div class="radio-option">
-                                <input type="radio" id="role-organizer" name="publisher_role" value="organizer" required
+                                <input type="radio" id="role-organizer" name="publisherRole" value="organizer" required
+                                    th:checked="${eventoForm != null and eventoForm.publisherRole == 'organizer'}"
                                     data-error="ev-role-error">
                                 <label for="role-organizer">Sou o organizador do evento</label>
                             </div>
                             <div class="radio-option">
-                                <input type="radio" id="role-helper" name="publisher_role" value="helper" required
+                                <input type="radio" id="role-helper" name="publisherRole" value="helper" required
+                                    th:checked="${eventoForm != null and eventoForm.publisherRole == 'helper'}"
                                     data-error="ev-role-error">
                                 <label for="role-helper">Estou apenas ajudando na divulgação</label>
                             </div>
@@ -293,7 +308,8 @@
                     <!-- Confirmação das Regras -->
                     <div class="field form-group checkbox-field">
                         <div class="checkbox-inline">
-                            <input type="checkbox" id="ev-rules-agree" name="rules_agree" required
+                            <input type="checkbox" id="ev-rules-agree" name="rulesAgree" value="true" required
+                                th:checked="${eventoForm != null and eventoForm.rulesAgree}"
                                 data-error="ev-rules-error">
                             <label for="ev-rules-agree">
                                 Confirmo que este é um evento exclusivamente de música extrema, não envolve bandas com
@@ -331,7 +347,6 @@
             </div>
         </div>
     </dialog>
-
 
 </div>
 

@@ -96,7 +96,7 @@
           <p class="nav-group-label">Curadoria</p>
           <ul class="nav-list">
             <li>
-              <a th:href="@{/admin/eventos}" class="nav-link" data-module-pending="true" data-module-name="Eventos">
+              <a th:href="@{/admin/eventos}" class="nav-link">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                   <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -325,14 +325,14 @@
                   </span>
                   <h3 class="module-card-title">Eventos</h3>
                 </div>
-                <span class="status-badge is-warning">Curadoria</span>
+                <span class="status-badge is-success">Ativo</span>
               </div>
               <p class="module-card-desc">
                 Aprove ou recuse eventos enviados pelo formulário público, além de editar datas, cartazes e excluir registros.
               </p>
               <div class="module-card-footer">
                 <span class="module-route">/admin/eventos</span>
-                <a th:href="@{/admin/eventos}" class="btn btn-sm" data-module-pending="true" data-module-name="Eventos">Moderar <span class="visually-hidden">Eventos</span></a>
+                <a th:href="@{/admin/eventos}" class="btn btn-sm">Moderar <span class="visually-hidden">Eventos</span></a>
               </div>
             </article>
 
@@ -435,8 +435,8 @@
                   <th scope="row">Eventos</th>
                   <td><code>/admin/eventos</code></td>
                   <td>Submissão pública + moderação</td>
-                  <td><span class="status-badge is-warning">Fila de aprovação</span></td>
-                  <td><a th:href="@{/admin/eventos}" class="btn btn-sm" data-module-pending="true" data-module-name="Eventos">Abrir <span class="visually-hidden">Eventos</span></a></td>
+                  <td><span class="status-badge is-success">Ativo</span></td>
+                  <td><a th:href="@{/admin/eventos}" class="btn btn-sm">Abrir <span class="visually-hidden">Eventos</span></a></td>
                 </tr>
                 <tr data-module-row>
                   <th scope="row">Indicações de Bandas</th>

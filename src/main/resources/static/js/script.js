@@ -1647,100 +1647,6 @@
     });
   }
 
-  // --- BASE DE EVENTOS APROVADOS (DEMONSTRAÇÃO) ---
-  const EVENTS_CATALOG = [
-    {
-      id: 'ev-1',
-      title: 'Necro Ritual Fest VI - Noite de Blasfêmia',
-      flyer: 'assets/images/capa-edicao-58.png',
-      city: 'São Paulo',
-      state: 'SP',
-      date: '2026-12-12',
-      time: '20:00',
-      organizerContact: '(11) 99123-4567 / @necroritualprod',
-      publisherWhatsapp: '(11) 99123-4567',
-      publisherRole: 'organizer'
-    },
-    {
-      id: 'ev-2',
-      title: 'Subterrâneo Profano: Death & Black Metal',
-      flyer: 'assets/images/capa-edicao-57.jpg',
-      city: 'Belo Horizonte',
-      state: 'MG',
-      date: '2026-11-28',
-      time: '19:30',
-      organizerContact: 'contato@subterraneoprofano.com.br',
-      publisherWhatsapp: '(31) 98444-1122',
-      publisherRole: 'helper'
-    },
-    {
-      id: 'ev-3',
-      title: 'Massacre Sonoro Sul-Americano (Beneficente Cena Underground)',
-      flyer: 'assets/images/capa-edicao-56.jpg',
-      city: 'Curitiba',
-      state: 'PR',
-      date: '2027-01-16',
-      time: '18:00',
-      organizerContact: '(41) 99777-3300',
-      publisherWhatsapp: '(41) 99777-3300',
-      publisherRole: 'organizer'
-    },
-    {
-      id: 'ev-4',
-      title: 'Culto das Catacumbas - Edição V',
-      flyer: 'assets/images/capa-edicao-55.jpg',
-      city: 'Rio de Janeiro',
-      state: 'RJ',
-      date: '2026-10-18',
-      time: '21:00',
-      organizerContact: '(21) 98888-2211',
-      publisherWhatsapp: '(21) 97777-9900',
-      publisherRole: 'helper'
-    },
-    {
-      id: 'ev-5',
-      title: 'Morte & Podridão Open Air',
-      flyer: 'assets/images/capa-edicao-56.jpg',
-      city: 'Porto Alegre',
-      state: 'RS',
-      date: '2026-09-05',
-      time: '17:00',
-      organizerContact: '@mortepodridaprod',
-      publisherWhatsapp: '(51) 99333-4455',
-      publisherRole: 'organizer'
-    }
-  ];
-
-  // --- PÁGINA EVENTOS: TEMPORAL, FILTROS, FLYER MODAL E VALIDAÇÃO ACESSÍVEL ---
-  function getTodayIsoCalendarDate() {
-    if (typeof Temporal !== 'undefined' && Temporal.Now) {
-      return Temporal.Now.plainDateISO().toString();
-    }
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth() + 1).padStart(2, '0');
-    const d = String(now.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-  }
-
-  function isEventPast(eventDateStr, todayStr) {
-    if (typeof Temporal !== 'undefined' && Temporal.PlainDate) {
-      const evDate = Temporal.PlainDate.from(eventDateStr);
-      const todayDate = Temporal.PlainDate.from(todayStr);
-      return Temporal.PlainDate.compare(evDate, todayDate) < 0;
-    }
-    return eventDateStr < todayStr;
-  }
-
-  function formatDisplayDate(dateStr) {
-    if (typeof Temporal !== 'undefined' && Temporal.PlainDate) {
-      const d = Temporal.PlainDate.from(dateStr);
-      return `${String(d.day).padStart(2, '0')}/${String(d.month).padStart(2, '0')}/${d.year}`;
-    }
-    const [y, m, d] = dateStr.split('-');
-    return `${d}/${m}/${y}`;
-  }
-
   function escapeHtml(str) {
     return String(str)
       .replace(/&/g, '&amp;')
@@ -1748,101 +1654,6 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
-  }
-
-  function renderEventsList() {
-    const grid = document.getElementById('events-grid');
-    if (!grid) return;
-
-    const stateFilter = document.getElementById('event-state-filter')?.value || 'all';
-    const statusFilter = document.getElementById('event-status-filter')?.value || 'all';
-    const countEl = document.getElementById('events-count-indicator');
-    const todayStr = getTodayIsoCalendarDate();
-
-    const enriched = EVENTS_CATALOG.map(ev => ({
-      ...ev,
-      isPast: isEventPast(ev.date, todayStr)
-    }));
-
-    // Ordenação: eventos que ainda vão acontecer primeiro (data mais próxima -> mais distante),
-    // depois eventos que já aconteceram (mais recente -> mais antigo).
-    enriched.sort((a, b) => {
-      if (a.isPast !== b.isPast) return a.isPast ? 1 : -1;
-      if (!a.isPast) return a.date.localeCompare(b.date);
-      return b.date.localeCompare(a.date);
-    });
-
-    const filtered = enriched.filter(ev => {
-      if (stateFilter !== 'all' && ev.state !== stateFilter) return false;
-      if (statusFilter === 'upcoming' && ev.isPast) return false;
-      if (statusFilter === 'past' && !ev.isPast) return false;
-      return true;
-    });
-
-    if (countEl) {
-      countEl.textContent = filtered.length === 1
-        ? '1 evento encontrado'
-        : `${filtered.length} eventos encontrados`;
-    }
-
-    if (filtered.length === 0) {
-      grid.innerHTML = `
-        <div class="events-empty-state">
-          <p>Nenhum evento aprovado encontrado para os filtros selecionados.</p>
-        </div>
-      `;
-      return;
-    }
-
-    grid.innerHTML = filtered.map(ev => {
-      const statusLabel = ev.isPast ? 'Já aconteceu' : 'Vai acontecer';
-      const statusClass = ev.isPast ? 'past' : 'upcoming';
-      const roleLabel = ev.publisherRole === 'organizer'
-        ? 'Organizador do evento'
-        : 'Apenas ajudando na divulgação';
-
-      return `
-        <article class="event-card ${ev.isPast ? 'is-past' : ''}">
-          <div class="event-flyer-wrap">
-            <span class="event-status-badge ${statusClass}">${statusLabel}</span>
-            <button
-              type="button"
-              class="event-flyer-btn"
-              data-flyer-src="${escapeHtml(ev.flyer)}"
-              data-flyer-title="${escapeHtml(ev.title)}"
-              aria-label="Ampliar flyer de ${escapeHtml(ev.title)}"
-            >
-              <img src="${escapeHtml(ev.flyer)}" alt="Flyer do evento ${escapeHtml(ev.title)}" class="xerox-img" loading="lazy">
-            </button>
-          </div>
-          <div class="event-card-body">
-            <h3 class="pirata-title event-card-title">${escapeHtml(ev.title)}</h3>
-            <ul class="event-meta-list">
-              <li>
-                <span class="event-meta-label">Local:</span>
-                <span>${escapeHtml(ev.city)} / <strong>${escapeHtml(ev.state)}</strong></span>
-              </li>
-              <li>
-                <span class="event-meta-label">Data:</span>
-                <span>${formatDisplayDate(ev.date)}</span>
-              </li>
-              <li>
-                <span class="event-meta-label">Horário:</span>
-                <span>${escapeHtml(ev.time)}</span>
-              </li>
-              <li>
-                <span class="event-meta-label">Organizador:</span>
-                <span>${escapeHtml(ev.organizerContact)}</span>
-              </li>
-            </ul>
-            <div class="event-publisher-info">
-              <span><strong>WhatsApp de quem publicou:</strong> ${escapeHtml(ev.publisherWhatsapp)}</span>
-              <span class="event-role-tag">${roleLabel}</span>
-            </div>
-          </div>
-        </article>
-      `;
-    }).join('');
   }
 
   function setupAccessibleFormValidation(form) {
@@ -1963,36 +1774,24 @@
   }
 
   function initEventsPage() {
-    if (!document.body.classList.contains('page-eventos')) return;
-
-    // Carrega polyfill do Temporal para navegadores sem suporte nativo (ex: Safari)
-    if (typeof Temporal === 'undefined') {
-      import('https://esm.sh/temporal-polyfill')
-        .then(mod => {
-          globalThis.Temporal = mod.Temporal;
-          renderEventsList();
-        })
-        .catch(() => {
-          // Fallback silencioso caso esteja offline
-        });
-    }
-
-    renderEventsList();
+    const eventsGrid = document.getElementById('events-grid');
+    const eventForm = document.getElementById('event-submit-form');
+    if (!eventsGrid && !eventForm) return;
 
     const stateFilter = document.getElementById('event-state-filter');
     const statusFilter = document.getElementById('event-status-filter');
     const filterForm = document.getElementById('events-filter-form');
 
-    if (stateFilter) stateFilter.addEventListener('change', renderEventsList);
-    if (statusFilter) statusFilter.addEventListener('change', renderEventsList);
-    if (filterForm) filterForm.addEventListener('submit', e => { e.preventDefault(); renderEventsList(); });
+    if (filterForm) {
+      if (stateFilter) stateFilter.addEventListener('change', () => filterForm.submit());
+      if (statusFilter) statusFilter.addEventListener('change', () => filterForm.submit());
+    }
 
     // Lightbox do Flyer via <dialog>
     const flyerDialog = document.getElementById('flyer-dialog');
     const flyerDialogImg = document.getElementById('flyer-dialog-img');
     const flyerDialogTitle = document.getElementById('flyer-dialog-title');
     const flyerDialogClose = document.getElementById('flyer-dialog-close');
-    const eventsGrid = document.getElementById('events-grid');
 
     if (eventsGrid && flyerDialog && flyerDialogImg && flyerDialogTitle) {
       eventsGrid.addEventListener('click', (e) => {
@@ -2036,36 +1835,15 @@
       });
     }
 
-    // Validação acessível e envio do formulário
-    const eventForm = document.getElementById('event-submit-form');
-    const feedbackEl = document.getElementById('event-submit-feedback');
-
+    // Validação acessível mantendo envio real (multipart/form-data + CSRF) ao backend
     if (eventForm) {
       setupAccessibleFormValidation(eventForm);
 
       eventForm.addEventListener('submit', (e) => {
-        e.preventDefault();
         if (!eventForm.checkValidity()) {
+          e.preventDefault();
           const firstInvalid = eventForm.querySelector(':invalid');
           if (firstInvalid) firstInvalid.focus();
-          return;
-        }
-
-        const formData = new FormData(eventForm);
-        const title = formData.get('title');
-        const city = formData.get('city');
-        const state = formData.get('state');
-
-        if (feedbackEl) {
-          feedbackEl.hidden = false;
-          feedbackEl.textContent = `☠ Evento "${title}" (${city}/${state}) enviado com sucesso! Ele está aguardando análise e aprovação manual do editor antes de ser publicado na agenda.`;
-          feedbackEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-
-        eventForm.reset();
-        if (previewWrap && previewImg) {
-          previewWrap.hidden = true;
-          previewImg.src = '';
         }
       });
     }

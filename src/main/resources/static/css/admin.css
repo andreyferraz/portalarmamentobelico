@@ -1724,3 +1724,105 @@ textarea {
   padding-inline-start: 0.75rem;
   margin-block-end: 0.75rem;
 }
+
+
+/* ==========================================================================
+   Módulo de Eventos — Abas de Moderação, Flyers e Botões de Curadoria
+   ========================================================================== */
+
+.status-tabs-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.75rem 1.25rem 0;
+  border-block-end: 1px solid var(--adm-border);
+  background-color: var(--adm-surface-subtle);
+}
+
+.status-tab-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--adm-radius-sm) var(--adm-radius-sm) 0 0;
+  border: 1px solid transparent;
+  border-block-end: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--adm-text-muted);
+  text-decoration: none;
+  margin-block-end: -1px;
+}
+
+.status-tab-link:hover {
+  color: var(--adm-text);
+  background-color: var(--adm-surface-hover);
+}
+
+.status-tab-link.is-active {
+  background-color: var(--adm-surface);
+  border-color: var(--adm-border);
+  color: var(--adm-text);
+  font-weight: 600;
+}
+
+.evento-thumb-btn {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  border-radius: var(--adm-radius-sm);
+  flex-shrink: 0;
+}
+
+.evento-thumb {
+  inline-size: 3.25rem;
+  block-size: 4rem;
+  object-fit: cover;
+  border-radius: var(--adm-radius-sm);
+  border: 1px solid var(--adm-border);
+  background-color: var(--adm-surface-subtle);
+}
+
+.btn-success {
+  color: var(--adm-success);
+  border-color: var(--adm-border);
+}
+
+.btn-success:hover {
+  background-color: var(--adm-success-soft);
+  border-color: var(--adm-success);
+  color: var(--adm-success);
+}
+
+.btn-warning {
+  color: var(--adm-warning);
+  border-color: var(--adm-border);
+}
+
+.btn-warning:hover {
+  background-color: var(--adm-warning-soft);
+  border-color: var(--adm-warning);
+  color: var(--adm-warning);
+}
+
+.admin-dialog--flyer {
+  inline-size: min(42rem, calc(100dvw - 2rem));
+}
+
+.admin-flyer-full-img {
+  inline-size: 100%;
+  max-block-size: 70dvh;
+  object-fit: contain;
+  border-radius: var(--adm-radius-sm);
+  border: 1px solid var(--adm-border);
+  background-color: var(--adm-surface-subtle);
+}
+
+.admin-table--eventos {
+  --label-1: "Evento";
+  --label-2: "Data & Local";
+  --label-3: "Contatos";
+  --label-4: "Moderação";
+  --label-5: "Ações";
+}

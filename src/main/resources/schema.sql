@@ -103,3 +103,33 @@ CREATE TABLE IF NOT EXISTS noticia_tag (
 
 CREATE INDEX IF NOT EXISTS idx_noticia_tag_noticia_ordem
 	ON noticia_tag (noticia_id, ordem ASC);
+
+CREATE TABLE IF NOT EXISTS evento (
+	id TEXT PRIMARY KEY,
+	titulo TEXT NOT NULL,
+	flyer_path TEXT NOT NULL,
+	cidade TEXT NOT NULL,
+	estado TEXT NOT NULL CHECK (estado IN (
+		'AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG',
+		'PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'
+	)),
+	data_evento TEXT NOT NULL,
+	horario TEXT NOT NULL,
+	contato_organizador TEXT NOT NULL,
+	whatsapp_publicador TEXT NOT NULL,
+	papel_publicador TEXT NOT NULL CHECK (papel_publicador IN ('ORGANIZADOR', 'AJUDANTE')),
+	aceitou_regras INTEGER NOT NULL DEFAULT 1 CHECK (aceitou_regras IN (0, 1)),
+	status_moderacao TEXT NOT NULL DEFAULT 'PENDENTE'
+		CHECK (status_moderacao IN ('PENDENTE', 'APROVADO', 'RECUSADO')),
+	motivo_recusa TEXT,
+	moderado_em TEXT,
+	moderado_por TEXT,
+	criado_em TEXT NOT NULL,
+	atualizado_em TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_evento_status_data
+	ON evento (status_moderacao, data_evento);
+
+CREATE INDEX IF NOT EXISTS idx_evento_estado_status_data
+	ON evento (estado, status_moderacao, data_evento);
